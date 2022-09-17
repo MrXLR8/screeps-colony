@@ -5,7 +5,6 @@ import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 
 export class CreepFactory
 {
-
     static CreateCreep(creep:Creep):BaseCreep
     {
       if(creep.id==null||creep.id==undefined) return null;
@@ -25,7 +24,6 @@ export class CreepFactory
         }
         return creepWrapper;
     }
-
 
     static DisposeCreep(mem:CreepMemory)
     {

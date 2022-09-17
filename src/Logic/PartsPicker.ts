@@ -4,19 +4,12 @@ import { CreepTypes } from "Models/Creeps/BaseCreep";
 export class PartsPicker
 {
 
+
     static MinerParts: BodyPartConstant[][] =
         [
             [MOVE, MOVE, MOVE,MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
             [MOVE, MOVE, WORK, WORK,WORK, CARRY, CARRY], //500
             [MOVE, MOVE, WORK, WORK, CARRY, CARRY], //400
-            [MOVE,MOVE, WORK, CARRY, CARRY] //300
-        ];
-
-    static BuilderParts: BodyPartConstant[][] =
-        [
-            [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY], //800
-            [MOVE, MOVE, WORK, WORK, WORK, WORK, CARRY, CARRY], //600
-            [MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY], //500
             [MOVE,MOVE, WORK, CARRY, CARRY] //300
         ];
 
@@ -27,7 +20,6 @@ export class PartsPicker
             [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
             [MOVE, WORK, WORK, CARRY] //300
         ];
-
 
     static CalculatePrice(parts: BodyPartConstant[])
     {

@@ -2,9 +2,14 @@ import { ActionResponseCode } from "Models/ActionResponseCode";
 import { Unit } from "Models/Unit";
 import { BaseCreepMemory } from "../Memory/BaseCreepMemory";
 
+export enum CreepTypes
+{
+    UniversalCreep,
+    HeavyMiner
+}
+
 export abstract class BaseCreep extends Unit
 {
-
     public creep: Creep;
 
     protected tasks: (()=>ActionResponseCode)[];
@@ -14,7 +19,6 @@ export abstract class BaseCreep extends Unit
         super();
         this.creep = _creep;
     }
-
 
     get memory():BaseCreepMemory
     {
@@ -63,8 +67,3 @@ export abstract class BaseCreep extends Unit
     }
 }
 
-export enum CreepTypes
-{
-    UniversalCreep,
-    HeavyMiner
-}

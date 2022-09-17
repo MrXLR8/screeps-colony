@@ -20,11 +20,6 @@ export class Finder
         //todo distance sort, energy check
     }
 
-
-    static GetPos(_pos: RoomPosition, _target: RoomPosition)
-    {
-        var pa = _pos.findPathTo(_target, { ignoreCreeps: false, range: 0 });
-    }
     static GetEmptyExtension(_pos: RoomPosition): Structure
     {
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
@@ -35,10 +30,7 @@ export class Finder
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
             }
         });
-
         return target as Structure;
-
-        //todo sort by distance
     }
 
     static GetEmptyTower(_pos: RoomPosition): StructureTower
@@ -51,10 +43,7 @@ export class Finder
                     structure.store.getCapacity(RESOURCE_ENERGY) == 0
             }
         });
-
         return target as StructureTower;
-
-        //todo sort by distance
     }
 
     static GetNotFullTower(_pos: RoomPosition): StructureTower
@@ -67,15 +56,11 @@ export class Finder
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
             }
         });
-
         return target as StructureTower;
-
-        //todo sort by distance
     }
 
     static GetFilledStorage(_pos: RoomPosition, minAmmount?: number): Structure
     {
-
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
@@ -85,10 +70,7 @@ export class Finder
                     structure.store.getUsedCapacity() > minAmmount
             }
         });
-
         return target as Structure;
-
-        //todo sort by distance
     }
 
     static FindDropped(_pos:RoomPosition, minAmmount?: number) :Resource
@@ -116,10 +98,7 @@ export class Finder
                     Utils.CalculatePercentOfHP(structure) < Constants.damagePercentToRepair
             }
         });
-
         return target as Structure;
-
-        //todo sort by distance
     }
 
     static GetRandomDamagedStructuresNoPercent(_room: Room): Structure
@@ -130,10 +109,7 @@ export class Finder
                 return ((structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER)&& structure.hits<structure.hitsMax)//todo all buildings?
             }
         });
-
         return target[random(0, target.length - 1)] as Structure;
-
-        //todo sort by distance
     }
 
     static GetDamagedWalls(_pos: Room): Structure
@@ -149,12 +125,8 @@ export class Finder
 
     }
 
-
     static GetConstructionSites(_pos: RoomPosition): ConstructionSite
     {
         return _pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
     }
-
-
-
 }
