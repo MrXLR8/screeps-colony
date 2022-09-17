@@ -4,85 +4,83 @@ import { BaseStructureMemory } from "./Memory/BaseStructureMemory";
 
 export abstract class Unit
 {
-    protected tasks: (()=>ActionResponseCode)[];
+    protected tasks: (() => ActionResponseCode)[];
 
-    abstract get memory():BaseCreepMemory|BaseStructureMemory;
+    abstract get memory(): BaseCreepMemory | BaseStructureMemory;
 
-    abstract set memory(memory:BaseCreepMemory|BaseStructureMemory);
+    abstract set memory(memory: BaseCreepMemory | BaseStructureMemory);
 
-    private IncrementNumber(num:number,max:number):number
+    private IncrementNumber(num: number, max: number): number
     {
         num++;
-        if(num>max) num=0;
+        if (num > max) num = 0;
         return num;
     }
 
-    protected GetTarget<T extends _HasId>():T
+    protected GetTarget<T extends _HasId>(): T
     {
         var targetID = this.memory.targetID;
 
-        if(targetID!=null)
+        if (targetID != null)
         {
             return Game.getObjectById(targetID as Id<T>);
         }
         return null;
     }
 
-    Act() : void
+    Act(): void
     {
-
-     //  var mem =  this.GetCreepMemory();
-       var taskNumber =this.memory.taskNumber;
-       var i=this.tasks.length*2;
-       var taskCount = this.tasks.length-1;
-       doLoop: do
+        var taskNumber = this.memory.taskNumber;
+        var i = this.tasks.length * 2;
+        var taskCount = this.tasks.length - 1;
+        doLoop: do
         {
             i--;
 
-            var result  = this.tasks[taskNumber].call(this);
-            codeSwitch: switch(result)
+            var result = this.tasks[taskNumber].call(this);
+            codeSwitch: switch (result)
             {
-                case ActionResponseCode.Done :
+                case ActionResponseCode.Done:
                     {
-                    taskNumber=this.IncrementNumber(taskNumber,taskCount);
-                    this.memory.taskNumber=taskNumber;
-                    this.memory.targetID=null;
-                    this.memory.actionAttempts=0;
-                    break doLoop;
+                        taskNumber = this.IncrementNumber(taskNumber, taskCount);
+                        this.memory.taskNumber = taskNumber;
+                        this.memory.targetID = null;
+                        this.memory.actionAttempts = 0;
+                        break doLoop;
                     }
-                case ActionResponseCode.NextTask :
+                case ActionResponseCode.NextTask:
                     {
-                    taskNumber=this.IncrementNumber(taskNumber,taskCount);
-                    this.memory.taskNumber=taskNumber;
-                    this.memory.targetID=null;
-                    this.memory.actionAttempts=0;
-                    break codeSwitch;
+                        taskNumber = this.IncrementNumber(taskNumber, taskCount);
+                        this.memory.taskNumber = taskNumber;
+                        this.memory.targetID = null;
+                        this.memory.actionAttempts = 0;
+                        break codeSwitch;
                     }
                 case ActionResponseCode.Repeat:
                     {
-                    break doLoop;
+                        break doLoop;
                     }
                 case ActionResponseCode.Reset:
                     {
-                    this.memory.taskNumber=0;
-                    this.memory.targetID=null;
-                    break doLoop;
+                        this.memory.taskNumber = 0;
+                        this.memory.targetID = null;
+                        break doLoop;
                     }
                 case ActionResponseCode.NextTaskPreserveTarget:
                     {
-                        taskNumber=this.IncrementNumber(taskNumber,taskCount);
-                        this.memory.taskNumber=taskNumber;
-                        this.memory.actionAttempts=0;
+                        taskNumber = this.IncrementNumber(taskNumber, taskCount);
+                        this.memory.taskNumber = taskNumber;
+                        this.memory.actionAttempts = 0;
                         break codeSwitch;
                     }
-                    case ActionResponseCode.ResetPreserveTarget:
+                case ActionResponseCode.ResetPreserveTarget:
                     {
-                            this.memory.taskNumber=0;
-                            break doLoop;
+                        this.memory.taskNumber = 0;
+                        break doLoop;
                     }
             }
 
-        } while(i>0)
+        } while (i > 0)
     }
 
 }

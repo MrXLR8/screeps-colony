@@ -1,5 +1,5 @@
 export class TargetInformation
 {
-    targetID:string;
-    reservedByIDs:string[];
+    targetID: string;
+    reservedByIDs: string[];
 }

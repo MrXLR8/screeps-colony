@@ -4,14 +4,11 @@ import { Utils } from "Logic/Utils";
 
 export class Tower
 {
-
     structure: StructureTower;
     constructor(structure: StructureTower)
     {
         this.structure = structure;
     }
-
-
 
     Act()
     {
@@ -34,27 +31,26 @@ export class Tower
         return true;
     }
 
-
     ActRepairWalls(): boolean
     {
         return false;
-/*
-        var percent: number = Utils.Percent(this.structure.store.getUsedCapacity(RESOURCE_ENERGY), this.structure.store.getCapacity(RESOURCE_ENERGY));
-      //  if(this.structure.room.energyAvailable!=this.structure.energyCapacity) return false;
+        /*
+                var percent: number = Utils.Percent(this.structure.store.getUsedCapacity(RESOURCE_ENERGY), this.structure.store.getCapacity(RESOURCE_ENERGY));
+              //  if(this.structure.room.energyAvailable!=this.structure.energyCapacity) return false;
 
-        if (percent < Constants.towerEnergyReserve)
-        {
-            return false;
-        }
-        var damaged = Finder.GetDamagedWalls(this.structure.room);
-        if (damaged == null || damaged == undefined)
-        {
-            return false;
-        }
+                if (percent < Constants.towerEnergyReserve)
+                {
+                    return false;
+                }
+                var damaged = Finder.GetDamagedWalls(this.structure.room);
+                if (damaged == null || damaged == undefined)
+                {
+                    return false;
+                }
 
-        this.structure.repair(damaged);
-        return true;
-        */
+                this.structure.repair(damaged);
+                return true;
+                */
     }
 
     ActRepair(): boolean
@@ -70,7 +66,7 @@ export class Tower
         {
             return false;
         }
-      this.structure.repair(damaged);
+        this.structure.repair(damaged);
         return true;
     }
 

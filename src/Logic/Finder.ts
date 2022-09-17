@@ -15,7 +15,7 @@ export class Finder
 
     static GetRandomSource(_room: Room): Source
     {
-        var sourceArray = _room.find(FIND_SOURCES_ACTIVE, {filter:(source)=>source.energy!=0});
+        var sourceArray = _room.find(FIND_SOURCES_ACTIVE, { filter: (source) => source.energy != 0 });
         return sourceArray[random(0, sourceArray.length - 1)];
     }
 
@@ -72,10 +72,10 @@ export class Finder
         return target as Structure;
     }
 
-    static FindDropped(_pos:RoomPosition, minAmmount?: number) :Resource
+    static FindDropped(_pos: RoomPosition, minAmmount?: number): Resource
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
-        return _pos.findClosestByRange(FIND_DROPPED_RESOURCES, {filter: (dropped) => {return dropped.amount>minAmmount}});
+        return _pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.amount > minAmmount } });
     }
 
     static GetOneRangeContrainer(_pos: RoomPosition): StructureContainer
@@ -105,7 +105,7 @@ export class Finder
         var target = _room.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                return ((structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER)&& structure.hits<structure.hitsMax)//todo all buildings?
+                return ((structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER) && structure.hits < structure.hitsMax)//todo all buildings?
             }
         });
         return target[random(0, target.length - 1)] as Structure;
@@ -116,7 +116,7 @@ export class Finder
         var targets = _pos.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                return (structure.structureType == STRUCTURE_WALL||structure.structureType == STRUCTURE_RAMPART) //sort by damages
+                return (structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) //sort by damages
             }
         }).sort((a, b) => { return a.hits - b.hits });
 

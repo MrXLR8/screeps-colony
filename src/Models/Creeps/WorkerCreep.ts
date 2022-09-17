@@ -11,10 +11,10 @@ export abstract class WorkerCreep extends BaseCreep
     protected ActGathering(): ActionResponseCode
     {
 
-        if(this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
+        if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         //todo look from id to not search twice
         var source: Structure = Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry());
-        if(source!=null)
+        if (source != null)
         {
             if (this.creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
             {
@@ -22,10 +22,10 @@ export abstract class WorkerCreep extends BaseCreep
                 this.creep.say(">⚡");
                 return ActionResponseCode.Repeat;
             }
-                this.creep.say("⚡");
-                return ActionResponseCode.Repeat;
+            this.creep.say("⚡");
+            return ActionResponseCode.Repeat;
         }
-        var dropped = Finder.FindDropped(this.creep.pos,this.AmmountCanCarry());
+        var dropped = Finder.FindDropped(this.creep.pos, this.AmmountCanCarry());
 
         if (dropped != null)
         {
@@ -42,12 +42,12 @@ export abstract class WorkerCreep extends BaseCreep
         return ActionResponseCode.NextTask;
     }
 
-    protected ActMining() :ActionResponseCode
+    protected ActMining(): ActionResponseCode
     {
-        if(this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
+        if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
 
 
-        var target: Source= this.GetTarget() as Source;
+        var target: Source = this.GetTarget() as Source;
         if (target == null || this.memory.actionAttempts > Constants.moveAttmepts)
         {
             target = Finder.GetRandomSource(this.creep.room);
@@ -56,25 +56,25 @@ export abstract class WorkerCreep extends BaseCreep
             this.memory.actionAttempts = 0;
         }
         var code = this.creep.harvest(target);
-        switch  (code)
+        switch (code)
         {
-            case (ERR_NOT_IN_RANGE) :
-            {
-                this.memory.actionAttempts++;
-                if(this.memory.actionAttempts>Constants.moveAttmepts)
+            case (ERR_NOT_IN_RANGE):
                 {
-                    return ActionResponseCode.Reset;
+                    this.memory.actionAttempts++;
+                    if (this.memory.actionAttempts > Constants.moveAttmepts)
+                    {
+                        return ActionResponseCode.Reset;
+                    }
+                    this.MoveToTarget(target);
+                    this.creep.say(">⛏️");
+                    return ActionResponseCode.Repeat;
                 }
-                this.MoveToTarget(target);
-                this.creep.say(">⛏️");
-                return ActionResponseCode.Repeat;
-            }
-            case ( ERR_NOT_ENOUGH_RESOURCES) :
-            {
-                if(this.creep.store.getUsedCapacity(RESOURCE_ENERGY)==0) return ActionResponseCode.Reset;
-                return ActionResponseCode.NextTask;
-            }
-        default: break;
+            case (ERR_NOT_ENOUGH_RESOURCES):
+                {
+                    if (this.creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.Reset;
+                    return ActionResponseCode.NextTask;
+                }
+            default: break;
         }
 
         this.memory.actionAttempts = 0;
@@ -83,9 +83,9 @@ export abstract class WorkerCreep extends BaseCreep
 
     }
 
-    protected ActUpgrading():ActionResponseCode
+    protected ActUpgrading(): ActionResponseCode
     {
-        if(this.creep.store.getUsedCapacity(RESOURCE_ENERGY)==0) return ActionResponseCode.NextTask;
+        if (this.creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.NextTask;
 
         var target: StructureController = this.creep.room.controller;
         var code: ScreepsReturnCode = this.creep.upgradeController(target);

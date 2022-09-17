@@ -16,17 +16,17 @@ export class HeavyMinerMemory extends BaseCreepMemory
 export class HeavyMinerCreep extends BaseCreep
 {
 
-    tasks= [this.ActHeavyMining,this.ActOneRangeStorage,this.ActDrop];
+    tasks = [this.ActHeavyMining, this.ActOneRangeStorage, this.ActDrop];
 
-    static Dispose(_mem:CreepMemory)
+    static Dispose(_mem: CreepMemory)
     {
 
         var mem = _mem as HeavyMinerMemory;
         var flag = Game.flags[mem.flagName];
 
-        if(!flag) return;
+        if (!flag) return;
 
-        console.log("Disposing heavy miner. "+flag.name);
+        console.log("Disposing heavy miner. " + flag.name);
 
         var flagMem = flag.memory as HeavyMinerFlagMemory;
         flagMem.assignedHvyMinerId = null;
@@ -35,26 +35,28 @@ export class HeavyMinerCreep extends BaseCreep
 
     private FlagAssign(): boolean
     {
-        var creepMem:HeavyMinerMemory= this.creep.memory as HeavyMinerMemory;
+        var creepMem: HeavyMinerMemory = this.creep.memory as HeavyMinerMemory;
 
-        if(creepMem.flagX!=null&&creepMem.flagY!=null) {
-            return true;}
+        if (creepMem.flagX != null && creepMem.flagY != null)
+        {
+            return true;
+        }
         for (const flagName in Game.flags) //filter this room
         {
             var flag = Game.flags[flagName];
-            if(flag.room!=this.creep.room||!flagName.startsWith("HeavySpot")) continue;
+            if (flag.room != this.creep.room || !flagName.startsWith("HeavySpot")) continue;
 
-            var flagMem =flag.memory as HeavyMinerFlagMemory;
+            var flagMem = flag.memory as HeavyMinerFlagMemory;
 
-            if (flagMem.assignedHvyMinerId == null||flagMem.assignedHvyMinerId==undefined)
+            if (flagMem.assignedHvyMinerId == null || flagMem.assignedHvyMinerId == undefined)
             {
-                flagMem=new HeavyMinerFlagMemory();
+                flagMem = new HeavyMinerFlagMemory();
                 flagMem.assignedHvyMinerId = this.creep.id.toString();
-                flag.memory=flagMem;
+                flag.memory = flagMem;
                 creepMem.flagX = flag.pos.x;
                 creepMem.flagY = flag.pos.y;
-                creepMem.flagName=flag.name;
-                var target = Finder.GetSource(new RoomPosition(flag.pos.x,flag.pos.y, this.creep.room.name));
+                creepMem.flagName = flag.name;
+                var target = Finder.GetSource(new RoomPosition(flag.pos.x, flag.pos.y, this.creep.room.name));
                 creepMem.targetID = target.id;
                 return true;
             }
@@ -64,9 +66,9 @@ export class HeavyMinerCreep extends BaseCreep
         return false;
     }
 
-    static FlagClean(currentRoom:Room)
+    static FlagClean(currentRoom: Room)
     {
-        var rightFlags = _.filter(Game.flags,function(o) { return o.room==currentRoom&&o.name.startsWith("HeavySpot"); })
+        var rightFlags = _.filter(Game.flags, function (o) { return o.room == currentRoom && o.name.startsWith("HeavySpot"); })
         for (const name in rightFlags)
         {
             var flag = Game.flags[name];
@@ -85,21 +87,21 @@ export class HeavyMinerCreep extends BaseCreep
     }
 
 
-    private ActHeavyMining():ActionResponseCode
+    private ActHeavyMining(): ActionResponseCode
     {
-        if(this.creep.store.getFreeCapacity()==0) return ActionResponseCode.NextTaskPreserveTarget;
-        if(!this.FlagAssign())
+        if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTaskPreserveTarget;
+        if (!this.FlagAssign())
         {
             this.creep.say("!🚩");
             return ActionResponseCode.Repeat;
         }
 
-        var mem: HeavyMinerMemory = this.creep.memory  as HeavyMinerMemory;
+        var mem: HeavyMinerMemory = this.creep.memory as HeavyMinerMemory;
         var target: Source = this.GetTarget() as Source;
-        var flagPos:RoomPosition;
-        flagPos= new RoomPosition(mem.flagX, mem.flagY, this.creep.room.name);
+        var flagPos: RoomPosition;
+        flagPos = new RoomPosition(mem.flagX, mem.flagY, this.creep.room.name);
 
-        if(!this.creep.pos.isEqualTo(flagPos.x,flagPos.y))
+        if (!this.creep.pos.isEqualTo(flagPos.x, flagPos.y))
         {
             this.MoveToPos(flagPos);
             this.creep.say(">⛏️");
@@ -112,12 +114,12 @@ export class HeavyMinerCreep extends BaseCreep
         return ActionResponseCode.Repeat;
     }
 
-    private ActOneRangeStorage():ActionResponseCode
+    private ActOneRangeStorage(): ActionResponseCode
     {
         var container = Finder.GetOneRangeContrainer(this.creep.pos);
-        if(container==null)
+        if (container == null)
         {
-             return ActionResponseCode.NextTaskPreserveTarget;
+            return ActionResponseCode.NextTaskPreserveTarget;
         }
         if (this.creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
         {
@@ -129,7 +131,7 @@ export class HeavyMinerCreep extends BaseCreep
         return ActionResponseCode.ResetPreserveTarget;
     }
 
-    private ActDrop():ActionResponseCode
+    private ActDrop(): ActionResponseCode
     {
         this.creep.say("⤵️");
         this.creep.drop(RESOURCE_ENERGY);

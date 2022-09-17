@@ -30,7 +30,7 @@ export class Utils
         for (var creepName in Game.creeps)
         {
             var creep: Creep = Game.creeps[creepName];
-            if(creep.room.name!=room.name) continue;
+            if (creep.room.name != room.name) continue;
             var role: CreepTypes = ((creep.memory) as BaseCreepMemory).Role;
             result[role]++;
         }

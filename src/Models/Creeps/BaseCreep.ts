@@ -12,7 +12,7 @@ export abstract class BaseCreep extends Unit
 {
     public creep: Creep;
 
-    protected tasks: (()=>ActionResponseCode)[];
+    protected tasks: (() => ActionResponseCode)[];
 
     constructor(_creep: Creep)
     {
@@ -20,17 +20,17 @@ export abstract class BaseCreep extends Unit
         this.creep = _creep;
     }
 
-    get memory():BaseCreepMemory
+    get memory(): BaseCreepMemory
     {
         return this.creep.memory as BaseCreepMemory;
     }
 
-    set memory(memory:BaseCreepMemory)
+    set memory(memory: BaseCreepMemory)
     {
-        this.creep.memory=memory;
+        this.creep.memory = memory;
     }
 
-    MoveToTarget(targetObj:RoomObject): boolean
+    MoveToTarget(targetObj: RoomObject): boolean
     {
         return this.MoveToPos(targetObj.pos)
     }
@@ -46,7 +46,7 @@ export abstract class BaseCreep extends Unit
 
     AmmountCanCarry(): number
     {
-        return (this.creep.getActiveBodyparts(CARRY)*50)-this.creep.store.getUsedCapacity();
+        return (this.creep.getActiveBodyparts(CARRY) * 50) - this.creep.store.getUsedCapacity();
     }
 
     static GetCreepType(creep: Creep): CreepTypes
@@ -57,13 +57,13 @@ export abstract class BaseCreep extends Unit
 
     static GetCreepTypeFromMemory(memory: CreepMemory): CreepTypes
     {
-        var mem: BaseCreepMemory =memory as BaseCreepMemory;
+        var mem: BaseCreepMemory = memory as BaseCreepMemory;
         return mem.Role;
     }
 
     log(message: string)
     {
-        console.log(this.creep.name + " (task:"+this.memory.taskNumber+", target: "+this.memory.targetID+")" + ":\n" + message);
+        console.log(this.creep.name + " (task:" + this.memory.taskNumber + ", target: " + this.memory.targetID + ")" + ":\n" + message);
     }
 }
 

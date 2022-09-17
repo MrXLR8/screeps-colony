@@ -1,4 +1,4 @@
 export class HeavyMinerFlagMemory implements FlagMemory
 {
-    assignedHvyMinerId:string=null;
+    assignedHvyMinerId: string = null;
 }

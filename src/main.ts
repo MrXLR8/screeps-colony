@@ -26,8 +26,8 @@ export function loop()
 
   for (var creepName in Game.creeps)
   {
-    var creepWrapper: BaseCreep=CreepFactory.CreateCreep(Game.creeps[creepName]);
-    if(!creepWrapper) continue;
+    var creepWrapper: BaseCreep = CreepFactory.CreateCreep(Game.creeps[creepName]);
+    if (!creepWrapper) continue;
     creepWrapper.Act();
   }
 }

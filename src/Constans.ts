@@ -18,7 +18,6 @@ export class Constants
               CreepTypes.UniversalCreep,
               CreepTypes.UniversalCreep,
         ];
-
 }
 
 

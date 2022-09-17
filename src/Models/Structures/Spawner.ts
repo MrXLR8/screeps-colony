@@ -15,14 +15,14 @@ export class Spawner
         this.structure = _structure;
     }
 
- private GetAviableCreepName(prefix:string):string
+    private GetAviableCreepName(prefix: string): string
     {
-        var i=1;
-        var combo = prefix+"#"+i;
-        while(Game.creeps[combo])
+        var i = 1;
+        var combo = prefix + "#" + i;
+        while (Game.creeps[combo])
         {
             i++;
-            combo=prefix+"#"+i;
+            combo = prefix + "#" + i;
         }
         return combo;
     }
@@ -37,18 +37,18 @@ export class Spawner
         {
             case CreepTypes.UniversalCreep:
                 mem = new BaseCreepMemory();
-                mem.taskNumber= 0;
-                mem.actionAttempts=0;
+                mem.taskNumber = 0;
+                mem.actionAttempts = 0;
                 mem.Role = CreepTypes.UniversalCreep;
                 creepName = this.GetAviableCreepName("Universal");
                 settings = new SpawnSettings(mem);
                 break;
             case CreepTypes.HeavyMiner:
                 var _mem = new HeavyMinerMemory();
-                _mem.taskNumber= 0;
-                _mem.actionAttempts=0;
-                _mem.flagX=null;
-                _mem.flagY=null;
+                _mem.taskNumber = 0;
+                _mem.actionAttempts = 0;
+                _mem.flagX = null;
+                _mem.flagY = null;
                 _mem.Role = CreepTypes.HeavyMiner;
                 creepName = this.GetAviableCreepName("Miner");
                 settings = new SpawnSettings(_mem);
@@ -56,7 +56,7 @@ export class Spawner
             default:
                 console.log("Uknown creep type to spawn");
         }
-        var code: ScreepsReturnCode = this.structure.spawnCreep(PartsPicker.GetAviableParts(_type,this.structure.room.energyAvailable), creepName, settings);
+        var code: ScreepsReturnCode = this.structure.spawnCreep(PartsPicker.GetAviableParts(_type, this.structure.room.energyAvailable), creepName, settings);
         switch (code)
         {
             case ERR_NOT_ENOUGH_RESOURCES:
@@ -83,13 +83,13 @@ export class Spawner
     ScenarioProduce(): CreepTypes
     {
 
-       var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.structure.room);
-       var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0 };
+        var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.structure.room);
+        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0 };
 
         for (var order of Constants.ScenarioProduce)
         {
             creepRequiredMoment[order]++;
-            if (creepRequiredMoment[order]>creepExist[order])
+            if (creepRequiredMoment[order] > creepExist[order])
             {
                 return order;
             }
