@@ -17,13 +17,13 @@ export abstract class Unit
         return num;
     }
 
-    protected GetTarget():RoomObject
+    protected GetTarget<T extends _HasId>():T
     {
         var targetID = this.memory.targetID;
 
         if(targetID!=null)
         {
-            return Game.getObjectById(targetID);
+            return Game.getObjectById(targetID as Id<T>);
         }
         return null;
     }

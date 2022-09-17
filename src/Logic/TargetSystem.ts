@@ -11,13 +11,6 @@ export class TargetSystem
     }
 
 
-
-
-    GetTarget(): RoomObject
-    {
-        return Game.getObjectById((this.creep.creep.memory as BaseCreepMemory).targetID);
-    }
-
     ReserveASlot(targetID: string, limit: number): boolean
     {
         var mem: GlobalMemory = Memory as GlobalMemory;

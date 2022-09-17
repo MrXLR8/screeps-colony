@@ -7,13 +7,6 @@ export class Finder
 {
     constructor() { }
 
-
-    static GetTarget(id:string) :RoomObject
-    {
-        if(id==null||id==undefined) return null;
-        return Game.getObjectById(id);
-    }
-
     static GetSource(_pos: RoomPosition): Source
     {
         return _pos.findClosestByRange(FIND_SOURCES_ACTIVE);

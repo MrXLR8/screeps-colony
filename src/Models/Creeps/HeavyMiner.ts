@@ -81,7 +81,7 @@ export class HeavyMinerCreep extends BaseCreep
             var id = mem.assignedHvyMinerId;
             if (id != null)
             {
-                var foundCreep = Game.getObjectById<Creep>(id);
+                var foundCreep = Game.getObjectById<Creep>(id as Id<Creep>);
                 if (foundCreep == null)
                 {
                     mem.assignedHvyMinerId = null;
