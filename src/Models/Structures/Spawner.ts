@@ -56,7 +56,6 @@ export class Spawner
             default:
                 console.log("Uknown creep type to spawn");
         }
-        var CreepRole: CreepRoleInfo = Constants.creepRoleInfo[_type];
         var code: ScreepsReturnCode = this.structure.spawnCreep(PartsPicker.GetAviableParts(_type,this.structure.room.energyAvailable), creepName, settings);
         switch (code)
         {
@@ -79,25 +78,6 @@ export class Spawner
             Utils.MemoryCleanUp();
             this.Spawn(create);
         }
-    }
-
-    WhoNeedsToBeProduced(): CreepTypes
-    {
-        var creepcount: { [type: number]: number } = Utils.GetCreepPopulation(this.structure.room);
-
-        for (var creepTypeNumber in Constants.creepRoleInfo)
-        {
-            var exists: number = creepcount[creepTypeNumber];
-            var requried: number = Constants.creepRoleInfo[creepTypeNumber].requiredAmmount;
-
-            //  console.log(String(Constants.creepRoleInfo[creepTypeNumber].type)+": "+exists+"/"+requried);
-            //  console.log(exists+'<'+requried);
-            if (exists < requried)
-            {
-                return Number(creepTypeNumber) as CreepTypes;
-            }
-        }
-        return null;
     }
 
     ScenarioProduce(): CreepTypes

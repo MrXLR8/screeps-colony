@@ -3,8 +3,6 @@ import { CreepTypes } from "Models/Creeps/BaseCreep";
 
 export class PartsPicker
 {
-
-
     static MinerParts: BodyPartConstant[][] =
         [
             [MOVE, MOVE, MOVE,MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
@@ -21,12 +19,24 @@ export class PartsPicker
             [MOVE, WORK, WORK, CARRY] //300
         ];
 
+    static BodyPartsPrice: { [part: string]: number } =
+        {
+            "move":50,
+            "work":100,
+            "carry":50,
+            "attack":80,
+            "ranged_attack":150,
+            "heal":250,
+            "claim":600,
+            "tough":10
+        }
+
     static CalculatePrice(parts: BodyPartConstant[])
     {
         var result: number = 0;
         for (var part of parts)
         {
-            result += Constants.BodyPartsPrice[part];
+            result += this.BodyPartsPrice[part];
         }
         return result;
     }
