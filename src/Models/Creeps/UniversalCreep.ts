@@ -12,7 +12,6 @@ export class UniversalCreep extends WorkerCreep
 
     private ActStoreExtensionTower():ActionResponseCode
     {
-
         if(this.creep.store.energy==0) return ActionResponseCode.Reset;
         var storage: Structure = Finder.GetEmptyTower(this.creep.pos);
         if (storage == null)
@@ -46,14 +45,11 @@ export class UniversalCreep extends WorkerCreep
                 this.creep.say("📥");
                 return ActionResponseCode.Repeat;
         }
-
     }
 
     private ActRepairing(): ActionResponseCode
     {
-
         this.creep.say("🔧");
-
         var target: Structure=this.GetTarget() as Structure;
 
         if (target == null)
@@ -143,6 +139,5 @@ export class UniversalCreep extends WorkerCreep
         }
         return ActionResponseCode.Repeat;
     }
-
 }
 

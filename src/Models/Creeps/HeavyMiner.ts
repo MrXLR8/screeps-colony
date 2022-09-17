@@ -1,11 +1,8 @@
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Finder } from "Logic/Finder";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
-import { Utils } from "Logic/Utils";
 import { HeavyMinerFlagMemory } from "Models/Memory/HeavyMinerFlagMemory";
 import { ActionResponseCode } from "Models/ActionResponseCode";
-
-
 
 export class HeavyMinerMemory extends BaseCreepMemory
 {
@@ -15,8 +12,6 @@ export class HeavyMinerMemory extends BaseCreepMemory
     flagY: number = null;
 
 }
-
-
 
 export class HeavyMinerCreep extends BaseCreep
 {
@@ -40,8 +35,6 @@ export class HeavyMinerCreep extends BaseCreep
 
     private FlagAssign(): boolean
     {
-
-
         var creepMem:HeavyMinerMemory= this.creep.memory as HeavyMinerMemory;
 
         if(creepMem.flagX!=null&&creepMem.flagY!=null) {
@@ -55,7 +48,6 @@ export class HeavyMinerCreep extends BaseCreep
 
             if (flagMem.assignedHvyMinerId == null||flagMem.assignedHvyMinerId==undefined)
             {
-                console.log("i am :"+this.creep.name+ "My id: "+this.creep.id+".Flag "+flagName+" has assigned: "+flagMem.assignedHvyMinerId);
                 flagMem=new HeavyMinerFlagMemory();
                 flagMem.assignedHvyMinerId = this.creep.id.toString();
                 flag.memory=flagMem;
@@ -67,6 +59,7 @@ export class HeavyMinerCreep extends BaseCreep
                 return true;
             }
         }
+
         console.log("No free flag found!");
         return false;
     }
@@ -101,7 +94,6 @@ export class HeavyMinerCreep extends BaseCreep
             return ActionResponseCode.Repeat;
         }
 
-
         var mem: HeavyMinerMemory = this.creep.memory  as HeavyMinerMemory;
         var target: Source = this.GetTarget() as Source;
         var flagPos:RoomPosition;
@@ -122,7 +114,6 @@ export class HeavyMinerCreep extends BaseCreep
 
     private ActOneRangeStorage():ActionResponseCode
     {
-
         var container = Finder.GetOneRangeContrainer(this.creep.pos);
         if(container==null)
         {
@@ -144,6 +135,5 @@ export class HeavyMinerCreep extends BaseCreep
         this.creep.drop(RESOURCE_ENERGY);
         return ActionResponseCode.ResetPreserveTarget;
     }
-
 }
 

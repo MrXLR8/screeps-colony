@@ -6,18 +6,7 @@ export class Constants
 {
     static damagePercentToRepair: number = 80;
     static moveAttmepts = 40;
-    static harvesterGatherPercentLevel = 30;
     static towerEnergyReserve = 20;
-
-    // 0 - Miner
-
-    /*  static roleBodyParts: { [type: number]: BodyPartConstant[] } =
-          { 0: [MOVE, WORK, CARRY] }
-
-      static creepsCountRequirement: { [type: number]: number } =
-          { 0: 1 }
-  */
-
 
           static ScenarioProduce: CreepTypes[] =
           [
@@ -35,7 +24,6 @@ export class Constants
             1: new CreepRoleInfo(2, [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], CreepTypes.HeavyMiner) //700
         }
 
-
     static BodyPartsPrice: { [part: string]: number } =
         {
             "move":50,
@@ -47,8 +35,6 @@ export class Constants
             "claim":600,
             "tough":10
         }
-
-
 
 }
 

@@ -8,8 +8,6 @@ import { BaseCreep } from "./BaseCreep";
 
 export abstract class WorkerCreep extends BaseCreep
 {
-
-
     protected ActGathering(): ActionResponseCode
     {
 

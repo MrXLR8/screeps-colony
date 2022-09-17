@@ -6,9 +6,6 @@ import { Tower } from "Models/Structures/Tower";
 
 export function loop()
 {
-
-
-
   for (var roomName in Game.rooms)
   {
     var room: Room = Game.rooms[roomName];
@@ -18,7 +15,6 @@ export function loop()
     {
       new Tower(tower).Act();
     }
-
   }
 
   for (var spawnerName in Game.spawns)
@@ -34,6 +30,5 @@ export function loop()
     if(!creepWrapper) continue;
     creepWrapper.Act();
   }
-
 }
 
