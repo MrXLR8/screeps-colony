@@ -1,4 +1,5 @@
 import { UnitFactory } from "Logic/UnitFactory";
+import { Utils } from "Logic/Utils";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Spawner } from "Models/Structures/Spawner";
 import { Tower } from "Models/Structures/Tower";
@@ -6,6 +7,8 @@ import { Tower } from "Models/Structures/Tower";
 
 export function loop()
 {
+  Utils.MemoryCleanUp();
+
   for (var roomName in Game.rooms)
   {
     var room: Room = Game.rooms[roomName];

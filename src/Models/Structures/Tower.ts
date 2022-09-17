@@ -1,73 +1,71 @@
 import { Constants } from "Constans";
 import { Finder } from "Logic/Finder";
 import { Utils } from "Logic/Utils";
+import { ActionResponseCode } from "Models/ActionResponseCode";
+import { BaseStructure } from "./BaseStructure";
 
-export class Tower
+export class Tower extends BaseStructure
 {
+    tasks = [this.ActAttack, this.ActRepair];
+
     structure: StructureTower;
     constructor(structure: StructureTower)
     {
-        this.structure = structure;
+        super(structure);
     }
 
-    Act()
+    ActAttack(): ActionResponseCode
     {
+        var target = this.GetTarget<Creep>();
 
-        if (!this.ActAttack())
+        if (target == null)
         {
-            if (!this.ActRepair())
-            {
-                this.ActRepairWalls();
-            }
+            target = this.structure.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         }
+        if (target == null) return ActionResponseCode.NextTask;
+
+        this.memory.targetID = target.id;
+
+        this.structure.attack(target);
+        return ActionResponseCode.Repeat;
     }
 
-
-    ActAttack(): boolean
+    ActRepairWalls(): ActionResponseCode
     {
-        var hostile: Creep = this.structure.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (hostile == null || hostile == undefined) return false;
-        this.structure.attack(hostile);
-        return true;
+        //todo target cache
+        var percent: number = Utils.Percent(this.structure.store.getUsedCapacity(RESOURCE_ENERGY), this.structure.store.getCapacity(RESOURCE_ENERGY));
+        //  if(this.structure.room.energyAvailable!=this.structure.energyCapacity) return false;
+
+        if (percent < Constants.towerEnergyReserve)
+        {
+            return ActionResponseCode.NextTask;
+        }
+        var damaged = Finder.GetDamagedWalls(this.structure.room);
+        if (damaged == null || damaged == undefined)
+        {
+            return ActionResponseCode.NextTask;
+        }
+
+        this.structure.repair(damaged);
+        return ActionResponseCode.Reset;
+
     }
 
-    ActRepairWalls(): boolean
-    {
-        return false;
-        /*
-                var percent: number = Utils.Percent(this.structure.store.getUsedCapacity(RESOURCE_ENERGY), this.structure.store.getCapacity(RESOURCE_ENERGY));
-              //  if(this.structure.room.energyAvailable!=this.structure.energyCapacity) return false;
-
-                if (percent < Constants.towerEnergyReserve)
-                {
-                    return false;
-                }
-                var damaged = Finder.GetDamagedWalls(this.structure.room);
-                if (damaged == null || damaged == undefined)
-                {
-                    return false;
-                }
-
-                this.structure.repair(damaged);
-                return true;
-                */
-    }
-
-    ActRepair(): boolean
+    ActRepair(): ActionResponseCode
     {
         var percent: number = Utils.Percent(this.structure.store.getUsedCapacity(RESOURCE_ENERGY), this.structure.store.getCapacity(RESOURCE_ENERGY));
         if (percent < Constants.towerEnergyReserve)
         {
-            return false;
+            return ActionResponseCode.Reset;
         }
         var damaged = Finder.GetRandomDamagedStructuresNoPercent(this.structure.room);
 
         if (damaged == null || damaged == undefined)
         {
-            return false;
+            return ActionResponseCode.NextTask;
         }
         this.structure.repair(damaged);
-        return true;
+        return ActionResponseCode.NextTask;
     }
 
 }

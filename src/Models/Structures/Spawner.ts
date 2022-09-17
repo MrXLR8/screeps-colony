@@ -5,35 +5,31 @@ import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { Utils } from "Logic/Utils";
 import { PartsPicker } from "Logic/PartsPicker";
 import { HeavyMinerMemory } from "Models/Creeps/HeavyMiner";
+import { BaseStructure } from "./BaseStructure";
+import { ActionResponseCode } from "Models/ActionResponseCode";
 
-export class Spawner
+export class Spawner extends BaseStructure
 {
+    tasks = [this.ActSpawn];
     structure: StructureSpawn;
 
     constructor(_structure: StructureSpawn)
     {
-        this.structure = _structure;
+        super(_structure);
     }
 
-    private GetAviableCreepName(prefix: string): string
-    {
-        var i = 1;
-        var combo = prefix + "#" + i;
-        while (Game.creeps[combo])
-        {
-            i++;
-            combo = prefix + "#" + i;
-        }
-        return combo;
-    }
-
-    Spawn(_type: CreepTypes): void
+    ActSpawn(): ActionResponseCode
     {
         var mem: BaseCreepMemory;
         var settings: SpawnSettings;
         var creepName: string;
         settings = new SpawnSettings(mem);
-        switch (_type)
+
+        if (this.structure.spawning) return ActionResponseCode.Done;
+        var type: CreepTypes = this.ScenarioProduce();
+        if (type == null) return ActionResponseCode.NextTask;
+
+        switch (type)
         {
             case CreepTypes.UniversalCreep:
                 mem = new BaseCreepMemory();
@@ -56,31 +52,34 @@ export class Spawner
             default:
                 console.log("Uknown creep type to spawn");
         }
-        var code: ScreepsReturnCode = this.structure.spawnCreep(PartsPicker.GetAviableParts(_type, this.structure.room.energyAvailable), creepName, settings);
+        var code: ScreepsReturnCode = this.structure.spawnCreep(PartsPicker.GetAviableParts(type, this.structure.room.energyAvailable), creepName, settings);
         switch (code)
         {
             case ERR_NOT_ENOUGH_RESOURCES:
                 console.log("Unabled to spawn, low resources. Tried to spawn - " + creepName);
-                break;
+                return ActionResponseCode.Repeat;
             case OK:
                 console.log('Spawning new ' + creepName);
-                break;
+                return ActionResponseCode.Done;
         }
+        return ActionResponseCode.Repeat;
+
+
         //todo error code processing
     }
 
-    Act()
+    private GetAviableCreepName(prefix: string): string
     {
-        if (this.structure.spawning) return;
-        var create: CreepTypes = this.ScenarioProduce();
-        if (create != null)
+        var i = 1;
+        var combo = prefix + "#" + i;
+        while (Game.creeps[combo])
         {
-            Utils.MemoryCleanUp();
-            this.Spawn(create);
+            i++;
+            combo = prefix + "#" + i;
         }
+        return combo;
     }
-
-    ScenarioProduce(): CreepTypes
+    private ScenarioProduce(): CreepTypes
     {
 
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.structure.room);

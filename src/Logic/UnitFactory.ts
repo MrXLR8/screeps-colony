@@ -2,8 +2,12 @@ import { BaseCreep, CreepTypes } from "Models/Creeps/BaseCreep";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { UniversalCreep } from "Models/Creeps/UniversalCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
+import { BaseStructure, StructureTypes } from "Models/Structures/BaseStructure";
+import { Spawner } from "Models/Structures/Spawner";
+import { Tower } from "Models/Structures/Tower";
+import { Unit } from "Models/Unit";
 
-export class CreepFactory
+export class UnitFactory
 {
   static CreateCreep(creep: Creep): BaseCreep
   {
@@ -38,4 +42,25 @@ export class CreepFactory
         return;
     }
   }
-}
+
+    static CreateStructure(structure: Structure): BaseStructure
+    {
+      var structureWrapper: BaseStructure;
+      var typeOfStructure: StructureTypes = BaseStructure.GetStructureType(structure);
+
+      switch (typeOfStructure)
+      {
+        case StructureTypes.Spawner:
+          structureWrapper = new Spawner(structure as StructureSpawn);
+          break;
+        case StructureTypes.Tower:
+          structureWrapper = new Tower(structure as StructureTower);
+          break;
+        default:
+          console.log(structure.id + " has uknown type of: " + typeOfStructure + "\n");
+      }
+      return structureWrapper;
+    }
+
+  }
+
