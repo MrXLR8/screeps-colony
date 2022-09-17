@@ -8,6 +8,6 @@ export class GlobalMemory implements Memory
     flags: { [name: string]: FlagMemory };
     rooms: { [name: string]: RoomMemory };
     spawns: { [name: string]: SpawnMemory };
-    structures: { [structureID: string]: BaseStructureMemory };
+    structures: { [structureID: string]: BaseStructureMemory } ;
     targets: { [name: string]: string[] }; //what reserved by who
 }

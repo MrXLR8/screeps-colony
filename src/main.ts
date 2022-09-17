@@ -22,10 +22,11 @@ export function loop()
     }
 
     var structureList: Structure[] = room.find(FIND_MY_STRUCTURES);
+
     for (var gameStructure of structureList)
     {
       var structure = UnitFactory.CreateStructure(gameStructure);
-      if (!structure) return;
+      if (!structure) continue;
       structure.Act();
     }
   }

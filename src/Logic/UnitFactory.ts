@@ -2,10 +2,11 @@ import { BaseCreep, CreepTypes } from "Models/Creeps/BaseCreep";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { UniversalCreep } from "Models/Creeps/UniversalCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
-import { BaseStructure, StructureTypes } from "Models/Structures/BaseStructure";
+import { BaseStructureMemory } from "Models/Memory/BaseStructureMemory";
+import { GlobalMemory } from "Models/Memory/GlobalMemory";
+import { BaseStructure } from "Models/Structures/BaseStructure";
 import { Spawner } from "Models/Structures/Spawner";
 import { Tower } from "Models/Structures/Tower";
-import { Unit } from "Models/Unit";
 
 export class UnitFactory
 {
@@ -43,24 +44,35 @@ export class UnitFactory
     }
   }
 
-    static CreateStructure(structure: Structure): BaseStructure
-    {
-      var structureWrapper: BaseStructure;
-      var typeOfStructure: StructureTypes = BaseStructure.GetStructureType(structure);
+  static CreateStructure(structure: Structure): BaseStructure
+  {
+    var structureWrapper: BaseStructure;
 
-      switch (typeOfStructure)
-      {
-        case StructureTypes.Spawner:
-          structureWrapper = new Spawner(structure as StructureSpawn);
-          break;
-        case StructureTypes.Tower:
-          structureWrapper = new Tower(structure as StructureTower);
-          break;
-        default:
-          console.log(structure.id + " has uknown type of: " + typeOfStructure + "\n");
-      }
-      return structureWrapper;
+    switch (structure.structureType)
+    {
+      case STRUCTURE_SPAWN:
+        structureWrapper = new Spawner(structure as StructureSpawn);
+        break;
+      case STRUCTURE_TOWER:
+        structureWrapper = new Tower(structure as StructureTower);
+        break;
+      default:
+        return null;
     }
 
+    UnitFactory.StructureMemoryExistsCheck(structure.id);
+
+    return structureWrapper;
   }
+
+  static StructureMemoryExistsCheck(id: Id<Structure>)
+  {
+    var request = (Memory as GlobalMemory).structures[id];
+    if (request == null)
+    {
+      var mem = new BaseStructureMemory();
+      (Memory as GlobalMemory).structures[id] = mem;
+    }
+  }
+}
 
