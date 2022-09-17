@@ -1,7 +1,7 @@
 import { copyFileSync } from "fs";
 import { CreepTypes } from "Models/Creeps/BaseCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
-import { CreepFactory } from "./CreepFactory";
+import { UnitFactory } from "./UnitFactory";
 
 export class Utils
 {
@@ -17,7 +17,7 @@ export class Utils
             if (!Game.creeps[name])
             {
                 var mem = Memory.creeps[name];
-                CreepFactory.DisposeCreep(mem);
+                UnitFactory.DisposeCreep(mem);
                 delete Memory.creeps[name];
                 console.log('Clearing non-existing creep memory:', name);
             }

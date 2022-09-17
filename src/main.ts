@@ -1,4 +1,4 @@
-import { CreepFactory } from "Logic/CreepFactory";
+import { UnitFactory } from "Logic/UnitFactory";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Spawner } from "Models/Structures/Spawner";
 import { Tower } from "Models/Structures/Tower";
@@ -26,7 +26,7 @@ export function loop()
 
   for (var creepName in Game.creeps)
   {
-    var creepWrapper: BaseCreep = CreepFactory.CreateCreep(Game.creeps[creepName]);
+    var creepWrapper: BaseCreep = UnitFactory.CreateCreep(Game.creeps[creepName]);
     if (!creepWrapper) continue;
     creepWrapper.Act();
   }
