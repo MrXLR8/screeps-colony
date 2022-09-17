@@ -11,27 +11,26 @@ export function loop()
 
   for (var roomName in Game.rooms)
   {
-    var room: Room = Game.rooms[roomName];
+    var room = Game.rooms[roomName];
 
-    var towers: StructureTower[] = room.find(FIND_STRUCTURES, { filter: (structure) => { return structure.structureType == STRUCTURE_TOWER } });
-    for (var tower of towers)
+    var creepList = room.find(FIND_MY_CREEPS);
+    for (var gameCreep of creepList)
     {
-      new Tower(tower).Act();
+      var creepWrapper: BaseCreep = UnitFactory.CreateCreep(gameCreep);
+      if (!creepWrapper) continue;
+      creepWrapper.Act();
+    }
+
+    var structureList: Structure[] = room.find(FIND_MY_STRUCTURES);
+    for (var gameStructure of structureList)
+    {
+      var structure = UnitFactory.CreateStructure(gameStructure);
+      if (!structure) return;
+      structure.Act();
     }
   }
 
-  for (var spawnerName in Game.spawns)
-  {
-    var SpawnerStructure: Spawner = new Spawner(Game.spawns[spawnerName]);
-
-    SpawnerStructure.Act();
-  }
-
-  for (var creepName in Game.creeps)
-  {
-    var creepWrapper: BaseCreep = UnitFactory.CreateCreep(Game.creeps[creepName]);
-    if (!creepWrapper) continue;
-    creepWrapper.Act();
-  }
 }
+
+
 
