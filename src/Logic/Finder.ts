@@ -15,9 +15,8 @@ export class Finder
 
     static GetRandomSource(_room: Room): Source
     {
-        var sourceArray = _room.find(FIND_SOURCES_ACTIVE);
+        var sourceArray = _room.find(FIND_SOURCES_ACTIVE, {filter:(source)=>source.energy!=0});
         return sourceArray[random(0, sourceArray.length - 1)];
-        //todo distance sort, energy check
     }
 
     static GetEmptyExtension(_pos: RoomPosition): Structure
