@@ -1,4 +1,5 @@
 import { Constants } from "Constans";
+import { sortBy } from "lodash";
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
@@ -13,13 +14,27 @@ export abstract class WorkerCreep extends BaseCreep
 
         if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         //todo look from id to not search twice
-        var source: Structure = Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry());
+        var source: StructureContainer | StructureStorage = this.GetTarget(() =>
+            Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry()),
+            (target) => { return (target as StructureContainer | StructureStorage).store.getFreeCapacity(RESOURCE_ENERGY) > 0 }
+        );
+
+        if (source == null) return ActionResponseCode.NextTask
+
         if (source != null)
         {
             if (this.creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
             {
                 this.MoveToTarget(source);
                 this.creep.say(">⚡");
+                source = Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry(), this.memory.targetID as Id<StructureContainer | StructureStorage>);
+                if (source != null)
+                {
+                    this.memory.targetID = source.id;
+                    this.memory.actionAttempts = 0;
+                    return ActionResponseCode.RepeatThisTick;
+                }
+
                 return ActionResponseCode.Repeat;
             }
             this.creep.say("⚡");
@@ -46,9 +61,12 @@ export abstract class WorkerCreep extends BaseCreep
     {
         if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
 
-        var target: Source = this.GetTarget<Source>(()=>Finder.GetRandomSource(this.creep.room));
+        var target: Source = this.GetTarget<Source>(
+            () => Finder.GetRandomSource(this.creep.room),
+            (target) => { return target.energy > 0 }
+        );
 
-        if(target==null) return ActionResponseCode.NextTask;
+        if (target == null) return ActionResponseCode.NextTask;
 
         if (this.memory.actionAttempts > Constants.moveAttmepts)
         {

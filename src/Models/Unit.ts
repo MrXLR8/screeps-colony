@@ -17,17 +17,28 @@ export abstract class Unit
         return num;
     }
 
-    protected GetTarget<T extends _HasId>(targetSearchMethod:()=>_HasId): T
+    protected GetTarget<T extends _HasId>(targetSearchMethod: () => _HasId, validTargetMethod?: (target: T) => boolean): T
     {
         var targetID = this.memory.targetID;
-        if (targetID!=null)
+        if (targetID != null)
         {
-            return Game.getObjectById(targetID as Id<T>);
+            var retrived = Game.getObjectById(targetID as Id<T>);
+            if (validTargetMethod !== undefined)
+            {
+                if (validTargetMethod.call(this, retrived))
+                {
+                    return retrived;
+                }
+            }
+            else
+            {
+                return retrived;
+            }
         }
         var targetObj = targetSearchMethod.call(this) as T;
-        if(targetObj!=null)
+        if (targetObj != null)
         {
-            this.memory.targetID=targetObj.id;
+            this.memory.targetID = targetObj.id;
             return targetObj;
         }
         return null;
@@ -65,11 +76,21 @@ export abstract class Unit
                     {
                         break doLoop;
                     }
+                case ActionResponseCode.RepeatThisTick:
+                    {
+                        break codeSwitch;
+                    }
                 case ActionResponseCode.Reset:
                     {
                         this.memory.taskNumber = 0;
                         this.memory.targetID = null;
                         break doLoop;
+                    }
+                case ActionResponseCode.ResetThisTick:
+                    {
+                        this.memory.taskNumber = 0;
+                        this.memory.targetID = null;
+                        break codeSwitch;
                     }
                 case ActionResponseCode.NextTaskPreserveTarget:
                     {

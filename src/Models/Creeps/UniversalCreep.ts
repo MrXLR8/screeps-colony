@@ -8,23 +8,75 @@ import { Utils } from "Logic/Utils";
 export class UniversalCreep extends WorkerCreep
 {
 
-    tasks = [this.ActGathering, this.ActMining, this.ActStoreExtensionTower, this.ActRepairing, this.ActBuilding, this.ActUpgrading];
+    tasks = [this.ActGathering, this.ActMining, this.ActFillEmptyTower, this.ActStoreExtension, this.ActRepairing, this.ActFillTower, this.ActBuilding, this.ActUpgrading];
 
-    private ActStoreExtensionTower(): ActionResponseCode
+
+    private FillTower(searchMethod: (pos: RoomPosition, ignoreId?: Id<StructureTower>) => StructureTower): ActionResponseCode
+    {
+        if (this.creep.store.energy == 0) return ActionResponseCode.ResetThisTick;
+
+        var tower: StructureTower = this.GetTarget(
+            () => searchMethod.call(this, this.creep.pos),
+            (target) => { return target.store.getFreeCapacity(RESOURCE_ENERGY) > 0 }
+        );
+
+        if (tower == null)
+        {
+            return ActionResponseCode.NextTask;
+        }
+        var actionCode = this.creep.transfer(tower, RESOURCE_ENERGY);
+
+        switch (actionCode)
+        {
+            case ERR_NOT_IN_RANGE:
+                {
+                    this.MoveToTarget(tower);
+                    this.creep.say(">🗼");
+                    return ActionResponseCode.Repeat;
+                }
+            case ERR_NOT_ENOUGH_RESOURCES:
+                {
+                    return ActionResponseCode.Reset;
+                }
+
+            case OK:
+                {
+                    this.creep.say("🗼");
+                    if(this.creep.store.energy == 0) return ActionResponseCode.Reset;
+                    var nextTarget = searchMethod.call(this, this.creep.pos, this.memory.targetID as Id<StructureTower>);
+                    if (nextTarget == null) return ActionResponseCode.NextTask;
+                    this.memory.targetID = nextTarget.id;
+                    this.memory.actionAttempts = 0;
+                    this.MoveToTarget(nextTarget);
+                    return ActionResponseCode.Repeat;
+                }
+            default:
+
+                return ActionResponseCode.Repeat;
+        }
+    }
+
+    private ActFillEmptyTower()
+    {
+        return this.FillTower(Finder.GetEmptyTower);
+    }
+
+    private ActFillTower()
+    {
+        return this.FillTower(Finder.GetNotFullTower);
+    }
+
+    private ActStoreExtension(): ActionResponseCode
     {
         if (this.creep.store.energy == 0) return ActionResponseCode.Reset;
-        var storage: Structure = Finder.GetEmptyTower(this.creep.pos);
-        if (storage == null)
-        {
-            storage = Finder.GetEmptyExtension(this.creep.pos);
-        }
-        if (storage == null)
-        {
-            storage = Finder.GetNotFullTower(this.creep.pos);
-        }
-        if (storage == null)
-        {
 
+        var storage: Structure = this.GetTarget(
+            () => Finder.GetEmptyExtension(this.creep.pos),
+            (target) => { return (target as StructureExtension | StructureSpawn).store.getFreeCapacity(RESOURCE_ENERGY) > 0 }
+        );
+
+        if (storage == null)
+        {
             return ActionResponseCode.NextTask;
         }
         var actionCode = this.creep.transfer(storage, RESOURCE_ENERGY);
@@ -41,6 +93,16 @@ export class UniversalCreep extends WorkerCreep
                 {
                     return ActionResponseCode.Reset;
                 }
+            case OK:
+                {
+                    if(this.creep.store.energy == 0) return ActionResponseCode.Reset;
+                    var nextTarget = Finder.GetEmptyExtension(this.creep.pos, this.memory.targetID as Id<Structure>);
+                    if (nextTarget == null) return ActionResponseCode.NextTask;
+                    this.memory.targetID = nextTarget.id;
+                    this.memory.actionAttempts = 0;
+                    this.MoveToTarget(nextTarget);
+                    return ActionResponseCode.Repeat;
+                }
             default:
                 this.creep.say("📥");
                 return ActionResponseCode.Repeat;
@@ -50,7 +112,11 @@ export class UniversalCreep extends WorkerCreep
     private ActRepairing(): ActionResponseCode
     {
         this.creep.say("🔧");
-        var target: OwnedStructure = this.GetTarget<OwnedStructure>(() => Finder.GetClosestDamagedStructures(this.creep.pos));
+
+        var target: OwnedStructure = this.GetTarget<OwnedStructure>(
+            () => Finder.GetClosestDamagedStructures(this.creep.pos),
+            (target) => { return target.hits != target.hitsMax }
+        );
 
         if (target == null)
         {
@@ -86,6 +152,14 @@ export class UniversalCreep extends WorkerCreep
                     this.memory.targetID = null;
                     this.memory.actionAttempts = 0;
                     return ActionResponseCode.Repeat;
+                }
+            case (OK):
+                {
+                    var nextTarget = Finder.GetClosestDamagedStructures(this.creep.pos, this.memory.targetID as Id<Structure>);
+                    if (nextTarget == null) return ActionResponseCode.NextTask;
+                    this.memory.targetID = nextTarget.id;
+                    this.memory.actionAttempts = 0;
+                    return ActionResponseCode.RepeatThisTick;
                 }
         }
         return ActionResponseCode.Repeat;
@@ -124,6 +198,16 @@ export class UniversalCreep extends WorkerCreep
                 {
                     this.memory.targetID = null;
                     this.memory.actionAttempts = 0;
+                    return ActionResponseCode.Repeat;
+                }
+            case (OK):
+                {
+                    if(this.creep.store.energy==0) return ActionResponseCode.Reset;
+                    var nextTarget = Finder.GetConstructionSites(this.creep.pos, this.memory.targetID as Id<ConstructionSite>);
+                    if (nextTarget == null) return ActionResponseCode.NextTask;
+                    this.memory.targetID = nextTarget.id;
+                    this.memory.actionAttempts = 0;
+                    this.MoveToTarget(nextTarget);
                     return ActionResponseCode.Repeat;
                 }
         }

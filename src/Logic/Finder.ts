@@ -1,5 +1,5 @@
 import { Constants } from "Constans";
-import { random } from "lodash";
+import { filter, random } from "lodash";
 import path from "path";
 import { Utils } from "./Utils";
 
@@ -19,7 +19,7 @@ export class Finder
         return sourceArray[random(0, sourceArray.length - 1)];
     }
 
-    static GetEmptyExtension(_pos: RoomPosition): Structure
+    static GetEmptyExtension(_pos: RoomPosition,ignoreId?:Id<Structure>): StructureExtension|StructureSpawn
     {
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
@@ -27,12 +27,14 @@ export class Finder
                 return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN)
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    &&
+                    structure.id!=ignoreId
             }
         });
-        return target as Structure;
+        return target as StructureExtension|StructureSpawn;
     }
 
-    static GetEmptyTower(_pos: RoomPosition): StructureTower
+    static GetEmptyTower(_pos: RoomPosition,ignoreId?:Id<Structure>): StructureTower
     {
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
@@ -40,12 +42,14 @@ export class Finder
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
                     structure.store.getCapacity(RESOURCE_ENERGY) == 0
+                    &&
+                    structure.id!=ignoreId
             }
         });
         return target as StructureTower;
     }
 
-    static GetNotFullTower(_pos: RoomPosition): StructureTower
+    static GetNotFullTower(_pos: RoomPosition,ignoreId?:Id<Structure>): StructureTower
     {
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
@@ -53,12 +57,14 @@ export class Finder
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    &&
+                    structure.id!=ignoreId
             }
         });
         return target as StructureTower;
     }
 
-    static GetFilledStorage(_pos: RoomPosition, minAmmount?: number): Structure
+    static GetFilledStorage(_pos: RoomPosition, minAmmount?: number,ignoreId?:Id<Structure>): StructureContainer|StructureStorage
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
@@ -67,56 +73,74 @@ export class Finder
                 return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) //|| structure.structureType == STRUCTURE_SPAWN
                     &&
                     structure.store.getUsedCapacity() > minAmmount
+                    &&
+                    structure.id!=ignoreId
             }
         });
-        return target as Structure;
+        return target as StructureContainer|StructureStorage;
     }
 
-    static FindDropped(_pos: RoomPosition, minAmmount?: number): Resource
+    static FindDropped(_pos: RoomPosition, minAmmount?: number,ignoreId?:Id<Resource>): Resource
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
-        return _pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.amount > minAmmount } });
+        return _pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.amount > minAmmount && dropped.id!=ignoreId } });
     }
 
-    static GetOneRangeContrainer(_pos: RoomPosition): StructureContainer
+    static GetOneRangeContrainer(_pos: RoomPosition,ignoreId?:Id<StructureContainer>): StructureContainer
     {
         var target = _pos.findInRange<StructureContainer>(FIND_STRUCTURES, 2,
             {
-                filter: (structure) => { return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) && structure.store.getFreeCapacity() != 0 }
+                filter: (structure) =>
+                {
+                    return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE)
+                     &&
+                     structure.store.getFreeCapacity() != 0
+                     &&
+                     structure.id!=ignoreId
+                     }
             });
         return target[0];
     }
 
-    static GetClosestDamagedStructures(_pos: RoomPosition): Structure
+    static GetClosestDamagedStructures(_pos: RoomPosition,ignoreId?:Id<Structure>): Structure
     {
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
             {
                 return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER) //todo all buildings?
                     &&
-                    Utils.CalculatePercentOfHP(structure) < Constants.damagePercentToRepair
+                    (Utils.CalculatePercentOfHP(structure) < Constants.damagePercentToRepair)
+                    &&
+                    structure.id!=ignoreId;
             }
         });
         return target as Structure;
     }
 
-    static GetRandomDamagedStructuresNoPercent(_room: Room): Structure
+    static GetRandomDamagedStructuresNoPercent(_room: Room,ignoreId?:Id<Structure>): Structure
     {
         var target = _room.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                return ((structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER) && structure.hits < structure.hitsMax)//todo all buildings?
+                return ((structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER)
+                 && (structure.hits < structure.hitsMax)
+                 &&
+                 structure.id!=ignoreId
+
+                 )//todo all buildings?
             }
         });
         return target[random(0, target.length - 1)] as Structure;
     }
 
-    static GetDamagedWalls(_pos: Room): Structure
+    static GetDamagedWalls(_pos: Room,ignoreId?:Id<Structure>): Structure
     {
         var targets = _pos.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                return (structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) //sort by damages
+                return (structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART)
+                &&
+                structure.id!=ignoreId
             }
         }).sort((a, b) => { return a.hits - b.hits });
 
@@ -124,8 +148,8 @@ export class Finder
 
     }
 
-    static GetConstructionSites(_pos: RoomPosition): ConstructionSite
+    static GetConstructionSites(_pos: RoomPosition,ignoreId?:Id<ConstructionSite>): ConstructionSite
     {
-        return _pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+        return _pos.findClosestByRange(FIND_CONSTRUCTION_SITES,{filter:(structure)=>{return structure.id!=ignoreId}});
     }
 }
