@@ -20,7 +20,7 @@ export abstract class Unit
     protected GetTarget<T extends _HasId>(targetSearchMethod:()=>_HasId): T
     {
         var targetID = this.memory.targetID;
-        if (!targetID)
+        if (targetID!=null)
         {
             return Game.getObjectById(targetID as Id<T>);
         }
