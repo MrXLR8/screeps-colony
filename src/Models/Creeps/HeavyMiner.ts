@@ -33,13 +33,13 @@ export class HeavyMinerCreep extends BaseCreep
         flag.memory = flagMem;
     }
 
-    private FlagAssign(): boolean
+    private FlagAssign(): Source
     {
         var creepMem: HeavyMinerMemory = this.creep.memory as HeavyMinerMemory;
 
         if (creepMem.flagX != null && creepMem.flagY != null)
         {
-            return true;
+            return Game.getObjectById(creepMem.targetID as Id<Source>);
         }
         for (const flagName in Game.flags) //filter this room
         {
@@ -58,12 +58,12 @@ export class HeavyMinerCreep extends BaseCreep
                 creepMem.flagName = flag.name;
                 var target = Finder.GetSource(new RoomPosition(flag.pos.x, flag.pos.y, this.creep.room.name));
                 creepMem.targetID = target.id;
-                return true;
+                return target;
             }
         }
 
         console.log("No free flag found!");
-        return false;
+        return null;
     }
 
     static FlagClean(currentRoom: Room)
@@ -90,14 +90,15 @@ export class HeavyMinerCreep extends BaseCreep
     private ActHeavyMining(): ActionResponseCode
     {
         if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTaskPreserveTarget;
-        if (!this.FlagAssign())
+        var target: Source = this.GetTarget<Source>(this.FlagAssign);
+
+        if(target==null)
         {
             this.creep.say("!🚩");
             return ActionResponseCode.Repeat;
         }
 
         var mem: HeavyMinerMemory = this.creep.memory as HeavyMinerMemory;
-        var target: Source = this.GetTarget() as Source;
         var flagPos: RoomPosition;
         flagPos = new RoomPosition(mem.flagX, mem.flagY, this.creep.room.name);
 

@@ -14,14 +14,11 @@ export class Tower extends BaseStructure
         super(structure);
     }
 
+
     ActAttack(): ActionResponseCode
     {
-        var target = this.GetTarget<Creep>();
+        var target = this.GetTarget<Creep>(()=>this.structure.pos.findClosestByRange(FIND_HOSTILE_CREEPS));
 
-        if (target == null)
-        {
-            target = this.structure.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        }
         if (target == null) return ActionResponseCode.NextTask;
 
         this.memory.targetID = target.id;

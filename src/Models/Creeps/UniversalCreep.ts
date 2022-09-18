@@ -50,16 +50,11 @@ export class UniversalCreep extends WorkerCreep
     private ActRepairing(): ActionResponseCode
     {
         this.creep.say("🔧");
-        var target: Structure = this.GetTarget() as Structure;
+        var target: OwnedStructure = this.GetTarget<OwnedStructure>(() => Finder.GetClosestDamagedStructures(this.creep.pos));
 
         if (target == null)
         {
-            target = Finder.GetClosestDamagedStructures(this.creep.pos);
-            if (target == null)
-            {
-                return ActionResponseCode.NextTask;
-            }
-            this.memory.targetID = target.id;
+            return ActionResponseCode.NextTask;
         }
 
         if (Utils.CalculatePercentOfHP(target) > 99)
@@ -100,16 +95,11 @@ export class UniversalCreep extends WorkerCreep
     {
         this.creep.say("🏗️");
 
-        var target: ConstructionSite = this.GetTarget() as ConstructionSite;
+        var target: ConstructionSite = this.GetTarget<ConstructionSite>(() => Finder.GetConstructionSites(this.creep.pos));
 
         if (target == null)
         {
-            var target: ConstructionSite = Finder.GetConstructionSites(this.creep.pos);
-            if (target == null)
-            {
-                return ActionResponseCode.NextTask;
-            }
-            this.memory.targetID = target.id;
+            return ActionResponseCode.NextTask;
         }
 
         var code: CreepActionReturnCode | ERR_NOT_ENOUGH_RESOURCES | ERR_RCL_NOT_ENOUGH = this.creep.build(target);

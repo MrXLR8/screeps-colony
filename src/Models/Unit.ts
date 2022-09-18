@@ -17,13 +17,18 @@ export abstract class Unit
         return num;
     }
 
-    protected GetTarget<T extends _HasId>(): T
+    protected GetTarget<T extends _HasId>(targetSearchMethod:()=>_HasId): T
     {
         var targetID = this.memory.targetID;
-
-        if (targetID != null)
+        if (!targetID)
         {
             return Game.getObjectById(targetID as Id<T>);
+        }
+        var targetObj = targetSearchMethod.call(this) as T;
+        if(targetObj!=null)
+        {
+            this.memory.targetID=targetObj.id;
+            return targetObj;
         }
         return null;
     }

@@ -47,7 +47,8 @@ export abstract class WorkerCreep extends BaseCreep
         if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
 
 
-        var target: Source = this.GetTarget() as Source;
+        var target: Source = this.GetTarget<Source>(()=>Finder.GetRandomSource(this.creep.room));
+
         if (target == null || this.memory.actionAttempts > Constants.moveAttmepts)
         {
             target = Finder.GetRandomSource(this.creep.room);
