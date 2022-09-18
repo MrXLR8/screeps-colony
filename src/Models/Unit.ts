@@ -1,4 +1,5 @@
 import { ActionResponseCode } from "./ActionResponseCode";
+import { TickAction } from "./Data/TickAction";
 import { BaseCreepMemory } from "./Memory/BaseCreepMemory";
 import { BaseStructureMemory } from "./Memory/BaseStructureMemory";
 
@@ -46,6 +47,7 @@ export abstract class Unit
 
     Act(): void
     {
+        this.memory.actions=new TickAction();
         var taskNumber = this.memory.taskNumber;
         var i = this.tasks.length * 2;
         var taskCount = this.tasks.length - 1;
@@ -54,9 +56,10 @@ export abstract class Unit
             i--;
 
             var result = this.tasks[taskNumber].call(this);
+            if(this.memory.actions.moved&&(this.memory.actions.worked||this.memory.actions.attacked)) return;
             codeSwitch: switch (result)
             {
-                case ActionResponseCode.Done:
+                case ActionResponseCode.StopCreepAct:
                     {
                         taskNumber = this.IncrementNumber(taskNumber, taskCount);
                         this.memory.taskNumber = taskNumber;

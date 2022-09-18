@@ -37,10 +37,12 @@ export abstract class BaseCreep extends Unit
 
     MoveToPos(targetPos: RoomPosition): boolean
     {
+        if(this.memory.actions.moved) return false;
         if (this.creep.moveTo(targetPos, { visualizePathStyle: { stroke: '#ffffff' } }) == ERR_NO_PATH)
         {
             return false;
         }
+        this.memory.actions.moved=true;
         return true;
     }
 

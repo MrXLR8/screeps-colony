@@ -1,3 +1,4 @@
+import { TickAction } from "Models/Data/TickAction";
 import { CreepTypes } from "../Creeps/BaseCreep";
 
 export class BaseCreepMemory implements CreepMemory
@@ -6,4 +7,8 @@ export class BaseCreepMemory implements CreepMemory
     targetID: string;
     actionAttempts: number = 0;
     taskNumber: number = 0;
+
+    actions:TickAction = new TickAction();
+
 }
+

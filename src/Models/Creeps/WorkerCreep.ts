@@ -38,6 +38,7 @@ export abstract class WorkerCreep extends BaseCreep
                 return ActionResponseCode.Repeat;
             }
             this.creep.say("⚡");
+            this.memory.actions.worked = true;
             return ActionResponseCode.Repeat;
         }
         var dropped = Finder.FindDropped(this.creep.pos, this.AmmountCanCarry());
@@ -94,12 +95,15 @@ export abstract class WorkerCreep extends BaseCreep
                     if (this.creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.Reset;
                     return ActionResponseCode.NextTask;
                 }
-            default: break;
+            case OK:
+                {
+                    this.memory.actions.worked = true;
+                    this.memory.actionAttempts = 0;
+                    this.creep.say("⛏️");
+                    return ActionResponseCode.Repeat;
+                }
+            default:return ActionResponseCode.NextTask;
         }
-
-        this.memory.actionAttempts = 0;
-        this.creep.say("⛏️");
-        return ActionResponseCode.Repeat;
 
     }
 
@@ -118,8 +122,15 @@ export abstract class WorkerCreep extends BaseCreep
                     this.creep.say(">⬆️");
                     return ActionResponseCode.Repeat;
                 }
+            case OK:
+                {
+                    this.memory.actions.worked = true;
+                    this.creep.say("⬆️");
+                    return ActionResponseCode.Repeat;
+                }
+            default:
+                return ActionResponseCode.NextTask;
         }
-        this.creep.say("⬆️");
-        return ActionResponseCode.Repeat;
+
     }
 }

@@ -1,11 +1,12 @@
 export enum ActionResponseCode
 {
-    Done,
+    StopCreepAct,
     NextTask,
+    NextTaskPreserveTarget,
     Repeat,
     RepeatThisTick,
     Reset,
     ResetThisTick,
-    NextTaskPreserveTarget,
+
     ResetPreserveTarget
 }

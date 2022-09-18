@@ -41,6 +41,7 @@ export class UniversalCreep extends WorkerCreep
 
             case OK:
                 {
+                    this.memory.actions.worked=true;
                     this.creep.say("🗼");
                     if(this.creep.store.energy == 0) return ActionResponseCode.Reset;
                     var nextTarget = searchMethod.call(this, this.creep.pos, this.memory.targetID as Id<StructureTower>);
@@ -95,6 +96,7 @@ export class UniversalCreep extends WorkerCreep
                 }
             case OK:
                 {
+                    this.memory.actions.worked=true;
                     if(this.creep.store.energy == 0) return ActionResponseCode.Reset;
                     var nextTarget = Finder.GetEmptyExtension(this.creep.pos, this.memory.targetID as Id<Structure>);
                     if (nextTarget == null) return ActionResponseCode.NextTask;
@@ -155,6 +157,7 @@ export class UniversalCreep extends WorkerCreep
                 }
             case (OK):
                 {
+                    this.memory.actions.worked=true;
                     var nextTarget = Finder.GetClosestDamagedStructures(this.creep.pos, this.memory.targetID as Id<Structure>);
                     if (nextTarget == null) return ActionResponseCode.NextTask;
                     this.memory.targetID = nextTarget.id;
@@ -202,6 +205,7 @@ export class UniversalCreep extends WorkerCreep
                 }
             case (OK):
                 {
+                    this.memory.actions.worked=true;
                     if(this.creep.store.energy==0) return ActionResponseCode.Reset;
                     var nextTarget = Finder.GetConstructionSites(this.creep.pos, this.memory.targetID as Id<ConstructionSite>);
                     if (nextTarget == null) return ActionResponseCode.NextTask;
