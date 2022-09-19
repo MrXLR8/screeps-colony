@@ -11,38 +11,22 @@ export abstract class Unit
 
     abstract set memory(memory: BaseCreepMemory | BaseStructureMemory);
 
+    get targetId():string
+    {
+        return this.memory.targetID;
+    }
+
+    set targetId(target:string)
+    {
+        this.memory.targetID=target;
+        this.memory.actionAttempts=0;
+    }
+
     private IncrementNumber(num: number, max: number): number
     {
         num++;
         if (num > max) num = 0;
         return num;
-    }
-
-    public GetTarget<T extends _HasId>(targetSearchMethod: () => _HasId, validTargetMethod?: (target: T) => boolean): T
-    {
-        var targetID = this.memory.targetID;
-        if (targetID != null)
-        {
-            var retrived = Game.getObjectById(targetID as Id<T>);
-            if (validTargetMethod !== undefined)
-            {
-                if (validTargetMethod.call(this, retrived))
-                {
-                    return retrived;
-                }
-            }
-            else
-            {
-                return retrived;
-            }
-        }
-        var targetObj = targetSearchMethod.call(this) as T;
-        if (targetObj != null)
-        {
-            this.memory.targetID = targetObj.id;
-            return targetObj;
-        }
-        return null;
     }
 
     Act(): void
