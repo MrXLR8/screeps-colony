@@ -8,7 +8,7 @@ import { Utils } from "Logic/Utils";
 export class UniversalCreep extends WorkerCreep
 {
 
-    tasks = [this.ActGathering, this.ActMining, this.ActFillEmptyTower, this.ActStoreExtension, this.ActRepairing, this.ActFillTower, this.ActBuilding, this.ActUpgrading];
+    tasks = [this.ActGathering, this.ActMining, this.ActFillEmptyTower, this.ActStoreExtension, this.ActRepairing, this.ActFillTower, this.ActBuilding];
 
 
     private FillTower(searchMethod: (pos: RoomPosition, ignoreId?: Id<StructureTower>) => StructureTower): ActionResponseCode
@@ -170,7 +170,7 @@ export class UniversalCreep extends WorkerCreep
 
     private ActBuilding(): ActionResponseCode
     {
-        this.creep.say("🏗️");
+
 
         var target: ConstructionSite = this.GetTarget<ConstructionSite>(() => Finder.GetConstructionSites(this.creep.pos));
 
@@ -184,6 +184,7 @@ export class UniversalCreep extends WorkerCreep
         {
             case (ERR_NOT_IN_RANGE):
                 {
+                    this.creep.say(">🏗️");
                     this.MoveToTarget(target);
                     this.memory.actionAttempts++;
                     if (this.memory.actionAttempts > Constants.moveAttmepts)
@@ -205,13 +206,8 @@ export class UniversalCreep extends WorkerCreep
                 }
             case (OK):
                 {
+                    this.creep.say("🏗️");
                     this.memory.actions.worked=true;
-                    if(this.creep.store.energy==0) return ActionResponseCode.Reset;
-                    var nextTarget = Finder.GetConstructionSites(this.creep.pos, this.memory.targetID as Id<ConstructionSite>);
-                    if (nextTarget == null) return ActionResponseCode.NextTask;
-                    this.memory.targetID = nextTarget.id;
-                    this.memory.actionAttempts = 0;
-                    this.MoveToTarget(nextTarget);
                     return ActionResponseCode.Repeat;
                 }
         }

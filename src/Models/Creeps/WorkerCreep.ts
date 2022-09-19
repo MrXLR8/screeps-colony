@@ -16,9 +16,8 @@ export abstract class WorkerCreep extends BaseCreep
         //todo look from id to not search twice
         var source: StructureContainer | StructureStorage = this.GetTarget(() =>
             Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry()),
-            (target) => { return (target as StructureContainer | StructureStorage).store.getFreeCapacity(RESOURCE_ENERGY) > 0 }
+            (target) => { return (target as StructureContainer | StructureStorage).store.getUsedCapacity(RESOURCE_ENERGY) > this.AmmountCanCarry() }
         );
-
         if (source == null) return ActionResponseCode.NextTask
 
         if (source != null)
@@ -27,18 +26,19 @@ export abstract class WorkerCreep extends BaseCreep
             {
                 this.MoveToTarget(source);
                 this.creep.say(">⚡");
-                source = Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry(), this.memory.targetID as Id<StructureContainer | StructureStorage>);
-                if (source != null)
-                {
-                    this.memory.targetID = source.id;
-                    this.memory.actionAttempts = 0;
-                    return ActionResponseCode.RepeatThisTick;
-                }
+
 
                 return ActionResponseCode.Repeat;
             }
             this.creep.say("⚡");
             this.memory.actions.worked = true;
+            source = Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry(), this.memory.targetID as Id<StructureContainer | StructureStorage>);
+            if (source != null)
+            {
+                this.memory.targetID = source.id;
+                this.memory.actionAttempts = 0;
+                return ActionResponseCode.RepeatThisTick;
+            }
             return ActionResponseCode.Repeat;
         }
         var dropped = Finder.FindDropped(this.creep.pos, this.AmmountCanCarry());
@@ -62,10 +62,13 @@ export abstract class WorkerCreep extends BaseCreep
     {
         if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
 
+
         var target: Source = this.GetTarget<Source>(
             () => Finder.GetRandomSource(this.creep.room),
             (target) => { return target.energy > 0 }
         );
+
+
 
         if (target == null) return ActionResponseCode.NextTask;
 

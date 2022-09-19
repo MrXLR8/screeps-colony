@@ -55,8 +55,17 @@ export abstract class Unit
         {
             i--;
 
+            try
+            {
             var result = this.tasks[taskNumber].call(this);
-            if(this.memory.actions.moved&&(this.memory.actions.worked||this.memory.actions.attacked)) return;
+            }
+            catch
+            {
+                console.log("Exception caught");
+                this.memory.taskNumber=0;
+                this.memory.targetID=null;
+                this.memory.actionAttempts=0;
+            }
             codeSwitch: switch (result)
             {
                 case ActionResponseCode.StopCreepAct:
@@ -109,7 +118,7 @@ export abstract class Unit
                     }
             }
 
-        } while (i > 0)
+        } while (this.memory.actions.moved&&(this.memory.actions.worked||this.memory.actions.attacked))
     }
 
 }
