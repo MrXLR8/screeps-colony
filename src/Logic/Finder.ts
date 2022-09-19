@@ -34,27 +34,14 @@ export class Finder
         return target as StructureExtension|StructureSpawn;
     }
 
-    static GetEmptyTower(_pos: RoomPosition,ignoreId?:Id<Structure>): StructureTower
+    static GetNotFilledTower(_pos: RoomPosition,filledMoreThen:number,ignoreId?:Id<Structure>): StructureTower
     {
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
             {
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
-                    structure.store.getCapacity(RESOURCE_ENERGY) == 0
-                    &&
-                    structure.id!=ignoreId
-            }
-        });
-        return target as StructureTower;
-    }
-
-    static GetNotFullTower(_pos: RoomPosition,ignoreId?:Id<Structure>): StructureTower
-    {
-        var target = _pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) =>
-            {
-                return (structure.structureType == STRUCTURE_TOWER)
+                    structure.store.getCapacity(RESOURCE_ENERGY) > filledMoreThen
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     &&
@@ -63,6 +50,7 @@ export class Finder
         });
         return target as StructureTower;
     }
+
 
     static GetFilledStorage(_pos: RoomPosition, minAmmount?: number,ignoreId?:Id<Structure>): StructureContainer|StructureStorage
     {
