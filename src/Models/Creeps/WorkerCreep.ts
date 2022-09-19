@@ -11,50 +11,51 @@ export abstract class WorkerCreep extends BaseCreep
 {
     protected ActGathering(): ActionResponseCode
     {
+        var SearchMethod = () => Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry());
+        var ValidationMethod = (target: StructureContainer | StructureStorage) => { return target.store.getUsedCapacity(RESOURCE_ENERGY) > this.AmmountCanCarry() };
 
         if (this.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
-        //todo look from id to not search twice
-        var source: StructureContainer | StructureStorage = this.GetTarget(() =>
-            Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry()),
-            (target) => { return (target as StructureContainer | StructureStorage).store.getUsedCapacity(RESOURCE_ENERGY) > this.AmmountCanCarry() }
-        );
-        if (source == null) return ActionResponseCode.NextTask
+
+        var source: StructureContainer | StructureStorage = this.GetTarget(SearchMethod, ValidationMethod);
 
         if (source != null)
         {
-            if (this.creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+            var code = this.creep.withdraw(source, RESOURCE_ENERGY);
+            switch (code)
             {
-                this.MoveToTarget(source);
-                this.creep.say(">⚡");
+                case ERR_NOT_IN_RANGE:
+                    this.MoveToTarget(source);
+                    this.creep.say(">⚡");
+                    return ActionResponseCode.Repeat;
+                case OK:
+                    this.creep.say("⚡");
+                    this.memory.actions.worked = true;
 
-
-                return ActionResponseCode.Repeat;
+                    source = Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry(), this.memory.targetID as Id<StructureContainer | StructureStorage>);
+                    if (source != null)
+                    {
+                        this.memory.targetID = source.id;
+                        this.memory.actionAttempts = 0;
+                        this.MoveToTarget(source);
+                    }
+                    return ActionResponseCode.Repeat;
             }
-            this.creep.say("⚡");
-            this.memory.actions.worked = true;
-            source = Finder.GetFilledStorage(this.creep.pos, this.AmmountCanCarry(), this.memory.targetID as Id<StructureContainer | StructureStorage>);
-            if (source != null)
-            {
-                this.memory.targetID = source.id;
-                this.memory.actionAttempts = 0;
-                return ActionResponseCode.RepeatThisTick;
-            }
-            return ActionResponseCode.Repeat;
         }
-        var dropped = Finder.FindDropped(this.creep.pos, this.AmmountCanCarry());
+        /*
+                var dropped = Finder.FindDropped(this.creep.pos, this.AmmountCanCarry());
 
-        if (dropped != null)
-        {
-            if (this.creep.pickup(dropped) == ERR_NOT_IN_RANGE)
-            {
-                this.MoveToTarget(dropped);
-                this.creep.say(">⚡");
-                return ActionResponseCode.Repeat;
-            }
-            this.creep.say("⚡");
-            return ActionResponseCode.Repeat;
-        }
-
+                if (dropped != null)
+                {
+                    if (this.creep.pickup(dropped) == ERR_NOT_IN_RANGE)
+                    {
+                        this.MoveToTarget(dropped);
+                        this.creep.say(">⚡");
+                        return ActionResponseCode.Repeat;
+                    }
+                    this.creep.say("⚡");
+                    return ActionResponseCode.Repeat;
+                }
+        */
         return ActionResponseCode.NextTask;
     }
 
@@ -105,7 +106,7 @@ export abstract class WorkerCreep extends BaseCreep
                     this.creep.say("⛏️");
                     return ActionResponseCode.Repeat;
                 }
-            default:return ActionResponseCode.NextTask;
+            default: return ActionResponseCode.NextTask;
         }
 
     }
