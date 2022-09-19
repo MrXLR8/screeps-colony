@@ -18,7 +18,7 @@ export abstract class Unit
         return num;
     }
 
-    protected GetTarget<T extends _HasId>(targetSearchMethod: () => _HasId, validTargetMethod?: (target: T) => boolean): T
+    public GetTarget<T extends _HasId>(targetSearchMethod: () => _HasId, validTargetMethod?: (target: T) => boolean): T
     {
         var targetID = this.memory.targetID;
         if (targetID != null)
