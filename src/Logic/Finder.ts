@@ -74,15 +74,15 @@ export class Finder
         return _pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.amount > minAmmount && dropped.id!=ignoreId } });
     }
 
-    static GetOneRangeContrainer(_pos: RoomPosition,ignoreId?:Id<StructureContainer>): StructureContainer
+    static GetContrainer(_pos: RoomPosition,range:number,resource:ResourceConstant,ignoreId?:Id<StructureContainer|StructureStorage>): StructureContainer|StructureStorage
     {
-        var target = _pos.findInRange<StructureContainer>(FIND_STRUCTURES, 2,
+        var target = _pos.findInRange<StructureContainer|StructureStorage>(FIND_STRUCTURES, range,
             {
                 filter: (structure) =>
                 {
                     return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE)
                      &&
-                     structure.store.getFreeCapacity() != 0
+                     structure.store.getFreeCapacity(resource) != 0
                      &&
                      structure.id!=ignoreId
                      }
