@@ -78,7 +78,7 @@ export class ActionLinkSend implements IAction
         if (this.target == null) return ActionResponseCode.Repeat;
 
         if (this.target.id == this.unit.structure.id) return ActionResponseCode.Repeat;
-        if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.Repeat;
+        if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) < 50) return ActionResponseCode.Repeat;
         var actionCode = this.unit.structure.transferEnergy(this.target);
 
         return this.WorkCodeProcessing(actionCode);

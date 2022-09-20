@@ -16,9 +16,9 @@ export class ActionStore implements IAction
     {
         this.unit = unit as BaseCreep;
         this.resource = resource;
-        this.containerTypes=containerTypes;
+        this.containerTypes = containerTypes;
         if (typeof range === 'undefined')
-           this.range = 999;
+            this.range = 999;
         else
             this.range = range
     }
@@ -38,7 +38,7 @@ export class ActionStore implements IAction
         var targetId = this.unit.targetId;
         if (targetId != null)
         {
-            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage|StructureLink>);
+            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink>);
         }
         if (this.target != null)
         {
@@ -113,7 +113,11 @@ export class ActionStore implements IAction
 
         this.GetSavedTarget();
 
-        if (this.target == null) return ActionResponseCode.NextTask;
+        if (this.target == null)
+        {
+            this.unit.creep.drop(this.resource);
+            return ActionResponseCode.NextTask;
+        }
 
         var actionCode = this.unit.creep.transfer(this.target, this.resource);
         return this.WorkCodeProcessing(actionCode);

@@ -104,7 +104,7 @@ export class ActionGather implements IAction
 
         this.GetSavedTarget();
 
-        if (this.target == null) { this.unit.log("failed to find storage");return ActionResponseCode.NextTask;}
+        if (this.target == null) return ActionResponseCode.NextTask;
 
         var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
 

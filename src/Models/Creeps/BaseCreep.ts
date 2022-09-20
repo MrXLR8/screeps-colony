@@ -49,6 +49,7 @@ export abstract class BaseCreep extends Unit
         return (this.creep.getActiveBodyparts(CARRY) * 50) - this.creep.store.getUsedCapacity();
     }
 
+
     static GetCreepType(creep: Creep): CreepTypes
     {
         var mem: BaseCreepMemory = creep.memory as BaseCreepMemory;

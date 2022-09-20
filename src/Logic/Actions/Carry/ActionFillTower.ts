@@ -11,11 +11,11 @@ export class ActionFillTower implements IAction
     unit: BaseCreep;
     target: StructureTower;
 
-    fillUntil:number;
-    constructor(unit: Unit,fillUntil:number)
+    fillUntil: number;
+    constructor(unit: Unit, fillUntil: number)
     {
         this.unit = unit as BaseCreep;
-        this.fillUntil=fillUntil;
+        this.fillUntil = fillUntil;
     }
 
 
@@ -31,14 +31,16 @@ export class ActionFillTower implements IAction
         var targetId = this.unit.targetId;
         if (targetId != null)
         {
-            this.target =Game.getObjectById(this.unit.targetId as Id<StructureTower>);
+            this.target = Game.getObjectById(this.unit.targetId as Id<StructureTower>);
+
 
             if (this.target != null)
             {
-                if (Utils.GetUsedStoragePercent(this.target.store,RESOURCE_ENERGY)<=this.fillUntil)
-                {
-                    return; //Target is valid
-                }
+                if (this.target instanceof StructureTower)
+                    if (Utils.GetUsedStoragePercent(this.target.store, RESOURCE_ENERGY) <= this.fillUntil)
+                    {
+                        return; //Target is valid
+                    }
             }
         }
 
@@ -58,7 +60,7 @@ export class ActionFillTower implements IAction
                 this.unit.creep.say(">🗼");
                 return ActionResponseCode.Repeat;
             case OK:
-                this.unit.memory.actions.worked=true;
+                this.unit.memory.actions.worked = true;
                 this.unit.creep.say("🗼");
                 if (!this.RepeatAction()) return ActionResponseCode.Reset;
                 return ActionResponseCode.Repeat;
@@ -94,7 +96,7 @@ export class ActionFillTower implements IAction
 
 
         var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
+        if (entryCode != null) return entryCode;
         this.GetSavedTarget();
 
         if (this.target == null) return ActionResponseCode.NextTask;

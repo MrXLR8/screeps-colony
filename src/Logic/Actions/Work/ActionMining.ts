@@ -29,7 +29,7 @@ export class ActionMining implements IAction
 
     EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.NextTask;
+        if ((this.unit.creep.getActiveBodyparts(WORK)*2) >this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
         return null;
     }
 
@@ -77,6 +77,9 @@ export class ActionMining implements IAction
                 this.unit.MoveToTarget(this.target);
                 this.unit.creep.say(">⛏️");
                 return ActionResponseCode.Repeat;
+            case ERR_NOT_ENOUGH_RESOURCES:
+                this.unit.creep.say("!⛏️");
+                return ActionResponseCode.Reset;
             case OK:
                 this.unit.memory.actions.worked = true;
                 this.unit.memory.actionAttempts = 0;
