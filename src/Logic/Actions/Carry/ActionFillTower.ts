@@ -9,7 +9,7 @@ import { IAction } from "../IAction";
 export class ActionFillTower implements IAction
 {
     unit: BaseCreep;
-    target: Tower;
+    target: StructureTower;
 
     fillUntil:number;
     constructor(unit: Unit,fillUntil:number)
@@ -29,22 +29,24 @@ export class ActionFillTower implements IAction
     GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
-        if (targetId == null)
+        if (targetId != null)
         {
-            this.target =new Tower(Game.getObjectById(this.unit.targetId as Id<StructureTower>));
-        }
-        if (this.target != null)
-        {
-            if (this.target.GetUsedStoragePercent(RESOURCE_ENERGY)<this.fillUntil)
+            this.target =Game.getObjectById(this.unit.targetId as Id<StructureTower>);
+
+            if (this.target != null)
             {
-                return; //Target is valid
+                if (Utils.GetUsedStoragePercent(this.target.store)<this.fillUntil)
+                {
+                    return; //Target is valid
+                }
             }
         }
 
-        this.target = new Tower(Finder.GetNotFilledTower(this.unit.creep.pos, this.fillUntil));
+
+        this.target = Finder.GetNotFilledTower(this.unit.creep.pos, this.fillUntil);
         if (this.target != null)
         {
-            this.unit.targetId = this.target.structure.id;
+            this.unit.targetId = this.target.id;
         }
     }
 
@@ -53,13 +55,13 @@ export class ActionFillTower implements IAction
         switch (code)
         {
             case ERR_NOT_IN_RANGE:
-                this.unit.MoveToTarget(this.target.structure);
+                this.unit.MoveToTarget(this.target);
                 this.unit.creep.say(">🗼");
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked=true;
                 this.unit.creep.say("🗼");
-                if (!this.RepeatAction()) return ActionResponseCode.NextTask;
+                if (!this.RepeatAction()) return ActionResponseCode.Reset;
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. FillTower error code: " + code);
@@ -69,6 +71,9 @@ export class ActionFillTower implements IAction
 
     RepeatAction(): boolean
     {
+        var newStore = this.unit.creep.store.getUsedCapacity(RESOURCE_ENERGY) - this.target.store.getFreeCapacity(RESOURCE_ENERGY);
+        if (newStore < 0) return false;
+
         var newTarget = Finder.GetNotFilledTower
             (
                 this.unit.creep.pos,
@@ -94,7 +99,7 @@ export class ActionFillTower implements IAction
 
         if (this.target == null) return ActionResponseCode.NextTask;
 
-        var actionCode = this.unit.creep.withdraw(this.target.structure, RESOURCE_ENERGY);
+        var actionCode = this.unit.creep.transfer(this.target, RESOURCE_ENERGY);
 
         return this.WorkCodeProcessing(actionCode);
     }

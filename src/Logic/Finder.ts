@@ -72,7 +72,7 @@ export class Finder
             {
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
-                    Utils.Percent(structure.store.getUsedCapacity(RESOURCE_ENERGY), structure.store.getCapacity(RESOURCE_ENERGY)) < filledLess
+                    Utils.GetUsedStoragePercent(structure.store) < filledLess
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     &&
@@ -126,7 +126,7 @@ export class Finder
         var target = room.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                return structure.structureType in types
+                return types.includes(structure.structureType)
                     &&
                     (Utils.CalculatePercentOfHP(structure) < Constants.damagePercentToRepair)
                     &&

@@ -5,6 +5,8 @@ import { UnitFactory } from "Logic/UnitFactory";
 import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { UniversalCreep } from "Models/Creeps/UniversalCreep";
+import { BaseStructure } from "Models/Structures/BaseStructure";
 import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
@@ -19,6 +21,8 @@ export class ActionRepair implements IAction
     energyPercent: number;
     towerReserves: number;
     byRandom: boolean;
+
+    testTower: boolean = false;
     whatToRepair: StructureConstant[];
     constructor(unit: Unit, whatToRepair: StructureConstant[], byRandom: boolean, towerReserves?: number)
     {
@@ -30,14 +34,16 @@ export class ActionRepair implements IAction
             this.room = this.unit.creep.room;
             this.energyStored = this.unit.creep.store[RESOURCE_ENERGY];
         }
-        else
+        else if (unit instanceof BaseStructure)
         {
+            this.testTower = true;
             this.unit = unit as Tower;
             this.room = this.unit.structure.room;
             this.towerReserves = towerReserves;
             this.energyStored = this.unit.structure.store[RESOURCE_ENERGY];
             this.energyPercent = Utils.Percent(this.energyStored, this.unit.structure.store.getCapacity(RESOURCE_ENERGY));
         }
+        else { console.log("UNKNOWN INSTANCE"); }
     }
 
 
@@ -71,7 +77,6 @@ export class ActionRepair implements IAction
         }
 
         var arrayOfTargets = Finder.GetDamagedStructures(this.room, this.whatToRepair);
-
         if (this.byRandom)
         {
             this.target = arrayOfTargets[random(0, arrayOfTargets.length - 1)];
@@ -118,9 +123,9 @@ export class ActionRepair implements IAction
 
     Act(): ActionResponseCode
     {
+        var test = this.unit as BaseStructure;
         var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
-
+        if (entryCode != null) return entryCode;
         this.GetSavedTarget();
 
         if (this.target == null) return ActionResponseCode.NextTask;

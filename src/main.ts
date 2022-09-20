@@ -26,7 +26,7 @@ export function loop()
       if (!creepWrapper) continue;
       creepWrapper.Act();
     }
-/*
+
     var structureList: Structure[] = room.find(FIND_MY_STRUCTURES);
 
     for (var gameStructure of structureList)
@@ -35,7 +35,7 @@ export function loop()
       if (!structure) continue;
       structure.Act();
     }
-    */
+
   }
 
 

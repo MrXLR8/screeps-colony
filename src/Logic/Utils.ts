@@ -43,6 +43,11 @@ export class Utils
         return (pos1.x==pos2.x)&&(pos1.y==pos2.y);
     }
 
+    static GetUsedStoragePercent<T extends ResourceConstant,K extends boolean>(storage:Store<T,K>): number
+    {
+        return Utils.Percent(storage.getUsedCapacity(), storage.getCapacity());
+    }
+
     static Percent(val: number, max: number): number
     {
         return (val / max) * 100;

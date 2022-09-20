@@ -43,15 +43,12 @@ export class ActionMoveFlag implements IAction
             }
         }
 
-
         this.target=Finder.FindWhereIAmAssigned(this.unit.creep.id);
-        if(this.target!=null) {this.unit.log("found my assign"); return;}
 
         this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id);
         if (this.target != null)
         {
             this.target.Assign(this.unit.creep.id);
-            this.unit.log("assigned flag " + this.target);
             this.unit.targetId = this.target.flag.name;
             var mem = this.unit.memory as HeavyMinerMemory;
             mem.flagName = this.target.flag.name;

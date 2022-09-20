@@ -1,5 +1,6 @@
 import { IAction } from "Logic/Actions/IAction";
 import { ActionResponseCode } from "./ActionResponseCode";
+import { BaseCreep } from "./Creeps/BaseCreep";
 import { TickAction } from "./Data/TickAction";
 import { BaseCreepMemory } from "./Memory/BaseCreepMemory";
 import { BaseStructureMemory } from "./Memory/BaseStructureMemory";
@@ -26,7 +27,6 @@ export abstract class Unit
 
     private IncrementNumber(num: number, max: number): number
     {
-        console.log("resetting");
         num++;
         if (num > max) num = 0;
         return num;
@@ -35,8 +35,9 @@ export abstract class Unit
     Act(): void
     {
 
-       // if((this.memory as BaseCreepMemory).Role!=1) return; //DEBUG
-        console.log(">>>>");
+        var a = this;
+       // if((a as unknown as BaseCreep).creep.name!="Universal#1") return; //DEBUG
+       // console.log(">>>> "+Game.time);
         this.memory.actions=new TickAction();
         var taskNumber = this.memory.taskNumber;
         var i = this.tasks.length * 2;
@@ -47,7 +48,7 @@ export abstract class Unit
 
             var result = this.tasks[taskNumber].Act();
 
-       //     console.log("TaskNumber" +taskNumber +" ended with: "+result.toString());
+         //  console.log("TaskNumber" +taskNumber +" ended with: "+result.toString() +"\nMoved: "+this.memory.actions.moved+"|Actioned: "+this.memory.actions.worked);
 
             codeSwitch: switch (result)
             {
@@ -101,8 +102,8 @@ export abstract class Unit
                     }
             }
 
-        } while (this.memory.actions.moved&&(this.memory.actions.worked||this.memory.actions.attacked))
-        console.log("<<<<<");
+        } while (i>0)
+       // console.log("<<<<<");
     }
 
 }
