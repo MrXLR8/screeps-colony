@@ -3,6 +3,7 @@ import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { HeavyMinerMemory } from "Models/Creeps/HeavyMiner";
 import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
@@ -14,14 +15,14 @@ export class ActionMoveFlag implements IAction
     primaryColor: ColorConstant;
     secondaryColor: ColorConstant;
 
-    oneCreepPerFlagSetting: boolean;
+    maxAssigned: number;
 
-    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, oneCreepPerFlagSetting: boolean)
+    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number)
     {
         this.unit = unit as BaseCreep;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
-        this.oneCreepPerFlagSetting = oneCreepPerFlagSetting;
+        this.maxAssigned = maxAssigned;
     }
 
     Act(): ActionResponseCode
@@ -61,18 +62,18 @@ export class ActionMoveFlag implements IAction
 
             if (this.target.CompareColors(this.primaryColor, this.secondaryColor))
             {
-                if (this.oneCreepPerFlagSetting)
-                {
-                    this.target.isAssigned(this.unit.creep.id);
-                    return; //Target is valid
-                }
+                this.target.isAssigned(this.unit.creep.id);
+                return; //Target is valid
             }
         }
 
-        this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor);
+        this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id);
         if (this.target != null)
         {
             this.target.Assign(this.unit.creep.id);
+            var mem = this.unit.memory as HeavyMinerMemory;
+            mem.flagName=this.target.flag.name;
+            this.unit.memory=mem;
         }
     }
 

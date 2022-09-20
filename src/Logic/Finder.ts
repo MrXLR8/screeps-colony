@@ -35,12 +35,17 @@ export class Finder
         return target as StructureExtension | StructureSpawn;
     }
 
-    static GetFlagByColors(primaryColor: ColorConstant, secondaryColor: ColorConstant):AssignableFlag
+    static GetFlagByColors(primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number,assignable:string): AssignableFlag
     {
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
-            if (flag.color == primaryColor && flag.secondaryColor == secondaryColor) return new AssignableFlag(flag);
+            if (flag.color == primaryColor && flag.secondaryColor == secondaryColor)
+            {
+                var obj = new AssignableFlag(flag);
+                if(obj.isAssigned(assignable)) return obj;
+                if(obj.assignedAmmount<maxAssigned) return obj;
+            }
         }
         return null;
     }
@@ -52,7 +57,7 @@ export class Finder
             {
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
-                    Utils.Percent(structure.store.getUsedCapacity(RESOURCE_ENERGY),structure.store.getCapacity(RESOURCE_ENERGY)) < filledLess
+                    Utils.Percent(structure.store.getUsedCapacity(RESOURCE_ENERGY), structure.store.getCapacity(RESOURCE_ENERGY)) < filledLess
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     &&
@@ -101,7 +106,7 @@ export class Finder
         return target[0];
     }
 
-    static GetDamagedStructures(room: Room,types:StructureConstant[], ignoreId?: Id<Structure>): Structure[]
+    static GetDamagedStructures(room: Room, types: StructureConstant[], ignoreId?: Id<Structure>): Structure[]
     {
         var target = room.find(FIND_STRUCTURES, {
             filter: (structure) =>

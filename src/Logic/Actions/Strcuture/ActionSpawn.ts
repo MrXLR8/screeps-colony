@@ -36,7 +36,7 @@ export class ActionSpawn implements IAction
         this.PrepareCreepToSpawn()
 
         if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.NextTask;
-        var actionCode = this.unit.structure.spawnCreep(
+        var actionCode = (this.unit.structure as StructureSpawn).spawnCreep(
             PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable),
             this.creepName,
             this.spawnsettings
@@ -47,7 +47,7 @@ export class ActionSpawn implements IAction
 
     EntryValidation(): ActionResponseCode
     {
-        if (this.unit.structure.spawning) return ActionResponseCode.NextTask;
+        if ((this.unit.structure as StructureSpawn).spawning) return ActionResponseCode.NextTask;
         return null;
     }
 

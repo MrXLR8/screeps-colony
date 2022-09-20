@@ -20,6 +20,11 @@ export class AssignableFlag
         this.flag.memory = memory;
     }
 
+    get assignedAmmount() :number
+    {
+        return this.memory.assignedCreeps.length;
+    }
+
   public  isAssigned(creepId: string): boolean
     {
         return creepId in this.memory.assignedCreeps
@@ -34,6 +39,16 @@ export class AssignableFlag
     {
         this.memory.assignedCreeps = this.memory.assignedCreeps.filter(data => data != creepId);
     }
+
+    public ReleaseDead()
+    {
+        for(var creepId in this.memory.assignedCreeps)
+        {
+            var found = Game.getObjectById<Id<Creep>>(creepId as Id<Creep>);
+            if(found==null) this.Release(creepId);
+        }
+    }
+
 
     public CompareColors(primaryColor:ColorConstant,secondaryColor:ColorConstant)
     {
