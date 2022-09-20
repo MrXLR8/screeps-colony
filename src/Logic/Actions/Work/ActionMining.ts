@@ -29,14 +29,14 @@ export class ActionMining implements IAction
 
     EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
+        if (this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
     GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
-        if (targetId == null)
+        if (targetId != null)
         {
             this.target = Game.getObjectById(this.unit.targetId as Id<Source>);
         }
@@ -74,10 +74,9 @@ export class ActionMining implements IAction
                     this.unit.log("move attempts");
                     return ActionResponseCode.Reset;
                 }
-
                 this.unit.MoveToTarget(this.target);
                 this.unit.creep.say(">⛏️");
-                return ActionResponseCode.Reset;
+                return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
                 this.unit.memory.actionAttempts = 0;

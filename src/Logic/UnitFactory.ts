@@ -76,8 +76,10 @@ export class UnitFactory
   static StructureMemoryExistsCheck(id: Id<Structure>)
   {
     var request = (Memory as GlobalMemory).structures[id];
-    if (request == null)
+
+    if (request == undefined)
     {
+      console.log(id+" creating memory");
       var mem = new BaseStructureMemory();
       (Memory as GlobalMemory).structures[id] = mem;
     }

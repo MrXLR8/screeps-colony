@@ -1,22 +1,24 @@
+import { forEach } from "lodash";
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
-export class ActionGather implements IAction
+export class ActionGatherFromFlag implements IAction
 {
     unit: BaseCreep;
     target: StructureContainer | StructureStorage | StructureLink;
-    containerTypes: StructureConstant[]
 
-    takeBigFirst: boolean;
+    primaryColor: ColorConstant;
 
-    constructor(unit: Unit, takeBigFirst: boolean, containerTypes: StructureConstant[])
+    secondaryColor: ColorConstant;
+
+    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant)
     {
         this.unit = unit as BaseCreep;
-        this.takeBigFirst = takeBigFirst;
-        this.containerTypes = containerTypes;
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
     }
 
 
@@ -33,7 +35,7 @@ export class ActionGather implements IAction
         var targetId = this.unit.targetId;
         if (targetId != null)
         {
-            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage|StructureLink>);
+            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink>);
         }
         if (this.target != null)
         {
@@ -43,15 +45,7 @@ export class ActionGather implements IAction
             }
         }
 
-        this.unit.log("tried to big sotrage");
-        if (this.takeBigFirst)
-        {
-            this.target = Finder.GetBiggestFilledStorage(this.unit.creep.room, this.containerTypes, this.unit.AmmountCanCarry())
-        }
-        else
-        {
-            this.target = Finder.GetFilledStorage(this.unit.creep.pos, this.containerTypes, this.unit.AmmountCanCarry());
-        }
+        this.target=this.FlagSearch();
 
         if (this.target != null)
         {
@@ -59,24 +53,25 @@ export class ActionGather implements IAction
         }
     }
 
+
+    FlagSearch():StructureContainer | StructureStorage | StructureLink
+    {
+        for (var flagName in Game.flags)
+        {
+            var flag = Game.flags[flagName];
+            if (flag.color == this.primaryColor && flag.secondaryColor == this.secondaryColor)
+            {
+               return flag.pos.lookFor<"structure">("structure")[0] as StructureContainer | StructureStorage | StructureLink;
+            }
+        }
+        return null;
+    }
+
+
+
     RepeatAction(): boolean
     {
-        var newStore = this.target.store.getUsedCapacity(RESOURCE_ENERGY)-this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY);
-        if(newStore<0) return false;
-        var newTarget = Finder.GetFilledStorage
-            (
-                this.unit.creep.pos,
-                this.containerTypes,
-                this.unit.AmmountCanCarry(),
-                this.unit.targetId as Id<StructureContainer | StructureStorage>
-            );
-        if (newTarget != null)
-        {
-            this.unit.targetId = newTarget.id;
-            this.unit.MoveToTarget(newTarget);
-            return true;
-        }
-        return false;
+throw("Not implemented");
     }
 
     WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
@@ -90,8 +85,7 @@ export class ActionGather implements IAction
             case OK:
                 this.unit.creep.say("⚡");
                 this.unit.memory.actions.worked = true;
-                if (!this.RepeatAction()) return ActionResponseCode.Repeat;
-                return ActionResponseCode.Repeat;
+                return ActionResponseCode.NextTask;
             default:
                 this.unit.log("Problem occured. Gather error code: " + code);
                 return ActionResponseCode.NextTask;
@@ -105,7 +99,7 @@ export class ActionGather implements IAction
 
         this.GetSavedTarget();
 
-        if (this.target == null) { this.unit.log("failed to find storage");return ActionResponseCode.NextTask;}
+        if (this.target == null) return ActionResponseCode.NextTask;
 
         var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
 

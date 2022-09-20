@@ -6,6 +6,7 @@ import { IAction } from "../IAction";
 import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
 import { Link } from "Models/Structures/Link";
+import { link } from "fs";
 export class ActionLinkSend implements IAction
 {
     unit: Link;
@@ -20,14 +21,14 @@ export class ActionLinkSend implements IAction
 
     EntryValidation(): ActionResponseCode
     {
-        if (this.unit.structure.store[RESOURCE_ENERGY] == 0) return ActionResponseCode.NextTask;
+        if (this.unit.structure.store[RESOURCE_ENERGY] == 0) return ActionResponseCode.Repeat;
         return null;
     }
 
     GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
-        if (targetId == null)
+        if (targetId != null)
         {
             this.target = Game.getObjectById(this.unit.targetId as Id<StructureLink>);
         }
@@ -52,6 +53,7 @@ export class ActionLinkSend implements IAction
     {
         switch (code)
         {
+            case ERR_TIRED:
             case OK:
                 this.unit.memory.actions.worked = true;
                 return ActionResponseCode.Repeat;
@@ -73,12 +75,11 @@ export class ActionLinkSend implements IAction
 
         this.GetSavedTarget();
 
-        if (this.target == null) return ActionResponseCode.NextTask;
+        if (this.target == null) return ActionResponseCode.Repeat;
 
-        if(this.target.id==this.unit.targetId) return ActionResponseCode.StopCreepAct;
 
-        if(this.target.store.getFreeCapacity(RESOURCE_ENERGY)==0) return ActionResponseCode.StopCreepAct;
-
+        if(this.target.id==this.unit.structure.id) return ActionResponseCode.Repeat;
+        if(this.target.store.getFreeCapacity(RESOURCE_ENERGY)==0) return ActionResponseCode.Repeat;
         var actionCode = this.unit.structure.transferEnergy(this.target);
 
         return this.WorkCodeProcessing(actionCode);

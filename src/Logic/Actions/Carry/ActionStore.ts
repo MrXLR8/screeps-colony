@@ -36,9 +36,8 @@ export class ActionStore implements IAction
     GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
-        if (targetId == null)
+        if (targetId != null)
         {
-
             this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage|StructureLink>);
         }
         if (this.target != null)
