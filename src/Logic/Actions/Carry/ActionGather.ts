@@ -43,7 +43,6 @@ export class ActionGather implements IAction
             }
         }
 
-        this.unit.log("tried to big sotrage");
         if (this.takeBigFirst)
         {
             this.target = Finder.GetBiggestFilledStorage(this.unit.creep.room, this.containerTypes, this.unit.AmmountCanCarry())

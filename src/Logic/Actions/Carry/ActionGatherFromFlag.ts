@@ -45,7 +45,7 @@ export class ActionGatherFromFlag implements IAction
             }
         }
 
-        this.target=this.FlagSearch();
+        this.target = this.FlagSearch();
 
         if (this.target != null)
         {
@@ -54,24 +54,23 @@ export class ActionGatherFromFlag implements IAction
     }
 
 
-    FlagSearch():StructureContainer | StructureStorage | StructureLink
+    FlagSearch(): StructureContainer | StructureStorage | StructureLink
     {
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
             if (flag.color == this.primaryColor && flag.secondaryColor == this.secondaryColor)
             {
-               return flag.pos.lookFor<"structure">("structure")[0] as StructureContainer | StructureStorage | StructureLink;
+                var found = flag.pos.lookFor<"structure">("structure")[0] as StructureContainer | StructureStorage | StructureLink;
+                if(found.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry()) return found;
             }
         }
         return null;
     }
 
-
-
     RepeatAction(): boolean
     {
-throw("Not implemented");
+        throw ("Not implemented");
     }
 
     WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode

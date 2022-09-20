@@ -12,8 +12,8 @@ export class Tower extends BaseStructure implements IStorable
     tasks: IAction[] =
         [
             new ActionTowerAttack(this),
-            new ActionRepair(this, [STRUCTURE_ROAD, STRUCTURE_CONTAINER], true, 20),
-            new ActionRepair(this, [STRUCTURE_WALL, STRUCTURE_RAMPART], false, 80)
+            new ActionRepair(this, [STRUCTURE_ROAD, STRUCTURE_CONTAINER], true,false, 20,),
+            new ActionRepair(this, [STRUCTURE_WALL, STRUCTURE_RAMPART], false, false,80,)
         ];
 
     structure: StructureTower;

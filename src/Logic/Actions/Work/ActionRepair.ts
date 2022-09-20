@@ -22,12 +22,13 @@ export class ActionRepair implements IAction
     towerReserves: number;
     byRandom: boolean;
 
-    testTower: boolean = false;
+    keepTask:boolean;
     whatToRepair: StructureConstant[];
-    constructor(unit: Unit, whatToRepair: StructureConstant[], byRandom: boolean, towerReserves?: number)
+    constructor(unit: Unit, whatToRepair: StructureConstant[], byRandom: boolean, keepTask:boolean,towerReserves?: number)
     {
         this.whatToRepair = whatToRepair;
         this.byRandom = byRandom;
+        this.keepTask=keepTask;
         if (unit instanceof BaseCreep)
         {
             this.unit = unit as BaseCreep;
@@ -36,7 +37,6 @@ export class ActionRepair implements IAction
         }
         else if (unit instanceof BaseStructure)
         {
-            this.testTower = true;
             this.unit = unit as Tower;
             this.room = this.unit.structure.room;
             this.towerReserves = towerReserves;
@@ -63,6 +63,7 @@ export class ActionRepair implements IAction
 
     GetSavedTarget(): void
     {
+
         var targetId = this.unit.targetId;
         if (targetId != null)
         {
@@ -102,6 +103,7 @@ export class ActionRepair implements IAction
                     this.unit.MoveToTarget(this.target);
                     this.unit.creep.say(">🔧");
                 }
+
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
@@ -109,6 +111,7 @@ export class ActionRepair implements IAction
                 {
                     this.unit.creep.say("🔧");
                 }
+                if(!this.keepTask) return ActionResponseCode.Reset;
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Repair error code: " + code);

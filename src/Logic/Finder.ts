@@ -10,7 +10,7 @@ export class Finder
 
     static GetClosestSource(_pos: RoomPosition): Source
     {
-        return _pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        return _pos.findClosestByRange(FIND_SOURCES);
         //todo distance sort, energy check
     }
 

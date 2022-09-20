@@ -21,6 +21,7 @@ export class ActionLinkSend implements IAction
 
     EntryValidation(): ActionResponseCode
     {
+        if (this.unit.structure.cooldown > 0) return ActionResponseCode.Repeat;
         if (this.unit.structure.store[RESOURCE_ENERGY] == 0) return ActionResponseCode.Repeat;
         return null;
     }
@@ -39,12 +40,10 @@ export class ActionLinkSend implements IAction
         var flag = this.unit.structure.room.find(FIND_FLAGS, { filter: (flag) => { return flag.color == COLOR_YELLOW && flag.secondaryColor == COLOR_WHITE } })[0];
         if (flag != null)
         {
-            console.log("found flag");
-            this.target=flag.pos.lookFor<"structure">("structure")[0] as StructureLink;
+            this.target = flag.pos.lookFor<"structure">("structure")[0] as StructureLink;
         }
         if (this.target != null)
         {
-            console.log("remebered flag");
             this.unit.targetId = this.target.id;
         }
     }
@@ -75,11 +74,11 @@ export class ActionLinkSend implements IAction
 
         this.GetSavedTarget();
 
+
         if (this.target == null) return ActionResponseCode.Repeat;
 
-
-        if(this.target.id==this.unit.structure.id) return ActionResponseCode.Repeat;
-        if(this.target.store.getFreeCapacity(RESOURCE_ENERGY)==0) return ActionResponseCode.Repeat;
+        if (this.target.id == this.unit.structure.id) return ActionResponseCode.Repeat;
+        if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.Repeat;
         var actionCode = this.unit.structure.transferEnergy(this.target);
 
         return this.WorkCodeProcessing(actionCode);
