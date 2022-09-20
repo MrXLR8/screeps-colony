@@ -7,11 +7,13 @@ import { IAction } from "../IAction";
 export class ActionGather implements IAction
 {
     unit: BaseCreep;
-    target: StructureContainer | StructureStorage;
+    target: StructureContainer | StructureStorage|StructureLink;
+    containerTypes:StructureConstant[]
 
-    constructor(unit: Unit)
+    constructor(unit: Unit,containerTypes:StructureConstant[])
     {
         this.unit = unit as BaseCreep;
+        this.containerTypes=containerTypes;
     }
 
 
@@ -38,7 +40,7 @@ export class ActionGather implements IAction
             }
         }
 
-        this.target = Finder.GetFilledStorage(this.unit.creep.pos, this.unit.AmmountCanCarry());
+        this.target = Finder.GetFilledStorage(this.unit.creep.pos,this.containerTypes, this.unit.AmmountCanCarry());
         if (this.target != null)
         {
             this.unit.targetId = this.target.id;
@@ -50,6 +52,7 @@ export class ActionGather implements IAction
         var newTarget = Finder.GetFilledStorage
             (
                 this.unit.creep.pos,
+                this.containerTypes,
                 this.unit.AmmountCanCarry(),
                 this.unit.targetId as Id<StructureContainer | StructureStorage>
             );

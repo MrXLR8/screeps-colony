@@ -55,11 +55,11 @@ export class ActionSpawn implements IAction
             case OK:
                 this.unit.memory.actions.worked = true;
                 return ActionResponseCode.Repeat;
-            case ERR_NOT_ENOUGH_RESOURCES :
+            case ERR_NOT_ENOUGH_RESOURCES:
                 console.log("Unabled to spawn, low resources. Tried to spawn - " + this.creepName);
                 return ActionResponseCode.Repeat;
             case ERR_INVALID_ARGS:
-                console.log("invalid args for spawned: "+this.creepName+". "+JSON.stringify(this.spawnsettings));
+                console.log("invalid args for spawned: " + this.creepName + ". " + JSON.stringify(this.spawnsettings));
             default:
                 this.unit.log("Problem occured. Spawner error code: " + code);
                 return ActionResponseCode.NextTask;
@@ -103,6 +103,14 @@ export class ActionSpawn implements IAction
                 this.creepName = this.GetAviableCreepName("Miner");
                 this.spawnsettings = new SpawnSettings(_mem);
                 break;
+            case CreepTypes.Courier:
+                mem = new BaseCreepMemory();
+                mem.taskNumber = 0;
+                mem.actionAttempts = 0;
+                mem.Role = CreepTypes.Courier;
+                this.creepName = this.GetAviableCreepName("Courier");
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
             default:
                 console.log("Uknown creep type to spawn");
         }
@@ -116,7 +124,7 @@ export class ActionSpawn implements IAction
     Act(): ActionResponseCode
     {
         var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
+        if (entryCode != null) return entryCode;
 
         this.GetSavedTarget();
 

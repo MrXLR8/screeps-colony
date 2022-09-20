@@ -7,22 +7,16 @@ import { ActionRepair } from "Logic/Actions/Work/ActionRepair";
 import { ActionBuild } from "Logic/Actions/Work/ActionBuild";
 import { ActionUpgrade } from "Logic/Actions/Work/ActionUpgrade";
 import { IAction } from "Logic/Actions/IAction";
+import { ActionStore } from "Logic/Actions/Carry/ActionStore";
 
 
-export class UniversalCreep extends BaseCreep
+export class CourierCreep extends BaseCreep
 {
-
 
     tasks: IAction[] =
     [
-        new ActionGather(this,[STRUCTURE_STORAGE,STRUCTURE_STORAGE]),
-        new ActionMining(this,false),
-        new ActionFillTower(this,20),
-        new ActionStoreExtension(this),
-        new ActionRepair(this,[STRUCTURE_CONTAINER,STRUCTURE_ROAD],false),
-        new ActionBuild(this),
-        new ActionFillTower(this,80),
-        new ActionUpgrade(this)
+        new ActionGather(this,[STRUCTURE_CONTAINER]),
+        new ActionStore(this,[STRUCTURE_STORAGE],RESOURCE_ENERGY)
     ];
 }
 

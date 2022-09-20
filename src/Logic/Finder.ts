@@ -83,15 +83,15 @@ export class Finder
     }
 
 
-    static GetFilledStorage(_pos: RoomPosition, minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage
+    static GetFilledStorage(_pos: RoomPosition, structureTypes:StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                return (structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE) //|| structure.structureType == STRUCTURE_SPAWN
+                return structureTypes.includes(structure.structureType) //|| structure.structureType == STRUCTURE_SPAWN
                     &&
-                    structure.store.getUsedCapacity() > minAmmount
+                    (structure as any).store.getUsedCapacity() > minAmmount
                     &&
                     structure.id != ignoreId
             }

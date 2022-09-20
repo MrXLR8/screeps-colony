@@ -6,7 +6,8 @@ import { BaseCreepMemory } from "../Memory/BaseCreepMemory";
 export enum CreepTypes
 {
     UniversalCreep,
-    HeavyMiner
+    HeavyMiner,
+    Courier
 }
 
 export abstract class BaseCreep extends Unit

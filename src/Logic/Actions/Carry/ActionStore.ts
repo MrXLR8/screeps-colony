@@ -18,7 +18,7 @@ export class ActionStore implements IAction
         this.resource = resource;
         this.containerTypes=containerTypes;
         if (typeof range === 'undefined')
-            range = 999;
+           this.range = 999;
         else
             this.range = range
     }
@@ -39,7 +39,7 @@ export class ActionStore implements IAction
         if (targetId == null)
         {
 
-            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage>);
+            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage|StructureLink>);
         }
         if (this.target != null)
         {
@@ -56,6 +56,8 @@ export class ActionStore implements IAction
         }
         else
         {
+
+
             this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.resource, this.containerTypes);
         }
         if (this.target != null)
@@ -109,12 +111,12 @@ export class ActionStore implements IAction
         var entryCode = this.EntryValidation();
         if (entryCode != null) return entryCode;
 
+
         this.GetSavedTarget();
 
         if (this.target == null) return ActionResponseCode.NextTask;
 
         var actionCode = this.unit.creep.transfer(this.target, this.resource);
-
         return this.WorkCodeProcessing(actionCode);
     }
 }

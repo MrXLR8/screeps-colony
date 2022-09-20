@@ -11,6 +11,13 @@ export class PartsPicker
             [MOVE, MOVE, WORK, CARRY, CARRY] //300
         ];
 
+    static CourierParts: BodyPartConstant[][] =
+        [
+            [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //600
+            [MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //450
+            [MOVE, MOVE, CARRY, CARRY, CARRY, CARRY] //300
+        ];
+
     static HeavyMinerParts: BodyPartConstant[][] =
         [
             [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
@@ -52,6 +59,9 @@ export class PartsPicker
                 break;
             case CreepTypes.HeavyMiner:
                 collection = this.HeavyMinerParts;
+                break;
+            case CreepTypes.Courier:
+                collection = this.CourierParts;
                 break;
             default:
                 return null;
