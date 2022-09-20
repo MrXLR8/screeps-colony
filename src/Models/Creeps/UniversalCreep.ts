@@ -116,7 +116,7 @@ export class UniversalCreep extends WorkerCreep
         this.creep.say("🔧");
 
         var target: OwnedStructure = this.GetTarget<OwnedStructure>(
-            () => Finder.GetClosestDamagedStructures(this.creep.pos),
+            () => Finder.GetDamagedStructures(this.creep.pos),
             (target) => { return target.hits != target.hitsMax }
         );
 
@@ -158,7 +158,7 @@ export class UniversalCreep extends WorkerCreep
             case (OK):
                 {
                     this.memory.actions.worked=true;
-                    var nextTarget = Finder.GetClosestDamagedStructures(this.creep.pos, this.memory.targetID as Id<Structure>);
+                    var nextTarget = Finder.GetDamagedStructures(this.creep.pos, this.memory.targetID as Id<Structure>);
                     if (nextTarget == null) return ActionResponseCode.NextTask;
                     this.memory.targetID = nextTarget.id;
                     this.memory.actionAttempts = 0;

@@ -101,19 +101,19 @@ export class Finder
         return target[0];
     }
 
-    static GetClosestDamagedStructures(_pos: RoomPosition, ignoreId?: Id<Structure>): Structure
+    static GetDamagedStructures(room: Room,types:StructureConstant[], ignoreId?: Id<Structure>): Structure[]
     {
-        var target = _pos.findClosestByRange(FIND_STRUCTURES, {
+        var target = room.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER) //todo all buildings?
+                return structure.structureType in types
                     &&
                     (Utils.CalculatePercentOfHP(structure) < Constants.damagePercentToRepair)
                     &&
                     structure.id != ignoreId;
             }
         });
-        return target as Structure;
+        return target as Structure[];
     }
 
     static GetRandomDamagedStructuresNoPercent(_room: Room, ignoreId?: Id<Structure>): Structure
