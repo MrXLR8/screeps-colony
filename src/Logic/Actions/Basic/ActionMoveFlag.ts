@@ -41,7 +41,6 @@ export class ActionMoveFlag implements IAction
                 if(this.target.isAssigned(this.unit.creep.id)) return;
                  //Target is valid
             }
-            this.unit.log("last target is invalid");
         }
 
 
@@ -63,7 +62,7 @@ export class ActionMoveFlag implements IAction
 
     EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.pos.isEqualTo(this.target.flag.pos)) return ActionResponseCode.NextTask;
+        if (Utils.PosCompare(this.unit.creep.pos,this.target.flag.pos))  { return ActionResponseCode.NextTask;}
         return null;
     }
 
@@ -76,7 +75,8 @@ export class ActionMoveFlag implements IAction
             case ERR_NO_PATH:
                 this.unit.creep.say("!🚩(NP)");
                 return ActionResponseCode.Repeat;
-            case OK|ERR_TIRED:
+            case ERR_TIRED:
+            case OK:
                 this.unit.memory.actions.moved = true;
                 this.unit.creep.say(">🚩");
                 return ActionResponseCode.Repeat;

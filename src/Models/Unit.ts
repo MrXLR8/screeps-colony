@@ -35,7 +35,7 @@ export abstract class Unit
     Act(): void
     {
 
-        if((this.memory as BaseCreepMemory).Role!=1) return; //DEBUG
+       // if((this.memory as BaseCreepMemory).Role!=1) return; //DEBUG
         console.log(">>>>");
         this.memory.actions=new TickAction();
         var taskNumber = this.memory.taskNumber;
@@ -47,7 +47,7 @@ export abstract class Unit
 
             var result = this.tasks[taskNumber].Act();
 
-            console.log("TaskNumber" +taskNumber +" ended with: "+result.toString());
+       //     console.log("TaskNumber" +taskNumber +" ended with: "+result.toString());
 
             codeSwitch: switch (result)
             {

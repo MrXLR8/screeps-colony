@@ -38,6 +38,11 @@ export class Utils
         return result;
     }
 
+    static PosCompare(pos1:RoomPosition,pos2:RoomPosition):boolean
+    {
+        return (pos1.x==pos2.x)&&(pos1.y==pos2.y);
+    }
+
     static Percent(val: number, max: number): number
     {
         return (val / max) * 100;
