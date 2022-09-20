@@ -1,4 +1,3 @@
-import { ActionResponseCode } from "Models/ActionResponseCode";
 import { ActionGather } from "Logic/Actions/Carry/ActionGather";
 import { BaseCreep } from "./BaseCreep";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
@@ -22,7 +21,7 @@ export class UniversalCreep extends BaseCreep
         new ActionStoreExtension(this),
         new ActionRepair(this,[STRUCTURE_CONTAINER,STRUCTURE_ROAD],false),
         new ActionBuild(this),
-        new ActionFillTower(this,100),
+        new ActionFillTower(this,80),
         new ActionUpgrade(this)
     ];
 }

@@ -35,13 +35,12 @@ export class ActionFillTower implements IAction
 
             if (this.target != null)
             {
-                if (Utils.GetUsedStoragePercent(this.target.store)<this.fillUntil)
+                if (Utils.GetUsedStoragePercent(this.target.store,RESOURCE_ENERGY)<=this.fillUntil)
                 {
                     return; //Target is valid
                 }
             }
         }
-
 
         this.target = Finder.GetNotFilledTower(this.unit.creep.pos, this.fillUntil);
         if (this.target != null)
@@ -92,9 +91,10 @@ export class ActionFillTower implements IAction
 
     Act(): ActionResponseCode
     {
+
+
         var entryCode = this.EntryValidation();
        if (entryCode!=null) return entryCode;
-
         this.GetSavedTarget();
 
         if (this.target == null) return ActionResponseCode.NextTask;

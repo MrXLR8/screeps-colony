@@ -72,7 +72,7 @@ export class Finder
             {
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
-                    Utils.GetUsedStoragePercent(structure.store) < filledLess
+                    Utils.GetUsedStoragePercent(structure.store,RESOURCE_ENERGY) <= filledLess
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     &&

@@ -50,9 +50,9 @@ export class Utils
         return (pos1.x==pos2.x)&&(pos1.y==pos2.y);
     }
 
-    static GetUsedStoragePercent<T extends ResourceConstant,K extends boolean>(storage:Store<T,K>): number
+    static GetUsedStoragePercent<T extends ResourceConstant,K extends boolean>(storage:Store<T,K>,resource:T): number
     {
-        return Utils.Percent(storage.getUsedCapacity(), storage.getCapacity());
+       return Utils.Percent(storage.getUsedCapacity(resource), storage.getCapacity(resource));;
     }
 
     static Percent(val: number, max: number): number

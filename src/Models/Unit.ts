@@ -39,6 +39,7 @@ export abstract class Unit
        // if((a as unknown as BaseCreep).creep.name!="Universal#1") return; //DEBUG
        // console.log(">>>> "+Game.time);
         this.memory.actions=new TickAction();
+
         var taskNumber = this.memory.taskNumber;
         var i = this.tasks.length * 2;
         var taskCount = this.tasks.length - 1;
