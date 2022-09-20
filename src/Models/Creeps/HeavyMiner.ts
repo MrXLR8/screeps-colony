@@ -56,7 +56,7 @@ export class HeavyMinerCreep extends BaseCreep
                 creepMem.flagX = flag.pos.x;
                 creepMem.flagY = flag.pos.y;
                 creepMem.flagName = flag.name;
-                var target = Finder.GetSource(new RoomPosition(flag.pos.x, flag.pos.y, this.creep.room.name));
+                var target = Finder.GetClosestSource(new RoomPosition(flag.pos.x, flag.pos.y, this.creep.room.name));
                 creepMem.targetID = target.id;
                 return target;
             }

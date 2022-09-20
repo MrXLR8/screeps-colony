@@ -8,7 +8,7 @@ export class Finder
 {
     constructor() { }
 
-    static GetSource(_pos: RoomPosition): Source
+    static GetClosestSource(_pos: RoomPosition): Source
     {
         return _pos.findClosestByRange(FIND_SOURCES_ACTIVE);
         //todo distance sort, energy check

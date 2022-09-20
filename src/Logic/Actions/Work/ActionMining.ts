@@ -9,8 +9,18 @@ export class ActionMining implements IAction
     unit: BaseCreep;
     target: Source;
 
-    constructor(creep: BaseCreep)
+    lookForClosest: boolean;
+
+    constructor(creep: BaseCreep, lookForClosest?: boolean)
     {
+        if (typeof lookForClosest !== 'undefined')
+        {
+            this.lookForClosest = lookForClosest;
+        }
+        else
+        {
+            this.lookForClosest = false;
+        }
         this.unit = creep as BaseCreep;
     }
 
@@ -43,12 +53,16 @@ export class ActionMining implements IAction
         }
         if (this.target != null)
         {
-            if (this.target.energy !=0)
+            if (this.target.energy != 0)
             {
                 return; //Target is valid
             }
         }
 
+        if (this.lookForClosest)
+        {
+            this.target = Finder.GetClosestSource(this.unit.creep.pos);
+        }
         this.target = Finder.GetRandomSource(this.unit.creep.room);
 
         if (this.target != null)
@@ -84,7 +98,7 @@ export class ActionMining implements IAction
 
     RepeatAction(): boolean
     {
-       throw ("Not implemented");
+        throw ("Not implemented");
     }
 
 }
