@@ -97,12 +97,4 @@ export class Spawner extends BaseStructure
     }
 }
 
-class SpawnSettings implements SpawnOptions
-{
-    memory?: CreepMemory | undefined;
 
-    constructor(_memory: CreepMemory)
-    {
-        this.memory = _memory;
-    }
-}
