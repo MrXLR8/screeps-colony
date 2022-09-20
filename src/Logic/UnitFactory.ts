@@ -6,6 +6,7 @@ import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { BaseStructureMemory } from "Models/Memory/BaseStructureMemory";
 import { GlobalMemory } from "Models/Memory/GlobalMemory";
 import { BaseStructure } from "Models/Structures/BaseStructure";
+import { Link } from "Models/Structures/Link";
 import { Spawner } from "Models/Structures/Spawner";
 import { Tower } from "Models/Structures/Tower";
 
@@ -59,6 +60,9 @@ export class UnitFactory
         break;
       case STRUCTURE_TOWER:
         structureWrapper = new Tower(structure as StructureTower);
+        break;
+      case STRUCTURE_LINK:
+        structureWrapper = new Link(structure as StructureLink);
         break;
       default:
         return null;
