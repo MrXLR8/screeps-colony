@@ -6,7 +6,7 @@ import { BaseStructure } from "./BaseStructure";
 
 export class Tower extends BaseStructure
 {
-    tasks = [this.ActAttack, this.ActRepair];
+    tasks = [this.ActAttack, this.ActRepair,this.ActRepairWalls];
 
     structure: StructureTower;
     constructor(structure: StructureTower)

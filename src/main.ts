@@ -9,6 +9,12 @@ export function loop()
 {
   Utils.MemoryCleanUp();
 
+  if (Game.cpu.bucket == 10000)
+  {
+    console.log("CREATED PIXEL");
+    Game.cpu.generatePixel();
+  }
+
   for (var roomName in Game.rooms)
   {
     var room = Game.rooms[roomName];
