@@ -15,7 +15,7 @@ export class CourierCreep extends BaseCreep
 
     tasks: IAction[] =
     [
-        new ActionGather(this,[STRUCTURE_CONTAINER]),
+        new ActionGather(this,true,[STRUCTURE_CONTAINER]),
         new ActionStore(this,[STRUCTURE_STORAGE],RESOURCE_ENERGY)
     ];
 }

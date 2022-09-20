@@ -13,6 +13,7 @@ export class PartsPicker
 
     static CourierParts: BodyPartConstant[][] =
         [
+            [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,CARRY,CARRY], //700
             [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //600
             [MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //450
             [MOVE, MOVE, CARRY, CARRY, CARRY, CARRY] //300

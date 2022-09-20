@@ -15,7 +15,7 @@ export class UniversalCreep extends BaseCreep
 
     tasks: IAction[] =
     [
-        new ActionGather(this,[STRUCTURE_STORAGE,STRUCTURE_STORAGE]),
+        new ActionGather(this,false,[STRUCTURE_STORAGE,STRUCTURE_STORAGE]),
         new ActionMining(this,false),
         new ActionFillTower(this,20),
         new ActionStoreExtension(this),

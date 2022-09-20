@@ -7,13 +7,16 @@ import { IAction } from "../IAction";
 export class ActionGather implements IAction
 {
     unit: BaseCreep;
-    target: StructureContainer | StructureStorage|StructureLink;
-    containerTypes:StructureConstant[]
+    target: StructureContainer | StructureStorage | StructureLink;
+    containerTypes: StructureConstant[]
 
-    constructor(unit: Unit,containerTypes:StructureConstant[])
+    takeBigFirst: boolean;
+
+    constructor(unit: Unit, takeBigFirst: boolean, containerTypes: StructureConstant[])
     {
         this.unit = unit as BaseCreep;
-        this.containerTypes=containerTypes;
+        this.takeBigFirst = takeBigFirst;
+        this.containerTypes = containerTypes;
     }
 
 
@@ -40,7 +43,15 @@ export class ActionGather implements IAction
             }
         }
 
-        this.target = Finder.GetFilledStorage(this.unit.creep.pos,this.containerTypes, this.unit.AmmountCanCarry());
+        if (this.takeBigFirst)
+        {
+            this.target = Finder.GetBiggestFilledStorage(this.unit.creep.room, this.containerTypes, this.unit.AmmountCanCarry())
+        }
+        else
+        {
+            this.target = Finder.GetFilledStorage(this.unit.creep.pos, this.containerTypes, this.unit.AmmountCanCarry());
+        }
+
         if (this.target != null)
         {
             this.unit.targetId = this.target.id;
@@ -49,6 +60,8 @@ export class ActionGather implements IAction
 
     RepeatAction(): boolean
     {
+        var newStore = this.target.store.getUsedCapacity(RESOURCE_ENERGY)-this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY);
+        if(newStore<0) return false;
         var newTarget = Finder.GetFilledStorage
             (
                 this.unit.creep.pos,
@@ -87,7 +100,7 @@ export class ActionGather implements IAction
     Act(): ActionResponseCode
     {
         var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
+        if (entryCode != null) return entryCode;
 
         this.GetSavedTarget();
 
