@@ -4,6 +4,7 @@ import { ActionResponseCode } from "Models/ActionResponseCode";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
+import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionMoveFlag implements IAction
@@ -15,9 +16,9 @@ export class ActionMoveFlag implements IAction
 
     oneCreepPerFlagSetting: boolean;
 
-    constructor(creep: BaseCreep, primaryColor: ColorConstant, secondaryColor: ColorConstant, oneCreepPerFlagSetting: boolean)
+    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, oneCreepPerFlagSetting: boolean)
     {
-        this.unit = creep as BaseCreep;
+        this.unit = unit as BaseCreep;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.oneCreepPerFlagSetting = oneCreepPerFlagSetting;

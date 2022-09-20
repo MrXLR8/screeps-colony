@@ -2,6 +2,7 @@ import { Constants } from "Constans";
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionMining implements IAction
@@ -11,7 +12,7 @@ export class ActionMining implements IAction
 
     lookForClosest: boolean;
 
-    constructor(creep: BaseCreep, lookForClosest?: boolean)
+    constructor(unit: Unit, lookForClosest?: boolean)
     {
         if (typeof lookForClosest !== 'undefined')
         {
@@ -21,7 +22,7 @@ export class ActionMining implements IAction
         {
             this.lookForClosest = false;
         }
-        this.unit = creep as BaseCreep;
+        this.unit = unit as BaseCreep;
     }
 
     Act(): ActionResponseCode

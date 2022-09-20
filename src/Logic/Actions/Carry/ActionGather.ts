@@ -1,6 +1,7 @@
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionGather implements IAction
@@ -8,9 +9,9 @@ export class ActionGather implements IAction
     unit: BaseCreep;
     target: StructureContainer | StructureStorage;
 
-    constructor(creep: BaseCreep)
+    constructor(unit: Unit)
     {
-        this.unit = creep as BaseCreep;
+        this.unit = unit as BaseCreep;
     }
 
 

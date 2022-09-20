@@ -1,6 +1,7 @@
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionStore implements IAction
@@ -10,9 +11,9 @@ export class ActionStore implements IAction
     range:number;
     resource:ResourceConstant;
 
-    constructor(creep: BaseCreep,resource:ResourceConstant,range?:number)
+    constructor(unit: Unit,resource:ResourceConstant,range?:number)
     {
-        this.unit = creep as BaseCreep;
+        this.unit = unit as BaseCreep;
         this.resource=resource;
         if(typeof range ==='undefined') range=999;
     }

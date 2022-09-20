@@ -8,7 +8,7 @@ import { Utils } from "Logic/Utils";
 export class UniversalCreep extends WorkerCreep
 {
 
-    tasks = [this.ActGathering, this.ActMining, this.ActFillEmptyTower, this.ActStoreExtension, this.ActRepairing, this.ActFillTower, this.ActBuilding,this.ActUpgrading];
+    //tasks = [this.ActGathering, this.ActMining, this.ActFillEmptyTower, this.ActStoreExtension, this.ActRepairing, this.ActFillTower, this.ActBuilding,this.ActUpgrading];
 
 
     private FillTower(searchMethod: (pos: RoomPosition, ignoreId?: Id<StructureTower>) => StructureTower): ActionResponseCode

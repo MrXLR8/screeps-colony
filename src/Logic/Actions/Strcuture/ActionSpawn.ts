@@ -10,6 +10,7 @@ import { Constants } from "Constans";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { HeavyMinerMemory } from "Models/Creeps/HeavyMiner";
 import { PartsPicker } from "Logic/PartsPicker";
+import { Unit } from "Models/Unit";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -18,9 +19,9 @@ export class ActionSpawn implements IAction
     creepName: string = null;
     spawnsettings: SpawnSettings = null;
 
-    constructor(structure: BaseStructure)
+    constructor(unit: Unit)
     {
-        this.unit = structure as Spawner;
+        this.unit = unit as Spawner;
     }
 
     Act(): ActionResponseCode

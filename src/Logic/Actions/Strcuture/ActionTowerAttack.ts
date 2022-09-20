@@ -4,14 +4,15 @@ import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { BaseStructure } from "Models/Structures/BaseStructure";
 import { IAction } from "../IAction";
 import {Tower} from "Models/Structures/Tower";
+import { Unit } from "Models/Unit";
 export class ActionTowerAttack implements IAction
 {
     unit: Tower;
     target: Creep;
 
-    constructor(structure: BaseStructure)
+    constructor(unit: Unit)
     {
-        this.unit = structure as Tower;
+        this.unit = unit as Tower;
     }
 
     Act(): ActionResponseCode
