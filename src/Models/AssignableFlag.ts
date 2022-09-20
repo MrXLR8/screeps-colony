@@ -32,6 +32,8 @@ export class AssignableFlag
 
     public  Assign(creepId: string)
     {
+
+        console.log("assigning to the flag "+this.flag.name+" next creep: "+creepId+" count: "+this.memory.assignedCreeps.length);
         this.memory.assignedCreeps.push(creepId);
     }
 
@@ -42,7 +44,7 @@ export class AssignableFlag
 
     public ReleaseDead()
     {
-        for(var creepId in this.memory.assignedCreeps)
+        for(var creepId of this.memory.assignedCreeps)
         {
             var found = Game.getObjectById<Id<Creep>>(creepId as Id<Creep>);
             if(found==null) this.Release(creepId);

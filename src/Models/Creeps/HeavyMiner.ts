@@ -27,7 +27,7 @@ export class HeavyMinerCreep extends BaseCreep
         [
             new ActionMoveFlag(this, COLOR_YELLOW, COLOR_YELLOW, 1),
             new ActionMining(this, true),
-            new ActionStore(this, RESOURCE_ENERGY, 2)
+            new ActionStore(this,[STRUCTURE_CONTAINER,STRUCTURE_STORAGE,STRUCTURE_LINK],RESOURCE_ENERGY, 2)
         ];
     static Dispose(_mem: CreepMemory)
     {

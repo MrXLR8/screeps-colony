@@ -1,4 +1,5 @@
 import { copyFileSync } from "fs";
+import { AssignableFlag } from "Models/AssignableFlag";
 import { CreepTypes } from "Models/Creeps/BaseCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { UnitFactory } from "./UnitFactory";
@@ -21,6 +22,12 @@ export class Utils
                 delete Memory.creeps[name];
                 console.log('Clearing non-existing creep memory:', name);
             }
+        }
+
+        for(var name in Game.flags)
+        {
+            var flag = new AssignableFlag(Game.flags[name]);
+            flag.ReleaseDead();
         }
     }
 

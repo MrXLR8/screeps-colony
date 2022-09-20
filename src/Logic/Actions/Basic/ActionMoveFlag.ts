@@ -31,35 +31,41 @@ export class ActionMoveFlag implements IAction
         if (targetId != null)
         {
 
-            rawTarget= Game.flags[targetId];
+            rawTarget = Game.flags[targetId];
         }
         if (rawTarget != null)
         {
             this.target = new AssignableFlag(rawTarget);
             if (this.target.CompareColors(this.primaryColor, this.secondaryColor))
             {
-                if(this.target.isAssigned(this.unit.creep.id)) return;
-                 //Target is valid
+                if (this.target.isAssigned(this.unit.creep.id)) return;
+                //Target is valid
             }
         }
 
-        this.target=Finder.FindWhereIAmAssigned(this.unit.creep.id);
+        this.target = Finder.FindWhereIAmAssigned(this.unit.creep.id);
 
-        this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id);
+        if (this.target == null)
+        {
+            this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id)
+            if (this.target != null)
+            {
+                this.target.Assign(this.unit.creep.id);
+            }
+        }
+
         if (this.target != null)
         {
-            this.target.Assign(this.unit.creep.id);
             this.unit.targetId = this.target.flag.name;
             var mem = this.unit.memory as HeavyMinerMemory;
             mem.flagName = this.target.flag.name;
             this.unit.memory = mem;
-
         }
     }
 
     EntryValidation(): ActionResponseCode
     {
-        if (Utils.PosCompare(this.unit.creep.pos,this.target.flag.pos))  { return ActionResponseCode.NextTask;}
+        if (Utils.PosCompare(this.unit.creep.pos, this.target.flag.pos)) { return ActionResponseCode.NextTask; }
         return null;
     }
 
@@ -101,7 +107,7 @@ export class ActionMoveFlag implements IAction
         }
 
         var entryCode = this.EntryValidation();
-        if (entryCode!=null) return entryCode;
+        if (entryCode != null) return entryCode;
 
         var actionCode = this.unit.MoveToPos(this.target.flag.pos);
         return this.WorkCodeProcessing(actionCode);

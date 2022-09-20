@@ -7,14 +7,16 @@ import { IAction } from "../IAction";
 export class ActionStore implements IAction
 {
     unit: BaseCreep;
-    target: StructureContainer | StructureStorage;
+    target: StructureContainer | StructureStorage | StructureLink;
     range: number;
     resource: ResourceConstant;
+    containerTypes: StructureConstant[];
 
-    constructor(unit: Unit, resource: ResourceConstant, range?: number)
+    constructor(unit: Unit, containerTypes: StructureConstant[], resource: ResourceConstant, range?: number)
     {
         this.unit = unit as BaseCreep;
         this.resource = resource;
+        this.containerTypes=containerTypes;
         if (typeof range === 'undefined')
             range = 999;
         else
@@ -47,7 +49,15 @@ export class ActionStore implements IAction
             }
         }
 
-        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.resource);
+        if (this.range == 2)
+        {
+            this.target = Finder.GetContrainer(this.unit.creep.pos, 1, this.resource, [STRUCTURE_LINK]);
+            if (this.target == null) this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.resource, this.containerTypes);
+        }
+        else
+        {
+            this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.resource, this.containerTypes);
+        }
         if (this.target != null)
         {
             this.unit.targetId = this.target.id;
@@ -82,7 +92,8 @@ export class ActionStore implements IAction
                 this.unit.creep.pos,
                 this.range,
                 this.resource,
-                this.unit.targetId as Id<StructureContainer | StructureStorage>
+                this.containerTypes,
+                this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink>
             );
         if (newTarget != null)
         {
