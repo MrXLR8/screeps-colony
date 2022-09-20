@@ -1,19 +1,21 @@
 import { Finder } from "Logic/Finder";
+import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionFillTower implements IAction
 {
     unit: BaseCreep;
-    target: StructureTower;
+    target: Tower;
 
-    fillFrom:number;
-    constructor(unit: Unit,fillFrom:number)
+    fillUntil:number;
+    constructor(unit: Unit,fillUntil:number)
     {
         this.unit = unit as BaseCreep;
-        this.fillFrom=fillFrom;
+        this.fillUntil=fillUntil;
     }
 
 
@@ -26,7 +28,7 @@ export class ActionFillTower implements IAction
 
         if (this.target == null) return ActionResponseCode.NextTask;
 
-        var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
+        var actionCode = this.unit.creep.withdraw(this.target.structure, RESOURCE_ENERGY);
 
         return this.WorkCodeProcessing(actionCode);
     }
@@ -42,20 +44,20 @@ export class ActionFillTower implements IAction
         var targetId = this.unit.targetId;
         if (targetId == null)
         {
-            this.target = Game.getObjectById(this.unit.targetId as Id<StructureTower>);
+            this.target =new Tower(Game.getObjectById(this.unit.targetId as Id<StructureTower>));
         }
         if (this.target != null)
         {
-            if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) >0)
+            if (this.target.GetUsedStoragePercent(RESOURCE_ENERGY)<this.fillUntil)
             {
                 return; //Target is valid
             }
         }
 
-        this.target = Finder.GetNotFilledTower(this.unit.creep.pos, this.fillFrom);
+        this.target = new Tower(Finder.GetNotFilledTower(this.unit.creep.pos, this.fillUntil));
         if (this.target != null)
         {
-            this.unit.targetId = this.target.id;
+            this.unit.targetId = this.target.structure.id;
         }
     }
 
@@ -64,7 +66,7 @@ export class ActionFillTower implements IAction
         switch (code)
         {
             case ERR_NOT_IN_RANGE:
-                this.unit.MoveToTarget(this.target);
+                this.unit.MoveToTarget(this.target.structure);
                 this.unit.creep.say(">🗼");
                 return ActionResponseCode.Repeat;
             case OK:
@@ -83,7 +85,7 @@ export class ActionFillTower implements IAction
         var newTarget = Finder.GetNotFilledTower
             (
                 this.unit.creep.pos,
-                this.fillFrom,
+                this.fillUntil,
                 this.unit.targetId as Id<StructureTower>
             );
         if (newTarget != null)

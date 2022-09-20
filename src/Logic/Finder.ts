@@ -45,14 +45,14 @@ export class Finder
         return null;
     }
 
-    static GetNotFilledTower(_pos: RoomPosition, filledMoreThen: number, ignoreId?: Id<Structure>): StructureTower
+    static GetNotFilledTower(_pos: RoomPosition, filledLess: number, ignoreId?: Id<Structure>): StructureTower
     {
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) =>
             {
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
-                    structure.store.getCapacity(RESOURCE_ENERGY) > filledMoreThen
+                    Utils.Percent(structure.store.getUsedCapacity(RESOURCE_ENERGY),structure.store.getCapacity(RESOURCE_ENERGY)) < filledLess
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     &&

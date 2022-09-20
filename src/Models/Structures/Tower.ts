@@ -2,9 +2,10 @@ import { Constants } from "Constans";
 import { Finder } from "Logic/Finder";
 import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
+import { IStorable } from "Models/Interfaces/IStorable";
 import { BaseStructure } from "./BaseStructure";
 
-export class Tower extends BaseStructure
+export class Tower extends BaseStructure implements IStorable
 {
     tasks = [this.ActAttack, this.ActRepair,this.ActRepairWalls];
 
@@ -12,6 +13,10 @@ export class Tower extends BaseStructure
     constructor(structure: StructureTower)
     {
         super(structure);
+    }
+   public GetUsedStoragePercent(resource:ResourceConstant): number
+    {
+        return Utils.Percent(this.structure.store.getUsedCapacity(resource),this.structure.store.getCapacity(resource));
     }
 
 
