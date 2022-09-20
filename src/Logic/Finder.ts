@@ -145,7 +145,7 @@ export class Finder
             {
                 return types.includes(structure.structureType)
                     &&
-                    (Utils.CalculatePercentOfHP(structure) < Constants.damagePercentToRepair)
+                    (structure.hits+800<structure.hitsMax)
                     &&
                     structure.id != ignoreId;
             }

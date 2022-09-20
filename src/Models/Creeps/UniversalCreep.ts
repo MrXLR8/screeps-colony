@@ -19,9 +19,9 @@ export class UniversalCreep extends BaseCreep
         new ActionMining(this,false),
         new ActionFillTower(this,20),
         new ActionStoreExtension(this),
-        new ActionRepair(this,[STRUCTURE_CONTAINER,STRUCTURE_ROAD],false,true),
         new ActionFillTower(this,80),
         new ActionBuild(this),
+        new ActionRepair(this,[STRUCTURE_CONTAINER,STRUCTURE_ROAD],false,true),
         new ActionUpgrade(this)
     ];
 }
