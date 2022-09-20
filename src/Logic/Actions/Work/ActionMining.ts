@@ -25,19 +25,7 @@ export class ActionMining implements IAction
         this.unit = unit as BaseCreep;
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
 
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.harvest(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
@@ -64,7 +52,10 @@ export class ActionMining implements IAction
         {
             this.target = Finder.GetClosestSource(this.unit.creep.pos);
         }
-        this.target = Finder.GetRandomSource(this.unit.creep.room);
+        else
+        {
+            this.target = Finder.GetRandomSource(this.unit.creep.room);
+        }
 
         if (this.target != null)
         {
@@ -78,14 +69,16 @@ export class ActionMining implements IAction
         {
             case ERR_NOT_IN_RANGE:
                 this.unit.memory.actionAttempts++;
+
                 if (this.unit.memory.actionAttempts > Constants.moveAttmepts)
                 {
+                    this.unit.log("move attempts");
                     return ActionResponseCode.Reset;
                 }
 
                 this.unit.MoveToTarget(this.target);
                 this.unit.creep.say(">⛏️");
-                return ActionResponseCode.Repeat;
+                return ActionResponseCode.Reset;
             case OK:
                 this.unit.memory.actions.worked = true;
                 this.unit.memory.actionAttempts = 0;
@@ -100,6 +93,20 @@ export class ActionMining implements IAction
     RepeatAction(): boolean
     {
         throw ("Not implemented");
+    }
+
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+        var actionCode = this.unit.creep.harvest(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
 }

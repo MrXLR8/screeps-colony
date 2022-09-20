@@ -7,6 +7,7 @@ import { ActionMining } from "Logic/Actions/Work/ActionMining";
 import { ActionStore } from "Logic/Actions/Carry/ActionStore";
 import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
 import { AssignableFlag } from "Models/AssignableFlag";
+import { IAction } from "Logic/Actions/IAction";
 
 export class HeavyMinerMemory extends BaseCreepMemory
 {
@@ -22,11 +23,11 @@ export class HeavyMinerCreep extends BaseCreep
 
     //tasks = [this.ActHeavyMining, this.ActOneRangeStorage, this.ActDrop];
 
-    tasks: (() => ActionResponseCode)[] =
+    tasks: IAction[] =
         [
-            new ActionMoveFlag(this, COLOR_YELLOW, COLOR_YELLOW, 1).Act,
-            new ActionMining(this, true).Act,
-            new ActionStore(this, RESOURCE_ENERGY, 1).Act
+            new ActionMoveFlag(this, COLOR_YELLOW, COLOR_YELLOW, 1),
+            new ActionMining(this, true),
+            new ActionStore(this, RESOURCE_ENERGY, 2)
         ];
     static Dispose(_mem: CreepMemory)
     {

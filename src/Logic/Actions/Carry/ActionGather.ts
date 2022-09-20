@@ -15,19 +15,7 @@ export class ActionGather implements IAction
     }
 
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
 
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
@@ -91,5 +79,19 @@ export class ActionGather implements IAction
                 this.unit.log("Problem occured. Gather error code: " + code);
                 return ActionResponseCode.NextTask;
         }
+    }
+
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+       if (entryCode!=null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 }

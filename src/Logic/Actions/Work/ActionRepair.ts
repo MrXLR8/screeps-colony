@@ -24,7 +24,7 @@ export class ActionRepair implements IAction
     {
         this.whatToRepair = whatToRepair;
         this.byRandom = byRandom;
-        if (this.unit instanceof BaseCreep)
+        if (unit instanceof BaseCreep)
         {
             this.unit = unit as BaseCreep;
             this.room = this.unit.creep.room;
@@ -40,27 +40,7 @@ export class ActionRepair implements IAction
         }
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
 
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode;
-
-        if (this.unit instanceof BaseCreep)
-        {
-            actionCode = this.unit.creep.repair(this.target);
-        }
-        else
-        {
-            actionCode = this.unit.structure.repair(this.target);
-        }
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
@@ -134,5 +114,27 @@ export class ActionRepair implements IAction
     RepeatAction(): boolean
     {
         throw ("Not implemented");
+    }
+
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+       if (entryCode!=null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode;
+
+        if (this.unit instanceof BaseCreep)
+        {
+            actionCode = this.unit.creep.repair(this.target);
+        }
+        else
+        {
+            actionCode = this.unit.structure.repair(this.target);
+        }
+        return this.WorkCodeProcessing(actionCode);
     }
 }

@@ -14,19 +14,7 @@ export class ActionBuild implements IAction
         this.unit = unit as BaseCreep;
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
 
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.build(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
@@ -72,5 +60,19 @@ export class ActionBuild implements IAction
     RepeatAction(): boolean
     {
         throw("Not Implemented");
+    }
+
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+       if (entryCode!=null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.creep.build(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 }

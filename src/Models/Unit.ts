@@ -1,3 +1,4 @@
+import { IAction } from "Logic/Actions/IAction";
 import { ActionResponseCode } from "./ActionResponseCode";
 import { TickAction } from "./Data/TickAction";
 import { BaseCreepMemory } from "./Memory/BaseCreepMemory";
@@ -5,7 +6,8 @@ import { BaseStructureMemory } from "./Memory/BaseStructureMemory";
 
 export abstract class Unit
 {
-    protected tasks: (() => ActionResponseCode)[];
+    protected tasks: IAction[];
+
 
     abstract get memory(): BaseCreepMemory | BaseStructureMemory;
 
@@ -24,6 +26,7 @@ export abstract class Unit
 
     private IncrementNumber(num: number, max: number): number
     {
+        console.log("resetting");
         num++;
         if (num > max) num = 0;
         return num;
@@ -31,6 +34,9 @@ export abstract class Unit
 
     Act(): void
     {
+
+        if((this.memory as BaseCreepMemory).Role!=1) return; //DEBUG
+        console.log(">>>>");
         this.memory.actions=new TickAction();
         var taskNumber = this.memory.taskNumber;
         var i = this.tasks.length * 2;
@@ -39,17 +45,10 @@ export abstract class Unit
         {
             i--;
 
-            try
-            {
-            var result = this.tasks[taskNumber].call(this);
-            }
-            catch
-            {
-                console.log("Exception caught");
-                this.memory.taskNumber=0;
-                this.memory.targetID=null;
-                this.memory.actionAttempts=0;
-            }
+            var result = this.tasks[taskNumber].Act();
+
+            console.log("TaskNumber" +taskNumber +" ended with: "+result.toString());
+
             codeSwitch: switch (result)
             {
                 case ActionResponseCode.StopCreepAct:
@@ -103,6 +102,7 @@ export abstract class Unit
             }
 
         } while (this.memory.actions.moved&&(this.memory.actions.worked||this.memory.actions.attacked))
+        console.log("<<<<<");
     }
 
 }

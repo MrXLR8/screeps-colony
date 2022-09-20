@@ -27,7 +27,7 @@ export class AssignableFlag
 
   public  isAssigned(creepId: string): boolean
     {
-        return creepId in this.memory.assignedCreeps
+        return this.memory.assignedCreeps.includes(creepId)
     }
 
     public  Assign(creepId: string)

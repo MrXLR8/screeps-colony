@@ -14,7 +14,6 @@ export class ActionMoveFlag implements IAction
     target: AssignableFlag;
     primaryColor: ColorConstant;
     secondaryColor: ColorConstant;
-
     maxAssigned: number;
 
     constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number)
@@ -25,22 +24,41 @@ export class ActionMoveFlag implements IAction
         this.maxAssigned = maxAssigned;
     }
 
-    Act(): ActionResponseCode
+    GetSavedTarget(): void
     {
-        this.GetSavedTarget();
-
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
-
-        if (this.target == null)
+        var targetId = this.unit.targetId;
+        var rawTarget;
+        if (targetId != null)
         {
-            this.unit.creep.say("!🚩(NF)");
-            return ActionResponseCode.Repeat;
+
+            rawTarget= Game.flags[targetId];
+        }
+        if (rawTarget != null)
+        {
+            this.target = new AssignableFlag(rawTarget);
+            if (this.target.CompareColors(this.primaryColor, this.secondaryColor))
+            {
+                if(this.target.isAssigned(this.unit.creep.id)) return;
+                 //Target is valid
+            }
+            this.unit.log("last target is invalid");
         }
 
-        var actionCode = this.unit.creep.moveTo(this.target.flag);
 
-        return this.WorkCodeProcessing(actionCode);
+        this.target=Finder.FindWhereIAmAssigned(this.unit.creep.id);
+        if(this.target!=null) {this.unit.log("found my assign"); return;}
+
+        this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id);
+        if (this.target != null)
+        {
+            this.target.Assign(this.unit.creep.id);
+            this.unit.log("assigned flag " + this.target);
+            this.unit.targetId = this.target.flag.name;
+            var mem = this.unit.memory as HeavyMinerMemory;
+            mem.flagName = this.target.flag.name;
+            this.unit.memory = mem;
+
+        }
     }
 
     EntryValidation(): ActionResponseCode
@@ -49,33 +67,7 @@ export class ActionMoveFlag implements IAction
         return null;
     }
 
-    GetSavedTarget(): void
-    {
-        var targetId = this.unit.targetId;
-        if (targetId == null)
-        {
-            var rawTarget = Game.flags[targetId];
-        }
-        if (rawTarget != null)
-        {
-            this.target = new AssignableFlag(rawTarget);
 
-            if (this.target.CompareColors(this.primaryColor, this.secondaryColor))
-            {
-                this.target.isAssigned(this.unit.creep.id);
-                return; //Target is valid
-            }
-        }
-
-        this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id);
-        if (this.target != null)
-        {
-            this.target.Assign(this.unit.creep.id);
-            var mem = this.unit.memory as HeavyMinerMemory;
-            mem.flagName=this.target.flag.name;
-            this.unit.memory=mem;
-        }
-    }
 
     WorkCodeProcessing(code: CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND): ActionResponseCode
     {
@@ -84,7 +76,7 @@ export class ActionMoveFlag implements IAction
             case ERR_NO_PATH:
                 this.unit.creep.say("!🚩(NP)");
                 return ActionResponseCode.Repeat;
-            case OK:
+            case OK|ERR_TIRED:
                 this.unit.memory.actions.moved = true;
                 this.unit.creep.say(">🚩");
                 return ActionResponseCode.Repeat;
@@ -98,4 +90,24 @@ export class ActionMoveFlag implements IAction
     {
         throw ("Not Implemented");
     }
+
+
+    Act(): ActionResponseCode
+    {
+        this.GetSavedTarget();
+
+
+        if (this.target == null)
+        {
+            this.unit.creep.say("!🚩(NF)");
+            return ActionResponseCode.Repeat;
+        }
+
+        var entryCode = this.EntryValidation();
+        if (entryCode!=null) return entryCode;
+
+        var actionCode = this.unit.MoveToPos(this.target.flag.pos);
+        return this.WorkCodeProcessing(actionCode);
+    }
+
 }

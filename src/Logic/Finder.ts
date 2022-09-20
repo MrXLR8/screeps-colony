@@ -42,11 +42,26 @@ export class Finder
             var flag = Game.flags[flagName];
             if (flag.color == primaryColor && flag.secondaryColor == secondaryColor)
             {
+
                 var obj = new AssignableFlag(flag);
                 if(obj.isAssigned(assignable)) return obj;
                 if(obj.assignedAmmount<maxAssigned) return obj;
             }
         }
+        return null;
+    }
+
+
+    static FindWhereIAmAssigned(creepID:string):AssignableFlag
+    {
+        for (var flagName in Game.flags)
+        {
+            var flag = Game.flags[flagName];
+
+                var obj = new AssignableFlag(flag);
+                if(obj.isAssigned(creepID)) return obj;
+            }
+
         return null;
     }
 

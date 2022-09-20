@@ -15,19 +15,7 @@ export class ActionTowerAttack implements IAction
         this.unit = unit as Tower;
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
 
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.structure.attack(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
@@ -71,5 +59,19 @@ export class ActionTowerAttack implements IAction
     RepeatAction(): boolean
     {
         throw("Not Implemented");
+    }
+
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+       if (entryCode!=null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.structure.attack(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 }

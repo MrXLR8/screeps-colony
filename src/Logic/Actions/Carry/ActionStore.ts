@@ -8,34 +8,27 @@ export class ActionStore implements IAction
 {
     unit: BaseCreep;
     target: StructureContainer | StructureStorage;
-    range:number;
-    resource:ResourceConstant;
+    range: number;
+    resource: ResourceConstant;
 
-    constructor(unit: Unit,resource:ResourceConstant,range?:number)
+    constructor(unit: Unit, resource: ResourceConstant, range?: number)
     {
         this.unit = unit as BaseCreep;
-        this.resource=resource;
-        if(typeof range ==='undefined') range=999;
+        this.resource = resource;
+        if (typeof range === 'undefined')
+            range = 999;
+        else
+            this.range = range
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
 
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.transfer(this.target, this.resource);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.store.getUsedCapacity(this.resource)==0) return ActionResponseCode.NextTask;
+        if (this.unit.creep.store.getUsedCapacity(this.resource) == 0) return ActionResponseCode.NextTask;
+
         return null;
+
     }
 
     GetSavedTarget(): void
@@ -43,17 +36,18 @@ export class ActionStore implements IAction
         var targetId = this.unit.targetId;
         if (targetId == null)
         {
+
             this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage>);
         }
         if (this.target != null)
         {
-            if (this.target.store.getFreeCapacity(this.resource) >0)
+            if (this.target.store.getFreeCapacity(this.resource) > 0)
             {
                 return; //Target is valid
             }
         }
 
-        this.target = Finder.GetContrainer(this.unit.creep.pos,this.range,this.resource);
+        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.resource);
         if (this.target != null)
         {
             this.unit.targetId = this.target.id;
@@ -69,7 +63,7 @@ export class ActionStore implements IAction
                 this.unit.creep.say(">🚚");
                 return ActionResponseCode.Repeat;
             case OK:
-                this.unit.memory.actions.worked=true;
+                this.unit.memory.actions.worked = true;
                 this.unit.creep.say("🚚");
                 if (!this.RepeatAction()) return ActionResponseCode.NextTask;
                 return ActionResponseCode.Repeat;
@@ -81,8 +75,8 @@ export class ActionStore implements IAction
 
     RepeatAction(): boolean
     {
-        var newStore = this.unit.creep.store.getUsedCapacity(this.resource)+this.target.store.getFreeCapacity(this.resource);
-        if(newStore>this.target.store.getCapacity(this.resource)) return false;
+        var newStore = this.unit.creep.store.getUsedCapacity(this.resource) - this.target.store.getFreeCapacity(this.resource);
+        if (newStore < 0) return false;
         var newTarget = Finder.GetContrainer
             (
                 this.unit.creep.pos,
@@ -97,5 +91,19 @@ export class ActionStore implements IAction
             return true;
         }
         return false;
+    }
+
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.creep.transfer(this.target, this.resource);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 }

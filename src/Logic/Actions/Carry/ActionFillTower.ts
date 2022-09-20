@@ -19,19 +19,6 @@ export class ActionFillTower implements IAction
     }
 
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.withdraw(this.target.structure, RESOURCE_ENERGY);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
@@ -95,5 +82,20 @@ export class ActionFillTower implements IAction
             return true;
         }
         return false;
+    }
+
+
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+       if (entryCode!=null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.creep.withdraw(this.target.structure, RESOURCE_ENERGY);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 }

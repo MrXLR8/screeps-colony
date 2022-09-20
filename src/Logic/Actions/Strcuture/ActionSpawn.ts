@@ -24,26 +24,7 @@ export class ActionSpawn implements IAction
         this.unit = unit as Spawner;
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (!entryCode) return entryCode;
 
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        this.PrepareCreepToSpawn()
-
-        if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.NextTask;
-        var actionCode = (this.unit.structure as StructureSpawn).spawnCreep(
-            PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable),
-            this.creepName,
-            this.spawnsettings
-        );
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     EntryValidation(): ActionResponseCode
     {
@@ -130,7 +111,26 @@ export class ActionSpawn implements IAction
         throw ("Not Implemented");
     }
 
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+       if (entryCode!=null) return entryCode;
 
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        this.PrepareCreepToSpawn()
+
+        if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.NextTask;
+        var actionCode = (this.unit.structure as StructureSpawn).spawnCreep(
+            PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable),
+            this.creepName,
+            this.spawnsettings
+        );
+
+        return this.WorkCodeProcessing(actionCode);
+    }
 
 }
 class SpawnSettings implements SpawnOptions
