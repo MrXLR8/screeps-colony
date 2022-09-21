@@ -16,9 +16,12 @@ export class ActionMoveFlag implements IAction
     secondaryColor: ColorConstant;
     maxAssigned: number;
 
-    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number)
+    thisRoomOnly: boolean;
+
+    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number, thisRoomOnly: boolean)
     {
         this.unit = unit as BaseCreep;
+        this.thisRoomOnly = thisRoomOnly;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.maxAssigned = maxAssigned;
@@ -47,6 +50,7 @@ export class ActionMoveFlag implements IAction
 
         if (this.target == null)
         {
+            if (this.thisRoomOnly) this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id, this.unit.creep.room)
             this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id)
             if (this.target != null)
             {
