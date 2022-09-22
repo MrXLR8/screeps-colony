@@ -16,6 +16,7 @@ export class ActionClaim implements IAction
 
     EntryValidation(): ActionResponseCode
     {
+        if (typeof this.unit.creep.room.controller.owner === 'undefined') return null;
         if (this.unit.creep.room.controller.owner.username == this.unit.creep.owner.username) { this.unit.creep.say("✔️"); return ActionResponseCode.Repeat; }
         return null;
     }
@@ -54,7 +55,6 @@ export class ActionClaim implements IAction
         if (entryCode != null) return entryCode;
 
         this.GetSavedTarget();
-
         if (this.target == null) return ActionResponseCode.NextTask;
 
         var actionCode = this.unit.creep.claimController(this.target);
