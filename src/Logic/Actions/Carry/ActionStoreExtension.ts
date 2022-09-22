@@ -31,7 +31,7 @@ export class ActionStoreExtension implements IAction
         }
         if (this.target != null)
         {
-            if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) >0)
+            if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) > 0)
             {
                 return; //Target is valid
             }
@@ -53,7 +53,7 @@ export class ActionStoreExtension implements IAction
                 this.unit.creep.say(">📥");
                 return ActionResponseCode.Repeat;
             case OK:
-                this.unit.memory.actions.worked=true;
+                this.unit.memory.actions.worked = true;
                 this.unit.creep.say("📥");
                 if (!this.RepeatAction()) return ActionResponseCode.NextTask;
                 return ActionResponseCode.Repeat;
@@ -65,6 +65,11 @@ export class ActionStoreExtension implements IAction
 
     RepeatAction(): boolean
     {
+
+        var newStore = this.unit.creep.store.getUsedCapacity(RESOURCE_ENERGY) - this.target.store.getFreeCapacity(RESOURCE_ENERGY);
+
+        console.log("Repeat. My ammount: "+this.unit.creep.store.getUsedCapacity(RESOURCE_ENERGY)+"-"+ this.target.store.getFreeCapacity(RESOURCE_ENERGY));
+        if (newStore <= 0) return false;
         var newTarget = Finder.GetEmptyExtension
             (
                 this.unit.creep.pos,
@@ -82,7 +87,7 @@ export class ActionStoreExtension implements IAction
     Act(): ActionResponseCode
     {
         var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
+        if (entryCode != null) return entryCode;
 
         this.GetSavedTarget();
 

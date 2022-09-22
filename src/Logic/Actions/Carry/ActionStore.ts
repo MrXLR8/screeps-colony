@@ -87,6 +87,8 @@ export class ActionStore implements IAction
     RepeatAction(): boolean
     {
         var newStore = this.unit.creep.store.getUsedCapacity(this.resource) - this.target.store.getFreeCapacity(this.resource);
+
+
         if (newStore < 0) return false;
         var newTarget = Finder.GetContrainer
             (

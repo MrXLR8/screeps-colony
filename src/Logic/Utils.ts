@@ -24,7 +24,7 @@ export class Utils
             }
         }
 
-        for(var name in Game.flags)
+        for (var name in Game.flags)
         {
             var flag = new AssignableFlag(Game.flags[name]);
             flag.ReleaseDead();
@@ -33,7 +33,7 @@ export class Utils
 
     static GetCreepPopulation(room: Room): { [type: number]: number }
     {
-        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0 ,3:0};
+        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
         for (var creepName in Game.creeps)
         {
             var creep: Creep = Game.creeps[creepName];
@@ -45,14 +45,25 @@ export class Utils
         return result;
     }
 
-    static PosCompare(pos1:RoomPosition,pos2:RoomPosition):boolean
+    static PosCompare(pos1: RoomPosition, pos2: RoomPosition): boolean
     {
-        return (pos1.x==pos2.x)&&(pos1.y==pos2.y);
+        return (pos1.x == pos2.x) && (pos1.y == pos2.y);
     }
 
-    static GetUsedStoragePercent<T extends ResourceConstant,K extends boolean>(storage:Store<T,K>,resource:T): number
+    static WhosClose(from:RoomPosition,pos1:RoomObject,pos2:RoomObject):RoomObject
     {
-       return Utils.Percent(storage.getUsedCapacity(resource), storage.getCapacity(resource));;
+        if(pos1==null&&pos2==null) return null;
+        if(pos1==null) return pos2;
+        if(pos2==null) return pos1;
+
+        if(from.getRangeTo(pos1)<from.getRangeTo(pos2)) return pos1;
+        return pos2;
+    }
+
+
+    static GetUsedStoragePercent<T extends ResourceConstant, K extends boolean>(storage: Store<T, K>, resource: T): number
+    {
+        return Utils.Percent(storage.getUsedCapacity(resource), storage.getCapacity(resource));;
     }
 
     static Percent(val: number, max: number): number

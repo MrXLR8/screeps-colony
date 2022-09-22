@@ -19,7 +19,6 @@ export class ClaimerCreep extends BaseCreep
 
     static SpawnCondition(): boolean
     {
-        console.log("spawn condition");
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
@@ -27,7 +26,6 @@ export class ClaimerCreep extends BaseCreep
             if (!assFalg.CompareColors(COLOR_RED, COLOR_WHITE)) continue;
             if (assFalg.assignedAmmount < 1) return true;
         }
-        console.log("spawn condition is false");
         return false;
     }
 

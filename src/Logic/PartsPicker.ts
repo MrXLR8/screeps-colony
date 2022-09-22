@@ -5,9 +5,9 @@ export class PartsPicker
 {
 
     static ClaimerParts: BodyPartConstant[][] =
-    [
-        [MOVE,CLAIM] //600
-    ];
+        [
+            [MOVE, CLAIM] //600
+        ];
     static MinerParts: BodyPartConstant[][] =
         [
             [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
@@ -57,7 +57,7 @@ export class PartsPicker
     static GetAviableParts(type: CreepTypes, energy: number): BodyPartConstant[]
     {
         var collection: BodyPartConstant[][];
-
+        console.log("taking parts of" + type);
         switch (type)
         {
             case CreepTypes.UniversalCreep:

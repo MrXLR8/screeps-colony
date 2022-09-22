@@ -1,13 +1,16 @@
+import { drop } from "lodash";
 import { Finder } from "Logic/Finder";
+import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { Storage } from "Models/Structures/Storage";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionGather implements IAction
 {
     unit: BaseCreep;
-    target: StructureContainer | StructureStorage | StructureLink;
+    target: Storage;
     containerTypes: StructureConstant[]
 
     takeBigFirst: boolean;
@@ -31,13 +34,15 @@ export class ActionGather implements IAction
     GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
+        var found;
         if (targetId != null)
         {
-            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage|StructureLink>);
+            found = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin>);
         }
-        if (this.target != null)
+        if (found != null)
         {
-            if (this.target.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry())
+            this.target = new Storage(found, RESOURCE_ENERGY)
+            if (this.target.ammount > this.unit.AmmountCanCarry())
             {
                 return; //Target is valid
             }
@@ -45,23 +50,29 @@ export class ActionGather implements IAction
 
         if (this.takeBigFirst)
         {
-            this.target = Finder.GetBiggestFilledStorage(this.unit.creep.room, this.containerTypes, this.unit.AmmountCanCarry())
+            found = Finder.GetBiggestFilledStorage(this.unit.creep.room, this.containerTypes, this.unit.AmmountCanCarry());
+            this.target = new Storage(found, RESOURCE_ENERGY);
         }
         else
         {
-            this.target = Finder.GetFilledStorage(this.unit.creep.pos, this.containerTypes, this.unit.AmmountCanCarry());
+            var structure = Finder.GetFilledStorage(this.unit.creep.pos, this.containerTypes, this.unit.AmmountCanCarry());
+            var dropped = Finder.FindDropped(this.unit.creep.pos, this.unit.AmmountCanCarry());
+
+            found = Utils.WhosClose(this.unit.creep.pos, structure, dropped) as StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin;
+
+            this.target = new Storage(found, RESOURCE_ENERGY);
         }
 
         if (this.target != null)
         {
-            this.unit.targetId = this.target.id;
+            this.unit.targetId = found.id;
         }
     }
 
     RepeatAction(): boolean
     {
-        var newStore = this.target.store.getUsedCapacity(RESOURCE_ENERGY)-this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY);
-        if(newStore<0) return false;
+        var newStore = this.target.ammount - this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY);
+        if (newStore < 0) return false;
         var newTarget = Finder.GetFilledStorage
             (
                 this.unit.creep.pos,
@@ -83,7 +94,7 @@ export class ActionGather implements IAction
         switch (code)
         {
             case ERR_NOT_IN_RANGE:
-                this.unit.MoveToTarget(this.target);
+                this.unit.MoveToTarget(this.target.storage);
                 this.unit.creep.say(">⚡");
                 return ActionResponseCode.Repeat;
             case OK:
@@ -106,7 +117,7 @@ export class ActionGather implements IAction
 
         if (this.target == null) return ActionResponseCode.NextTask;
 
-        var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
+        var actionCode = this.target.Gather(this.unit);
 
         return this.WorkCodeProcessing(actionCode);
     }
