@@ -39,7 +39,7 @@ export class ActionSpawn implements IAction
     {
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
         var creepGlobal: { [type: number]: number } = Utils.GetCreepPopulation();
-        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
+        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0,5:0,6:0,7:0,8:0 };
 
         for (var order of Constants.ScenarioProduce)
         {
@@ -57,7 +57,6 @@ export class ActionSpawn implements IAction
                     }
                     continue;
                 }
-                console.log("TYPE: " + order + "\n" + creepRequiredMoment[order] + " > " + creepExist[order])
                 this.target = order;
                 return;
             }

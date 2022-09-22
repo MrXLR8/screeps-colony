@@ -1,38 +1,13 @@
 import { Constants } from "Constans";
 import { CreepTypes } from "Models/Creeps/BaseCreep";
+import { ClaimerCreep } from "Models/Creeps/Claimer";
+import { CourierCreep } from "Models/Creeps/Courier";
+import { ExpiditorCreep } from "Models/Creeps/ExpiditorCreep";
+import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
+import { UniversalCreep } from "Models/Creeps/UniversalCreep";
 
 export class PartsPicker
 {
-
-    static ClaimerParts: BodyPartConstant[][] =
-        [
-            [MOVE, CLAIM] //600
-        ];
-    static MinerParts: BodyPartConstant[][] =
-        [
-            [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
-            [MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY], //500
-            [MOVE, MOVE, WORK, WORK, CARRY, CARRY], //400
-            [MOVE, MOVE, WORK, CARRY, CARRY] //300
-        ];
-
-    static CourierParts: BodyPartConstant[][] =
-        [
-            [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //750
-            [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //600
-            [MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //450
-            [MOVE, MOVE, CARRY, CARRY, CARRY, CARRY] //300
-        ];
-
-    static HeavyMinerParts: BodyPartConstant[][] =
-        [
-            [MOVE,MOVE,MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
-            [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
-            [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
-            [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
-            [MOVE, WORK, WORK, CARRY] //300
-        ];
-
     static BodyPartsPrice: { [part: string]: number } =
         {
             "move": 50,
@@ -62,19 +37,19 @@ export class PartsPicker
         switch (type)
         {
             case CreepTypes.UniversalCreep:
-                collection = this.MinerParts;
+                collection = UniversalCreep.parts;
                 break;
             case CreepTypes.HeavyMiner:
-                collection = this.HeavyMinerParts;
+                collection = HeavyMinerCreep.parts;
                 break;
             case CreepTypes.Courier:
-                collection = this.CourierParts;
+                collection = CourierCreep.parts;
                 break;
             case CreepTypes.Claimer:
-                collection = this.ClaimerParts;
+                collection = ClaimerCreep.parts;
                 break;
             case CreepTypes.ExpeditorCreep:
-                collection = this.MinerParts;
+                collection = ExpiditorCreep.parts;
                 break;
             default:
                 return null;

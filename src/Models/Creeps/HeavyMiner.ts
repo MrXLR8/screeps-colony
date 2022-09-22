@@ -13,7 +13,14 @@ import { IAction } from "Logic/Actions/IAction";
 export class HeavyMinerCreep extends BaseCreep
 {
 
-    //tasks = [this.ActHeavyMining, this.ActOneRangeStorage, this.ActDrop];
+    static parts: BodyPartConstant[][] =
+    [
+        [MOVE,MOVE,MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
+        [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
+        [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
+        [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
+        [MOVE, WORK, WORK, CARRY] //300
+    ];
 
     tasks: IAction[] =
         [

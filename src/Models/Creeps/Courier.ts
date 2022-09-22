@@ -15,6 +15,14 @@ import { ActionSalvage } from "Logic/Actions/Carry/ActionSalvage";
 export class CourierCreep extends BaseCreep
 {
 
+    static parts: BodyPartConstant[][] =
+    [
+        [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //750
+        [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //600
+        [MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //450
+        [MOVE, MOVE, CARRY, CARRY, CARRY, CARRY] //300
+    ];
+
     tasks: IAction[] =
     [
         new ActionSalvage(this,200),

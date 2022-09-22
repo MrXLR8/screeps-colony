@@ -10,6 +10,12 @@ import { BaseCreep } from "./BaseCreep";
 export class ClaimerCreep extends BaseCreep
 {
 
+
+    static parts: BodyPartConstant[][] =
+        [
+            [MOVE, CLAIM] //600
+        ];
+
     tasks: IAction[] =
         [
             new ActionMoveFlag(this, COLOR_RED, COLOR_WHITE, 1, false),
