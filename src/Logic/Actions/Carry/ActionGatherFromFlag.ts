@@ -61,8 +61,9 @@ export class ActionGatherFromFlag implements IAction
             var flag = Game.flags[flagName];
             if (flag.color == this.primaryColor && flag.secondaryColor == this.secondaryColor)
             {
+                if (flag.room != this.unit.creep.room) return null;
                 var found = flag.pos.lookFor<"structure">("structure")[0] as StructureContainer | StructureStorage | StructureLink;
-                if(found.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry()) return found;
+                if (found.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry()) return found;
             }
         }
         return null;

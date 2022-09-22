@@ -25,6 +25,8 @@ export class Constants
               CreepTypes.ExpeditorCreep,
               CreepTypes.ExpeditorCreep,
               CreepTypes.ExpeditorCreep,
+              CreepTypes.ExpeditorCreep,
+              CreepTypes.ExpeditorCreep,
         ];
 }
 

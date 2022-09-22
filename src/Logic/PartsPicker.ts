@@ -33,7 +33,6 @@ export class PartsPicker
     static GetAviableParts(type: CreepTypes, energy: number): BodyPartConstant[]
     {
         var collection: BodyPartConstant[][];
-        console.log("taking parts of" + type);
         switch (type)
         {
             case CreepTypes.UniversalCreep:

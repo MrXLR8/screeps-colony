@@ -47,7 +47,8 @@ export class ExpiditorCreep extends BaseCreep
         for (var roomName in Game.rooms)
         {
             room = Game.rooms[roomName];
-            if (room.controller == null || room.controller == undefined) continue;
+            if (typeof room.controller === 'undefined') continue;
+            if (typeof room.controller.owner==='undefined') continue;
             if (room.controller.owner.username != Constants.userName) continue;
             if (room.controller.level < Constants.weakController) secondTarget = room;
             if (room.find(FIND_MY_SPAWNS)[0] == null) return room;

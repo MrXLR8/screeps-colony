@@ -91,6 +91,7 @@ export class ActionSpawn implements IAction
                 console.log("Unabled to spawn, low resources. Tried to spawn - " + this.creepName);
                 return ActionResponseCode.Repeat;
             case ERR_INVALID_ARGS:
+                return ActionResponseCode.Repeat;
             //console.log("invalid args for spawned: " + this.creepName + ". " + JSON.stringify(this.spawnsettings));
             default:
                 this.unit.log("Problem occured. Spawner error code: " + code);
