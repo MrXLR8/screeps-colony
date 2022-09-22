@@ -8,19 +8,20 @@ import { ActionStore } from "Logic/Actions/Carry/ActionStore";
 import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { IAction } from "Logic/Actions/IAction";
+import { EnergySource } from "Models/Structures/EnergySource";
 
 
 export class HeavyMinerCreep extends BaseCreep
 {
 
     static parts: BodyPartConstant[][] =
-    [
-        [MOVE,MOVE,MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
-        [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
-        [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
-        [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
-        [MOVE, WORK, WORK, CARRY] //300
-    ];
+        [
+            [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
+            [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
+            [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
+            [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
+            [MOVE, WORK, WORK, CARRY] //300
+        ];
 
     tasks: IAction[] =
         [
@@ -29,6 +30,20 @@ export class HeavyMinerCreep extends BaseCreep
             new ActionStore(this, [STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK], RESOURCE_ENERGY, 2)
         ];
 
+
+
+
+    Assign(): boolean
+    {
+        var source = this.creep.room.find(FIND_SOURCES, {
+            filter: (src) =>
+            {
+                var obj = new EnergySource(src);
+                return obj.TryToAssignMiner(this)
+            }
+        });
+        return source!=null;
+    }
 
     static SpawnCondition(): boolean
     {

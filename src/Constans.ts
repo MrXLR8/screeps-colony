@@ -21,6 +21,8 @@ export class Constants
               CreepTypes.Courier,
               CreepTypes.HeavyMiner,
               CreepTypes.HeavyMiner,
+              CreepTypes.HeavyMiner,
+              CreepTypes.HeavyMiner,
               CreepTypes.Claimer,
               CreepTypes.ExpeditorCreep,
               CreepTypes.ExpeditorCreep,
