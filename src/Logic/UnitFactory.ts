@@ -1,6 +1,7 @@
 import { BaseCreep, CreepTypes } from "Models/Creeps/BaseCreep";
 import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { CourierCreep } from "Models/Creeps/Courier";
+import { ExpiditorCreep } from "Models/Creeps/ExpiditorCreep";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { UniversalCreep } from "Models/Creeps/UniversalCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
@@ -32,6 +33,9 @@ export class UnitFactory
         break;
       case CreepTypes.Claimer:
         creepWrapper = new ClaimerCreep(creep);
+        break;
+      case CreepTypes.ExpeditorCreep:
+        creepWrapper = new ExpiditorCreep(creep);
         break;
       default:
         console.log(creep.name + " has uknown role of: " + typeOfCreep + "\n" + JSON.stringify(creep.memory as BaseCreepMemory));

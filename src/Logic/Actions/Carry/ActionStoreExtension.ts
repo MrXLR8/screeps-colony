@@ -68,7 +68,6 @@ export class ActionStoreExtension implements IAction
 
         var newStore = this.unit.creep.store.getUsedCapacity(RESOURCE_ENERGY) - this.target.store.getFreeCapacity(RESOURCE_ENERGY);
 
-        console.log("Repeat. My ammount: "+this.unit.creep.store.getUsedCapacity(RESOURCE_ENERGY)+"-"+ this.target.store.getFreeCapacity(RESOURCE_ENERGY));
         if (newStore <= 0) return false;
         var newTarget = Finder.GetEmptyExtension
             (

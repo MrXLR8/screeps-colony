@@ -49,8 +49,13 @@ export class ActionMoveFlag implements IAction
 
         if (this.target == null)
         {
-            if (this.thisRoomOnly) this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id, this.unit.creep.room)
-            this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id)
+            this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id, this.unit.creep.room);
+
+            if (this.target == null && !this.thisRoomOnly)
+            {
+                this.target = Finder.GetFlagByColors(this.primaryColor, this.secondaryColor, this.maxAssigned, this.unit.creep.id)
+            }
+
             if (this.target != null)
             {
                 this.target.Assign(this.unit.creep.id);

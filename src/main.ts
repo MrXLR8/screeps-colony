@@ -1,3 +1,4 @@
+import { Constants } from "Constans";
 import { UnitFactory } from "Logic/UnitFactory";
 import { Utils } from "Logic/Utils";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
@@ -8,6 +9,8 @@ import { Tower } from "Models/Structures/Tower";
 export function loop()
 {
   Utils.MemoryCleanUp();
+
+  Constants.userName="XLR8";
 
   if (Game.cpu.bucket == 10000)
   {

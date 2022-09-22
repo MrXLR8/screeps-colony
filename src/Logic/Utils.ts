@@ -33,7 +33,7 @@ export class Utils
 
     static GetCreepPopulation(room: Room): { [type: number]: number }
     {
-        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
+        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0,4:0 };
         for (var creepName in Game.creeps)
         {
             var creep: Creep = Game.creeps[creepName];

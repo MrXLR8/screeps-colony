@@ -8,6 +8,7 @@ export class Constants
     static moveAttmepts = 40;
     static towerEnergyReserve = 20;
 
+    static userName:string;
     static ScenarioProduce: CreepTypes[] =
         [
               CreepTypes.UniversalCreep,
@@ -16,7 +17,12 @@ export class Constants
               CreepTypes.UniversalCreep,
               CreepTypes.HeavyMiner,
               CreepTypes.Courier,
-              CreepTypes.Claimer
+              CreepTypes.HeavyMiner,
+              CreepTypes.HeavyMiner,
+              CreepTypes.Claimer,
+              CreepTypes.ExpeditorCreep,
+              CreepTypes.ExpeditorCreep,
+              CreepTypes.ExpeditorCreep,
         ];
 }
 

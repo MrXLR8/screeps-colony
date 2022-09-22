@@ -12,6 +12,7 @@ import { PartsPicker } from "Logic/PartsPicker";
 import { Unit } from "Models/Unit";
 import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
+import { ExpiditorCreep } from "Models/Creeps/ExpiditorCreep";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -37,7 +38,7 @@ export class ActionSpawn implements IAction
     GetSavedTarget(): void
     {
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
-        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
+        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 ,4:0};
 
 
         for (var order of Constants.ScenarioProduce)
@@ -61,6 +62,8 @@ export class ActionSpawn implements IAction
                 return HeavyMinerCreep.SpawnCondition();
             case CreepTypes.Claimer:
                 return ClaimerCreep.SpawnCondition();
+            case CreepTypes.ExpeditorCreep:
+                return ExpiditorCreep.SpawnCondition() != null;
             default:
                 return true;
         }
@@ -78,7 +81,7 @@ export class ActionSpawn implements IAction
                 console.log("Unabled to spawn, low resources. Tried to spawn - " + this.creepName);
                 return ActionResponseCode.Repeat;
             case ERR_INVALID_ARGS:
-                //console.log("invalid args for spawned: " + this.creepName + ". " + JSON.stringify(this.spawnsettings));
+            //console.log("invalid args for spawned: " + this.creepName + ". " + JSON.stringify(this.spawnsettings));
             default:
                 this.unit.log("Problem occured. Spawner error code: " + code);
                 return ActionResponseCode.NextTask;
@@ -104,28 +107,30 @@ export class ActionSpawn implements IAction
         mem.taskNumber = 0;
         mem.assignedTo = null;
         mem.actionAttempts = 0;
+        mem.Role = this.target;
         this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
 
         switch (this.target)
         {
             case CreepTypes.UniversalCreep:
-                mem.Role = CreepTypes.UniversalCreep;
                 this.creepName = this.GetAviableCreepName("Universal");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.HeavyMiner:
-                mem.Role = CreepTypes.HeavyMiner;
                 this.creepName = this.GetAviableCreepName("Miner");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Courier:
-                mem.Role = CreepTypes.Courier;
                 this.creepName = this.GetAviableCreepName("Courier");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Claimer:
-                mem.Role = CreepTypes.Claimer;
                 this.creepName = this.GetAviableCreepName("Claimer");
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
+            case CreepTypes.ExpeditorCreep:
+                this.creepName = this.GetAviableCreepName("Expiditor");
+                mem.assignedTo = ExpiditorCreep.GetMyNoSpawnRoom().controller.id;
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:

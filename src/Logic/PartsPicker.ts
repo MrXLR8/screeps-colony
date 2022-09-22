@@ -72,6 +72,9 @@ export class PartsPicker
             case CreepTypes.Claimer:
                 collection = this.ClaimerParts;
                 break;
+            case CreepTypes.ExpeditorCreep:
+                collection = this.MinerParts;
+                break;
             default:
                 return null;
         }
