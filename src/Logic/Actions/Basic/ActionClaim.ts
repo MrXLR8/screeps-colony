@@ -16,17 +16,16 @@ export class ActionClaim implements IAction
 
     EntryValidation(): ActionResponseCode
     {
-        if(this.unit.creep.room.controller.owner==this.unit.creep.owner) {this.unit.creep.say("✔️"); return ActionResponseCode.Repeat;}
-        if (this.unit.creep.store.energy == 0) return ActionResponseCode.NextTask;
+        if (this.unit.creep.room.controller.owner.username == this.unit.creep.owner.username) { this.unit.creep.say("✔️"); return ActionResponseCode.Repeat; }
         return null;
     }
 
     GetSavedTarget(): void
     {
-        this.target=this.unit.creep.room.controller;
+        this.target = this.unit.creep.room.controller;
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode| ERR_FULL | ERR_GCL_NOT_ENOUGH): ActionResponseCode
+    WorkCodeProcessing(code: ScreepsReturnCode | ERR_FULL | ERR_GCL_NOT_ENOUGH): ActionResponseCode
     {
         switch (code)
         {
@@ -35,9 +34,9 @@ export class ActionClaim implements IAction
                 this.unit.creep.say(">🎪");
                 return ActionResponseCode.Repeat;
             case OK:
-                this.unit.memory.actions.worked=true;
+                this.unit.memory.actions.worked = true;
                 this.unit.creep.say("🎪");
-                 return ActionResponseCode.Repeat;
+                return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Claim error code: " + code);
                 return ActionResponseCode.NextTask;
@@ -46,13 +45,13 @@ export class ActionClaim implements IAction
 
     RepeatAction(): boolean
     {
-        throw("Not Implemented");
+        throw ("Not Implemented");
     }
 
     Act(): ActionResponseCode
     {
         var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
+        if (entryCode != null) return entryCode;
 
         this.GetSavedTarget();
 

@@ -38,11 +38,13 @@ export class ActionSpawn implements IAction
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
         var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
+
         for (var order of Constants.ScenarioProduce)
         {
             creepRequiredMoment[order]++;
             if (creepRequiredMoment[order] > creepExist[order])
             {
+                console.log("order : "+order+"\n"+creepRequiredMoment[order]+"."+creepExist[order]);
                 if(!this.CheckSpawnCondition(order)) continue;
                 this.target = order;
                 return;
@@ -53,7 +55,7 @@ export class ActionSpawn implements IAction
 
     CheckSpawnCondition(type: CreepTypes): boolean
     {
-        switch (this.target)
+        switch (type)
         {
             case CreepTypes.HeavyMiner:
                 return HeavyMinerCreep.SpawnCondition();

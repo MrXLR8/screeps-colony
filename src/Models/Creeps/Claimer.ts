@@ -27,6 +27,7 @@ export class ClaimerCreep extends BaseCreep
             if (!assFalg.CompareColors(COLOR_RED, COLOR_WHITE)) continue;
             if (assFalg.assignedAmmount < 1) return true;
         }
+        console.log("spawn condition is false");
         return false;
     }
 

@@ -22,7 +22,7 @@ export class Finder
 
     static GetEmptyExtension(_pos: RoomPosition, ignoreId?: Id<Structure>): StructureExtension | StructureSpawn
     {
-        var target = _pos.findClosestByRange(FIND_STRUCTURES, {
+        var target = _pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (structure) =>
             {
                 return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN)
@@ -67,7 +67,7 @@ export class Finder
 
     static GetNotFilledTower(_pos: RoomPosition, filledLess: number, ignoreId?: Id<Structure>): StructureTower
     {
-        var target = _pos.findClosestByRange(FIND_STRUCTURES, {
+        var target = _pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (structure) =>
             {
                 return (structure.structureType == STRUCTURE_TOWER)
@@ -86,7 +86,7 @@ export class Finder
     static GetFilledStorage(_pos: RoomPosition, structureTypes: StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage | StructureLink
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
-        var target = _pos.findClosestByRange(FIND_STRUCTURES, {
+        var target = _pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (structure) =>
             {
                 return structureTypes.includes(structure.structureType) //|| structure.structureType == STRUCTURE_SPAWN
@@ -118,7 +118,7 @@ export class Finder
     static FindDropped(_pos: RoomPosition, minAmmount?: number, ignoreId?: Id<Resource>): Resource
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
-        return _pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.amount > minAmmount && dropped.id != ignoreId } });
+        return _pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.amount > minAmmount && dropped.id != ignoreId } });
     }
 
     static GetContrainer(_pos: RoomPosition, range: number, resource: ResourceConstant, structureTypes: StructureConstant[], ignoreId?: Id<StructureContainer | StructureStorage | StructureLink>): StructureContainer | StructureStorage | StructureLink
@@ -186,6 +186,6 @@ export class Finder
 
     static GetConstructionSites(_pos: RoomPosition, ignoreId?: Id<ConstructionSite>): ConstructionSite
     {
-        return _pos.findClosestByRange(FIND_CONSTRUCTION_SITES, { filter: (structure) => { return structure.id != ignoreId } });
+        return _pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (structure) => { return structure.id != ignoreId } });
     }
 }
