@@ -3,8 +3,7 @@ import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
-import { HeavyMinerMemory } from "Models/Creeps/HeavyMiner";
-import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
+import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
@@ -61,8 +60,8 @@ export class ActionMoveFlag implements IAction
         if (this.target != null)
         {
             this.unit.targetId = this.target.flag.name;
-            var mem = this.unit.memory as HeavyMinerMemory;
-            mem.flagName = this.target.flag.name;
+            var mem = this.unit.memory as BaseCreepMemory;
+            mem.assignedTo = this.target.flag.name;
             this.unit.memory = mem;
         }
     }

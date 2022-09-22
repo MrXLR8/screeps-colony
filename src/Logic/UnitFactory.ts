@@ -1,4 +1,5 @@
 import { BaseCreep, CreepTypes } from "Models/Creeps/BaseCreep";
+import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { CourierCreep } from "Models/Creeps/Courier";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { UniversalCreep } from "Models/Creeps/UniversalCreep";
@@ -28,6 +29,9 @@ export class UnitFactory
         break;
       case CreepTypes.Courier:
         creepWrapper = new CourierCreep(creep);
+        break;
+      case CreepTypes.Claimer:
+        creepWrapper = new ClaimerCreep(creep);
         break;
       default:
         console.log(creep.name + " has uknown role of: " + typeOfCreep + "\n" + JSON.stringify(creep.memory as BaseCreepMemory));
@@ -79,7 +83,7 @@ export class UnitFactory
 
     if (request == undefined)
     {
-      console.log(id+" creating memory");
+      console.log(id + " creating memory");
       var mem = new BaseStructureMemory();
       (Memory as GlobalMemory).structures[id] = mem;
     }

@@ -9,14 +9,6 @@ import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { IAction } from "Logic/Actions/IAction";
 
-export class HeavyMinerMemory extends BaseCreepMemory
-{
-    minerStatus: number = 0;
-    flagName: string;
-    flagX: number = null;
-    flagY: number = null;
-
-}
 
 export class HeavyMinerCreep extends BaseCreep
 {
@@ -25,14 +17,27 @@ export class HeavyMinerCreep extends BaseCreep
 
     tasks: IAction[] =
         [
-            new ActionMoveFlag(this, COLOR_YELLOW, COLOR_YELLOW, 1),
+            new ActionMoveFlag(this, COLOR_YELLOW, COLOR_YELLOW, 1, true),
             new ActionMining(this, true),
-            new ActionStore(this,[STRUCTURE_CONTAINER,STRUCTURE_STORAGE,STRUCTURE_LINK],RESOURCE_ENERGY, 2)
+            new ActionStore(this, [STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK], RESOURCE_ENERGY, 2)
         ];
+
+
+    static SpawnCondition(): boolean
+    {
+        for (var flagName in Game.flags)
+        {
+            var flag = Game.flags[flagName];
+            var assFalg = new AssignableFlag(flag);
+            if (!assFalg.CompareColors(COLOR_YELLOW, COLOR_YELLOW)) continue;
+            if (assFalg.assignedAmmount < 1) return true;
+        }
+        return false;
+    }
     static Dispose(_mem: CreepMemory)
     {
-        var mem = _mem as HeavyMinerMemory;
-        var flag = Game.flags[mem.flagName];
+        var mem = _mem as BaseCreepMemory;
+        var flag = Game.flags[mem.assignedTo];
 
         if (!flag) return;
 

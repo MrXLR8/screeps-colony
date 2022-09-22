@@ -35,32 +35,32 @@ export class Finder
         return target as StructureExtension | StructureSpawn;
     }
 
-    static GetFlagByColors(primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number,assignable:string): AssignableFlag
+    static GetFlagByColors(primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number, assignable: string, room?: Room): AssignableFlag
     {
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
+            if (typeof room !== 'undefined') if (flag.room != room) continue;
             if (flag.color == primaryColor && flag.secondaryColor == secondaryColor)
             {
-
                 var obj = new AssignableFlag(flag);
-                if(obj.isAssigned(assignable)) return obj;
-                if(obj.assignedAmmount<maxAssigned) return obj;
+                if (obj.isAssigned(assignable)) return obj;
+                if (obj.assignedAmmount < maxAssigned) return obj;
             }
         }
         return null;
     }
 
 
-    static FindWhereIAmAssigned(creepID:string):AssignableFlag
+    static FindWhereIAmAssigned(creepID: string): AssignableFlag
     {
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
 
-                var obj = new AssignableFlag(flag);
-                if(obj.isAssigned(creepID)) return obj;
-            }
+            var obj = new AssignableFlag(flag);
+            if (obj.isAssigned(creepID)) return obj;
+        }
 
         return null;
     }
@@ -72,7 +72,7 @@ export class Finder
             {
                 return (structure.structureType == STRUCTURE_TOWER)
                     &&
-                    Utils.GetUsedStoragePercent(structure.store,RESOURCE_ENERGY) <= filledLess
+                    Utils.GetUsedStoragePercent(structure.store, RESOURCE_ENERGY) <= filledLess
                     &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     &&
@@ -83,7 +83,7 @@ export class Finder
     }
 
 
-    static GetFilledStorage(_pos: RoomPosition, structureTypes:StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage|StructureLink
+    static GetFilledStorage(_pos: RoomPosition, structureTypes: StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage | StructureLink
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
         var target = _pos.findClosestByRange(FIND_STRUCTURES, {
@@ -96,10 +96,10 @@ export class Finder
                     structure.id != ignoreId
             }
         });
-        return target as StructureContainer | StructureStorage|StructureLink;
+        return target as StructureContainer | StructureStorage | StructureLink;
     }
 
-    static GetBiggestFilledStorage(room: Room, structureTypes:StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage|StructureLink
+    static GetBiggestFilledStorage(room: Room, structureTypes: StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage | StructureLink
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
         var target = room.find(FIND_STRUCTURES, {
@@ -111,8 +111,8 @@ export class Finder
                     &&
                     structure.id != ignoreId
             }
-        }).sort((a,b)=> { return (b as any).store.getUsedCapacity()-(a as any).store.getUsedCapacity()});
-        return target[0] as StructureContainer | StructureStorage|StructureLink;
+        }).sort((a, b) => { return (b as any).store.getUsedCapacity() - (a as any).store.getUsedCapacity() });
+        return target[0] as StructureContainer | StructureStorage | StructureLink;
     }
 
     static FindDropped(_pos: RoomPosition, minAmmount?: number, ignoreId?: Id<Resource>): Resource
@@ -121,7 +121,7 @@ export class Finder
         return _pos.findClosestByRange(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.amount > minAmmount && dropped.id != ignoreId } });
     }
 
-    static GetContrainer(_pos: RoomPosition, range: number, resource: ResourceConstant,structureTypes:StructureConstant[],ignoreId?: Id<StructureContainer | StructureStorage|StructureLink>): StructureContainer | StructureStorage | StructureLink
+    static GetContrainer(_pos: RoomPosition, range: number, resource: ResourceConstant, structureTypes: StructureConstant[], ignoreId?: Id<StructureContainer | StructureStorage | StructureLink>): StructureContainer | StructureStorage | StructureLink
     {
         var target = _pos.findInRange<StructureContainer | StructureStorage | StructureLink>(FIND_STRUCTURES, range,
             {
@@ -134,7 +134,7 @@ export class Finder
                         &&
                         structure.id != ignoreId
                 }
-            }).sort((a,b)=>{return a.pos.getRangeTo(b)});
+            }).sort((a, b) => { return a.pos.getRangeTo(b) });
         return target[0];
     }
 
@@ -145,7 +145,7 @@ export class Finder
             {
                 return types.includes(structure.structureType)
                     &&
-                    (structure.hits+800<structure.hitsMax)
+                    (structure.hits + 800 < structure.hitsMax)
                     &&
                     structure.id != ignoreId;
             }

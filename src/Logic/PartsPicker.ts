@@ -3,6 +3,11 @@ import { CreepTypes } from "Models/Creeps/BaseCreep";
 
 export class PartsPicker
 {
+
+    static ClaimerParts: BodyPartConstant[][] =
+    [
+        [MOVE,CLAIM] //600
+    ];
     static MinerParts: BodyPartConstant[][] =
         [
             [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
@@ -13,7 +18,7 @@ export class PartsPicker
 
     static CourierParts: BodyPartConstant[][] =
         [
-            [MOVE, MOVE, MOVE, MOVE,MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,CARRY,CARRY], //750
+            [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //750
             [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //600
             [MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //450
             [MOVE, MOVE, CARRY, CARRY, CARRY, CARRY] //300
@@ -63,6 +68,9 @@ export class PartsPicker
                 break;
             case CreepTypes.Courier:
                 collection = this.CourierParts;
+                break;
+            case CreepTypes.Claimer:
+                collection = this.ClaimerParts;
                 break;
             default:
                 return null;

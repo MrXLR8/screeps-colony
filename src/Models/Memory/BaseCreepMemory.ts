@@ -7,7 +7,7 @@ export class BaseCreepMemory implements CreepMemory
     targetID: string;
     actionAttempts: number = 0;
     taskNumber: number = 0;
-
+    assignedTo:string;
     actions:TickAction = new TickAction();
 
 }

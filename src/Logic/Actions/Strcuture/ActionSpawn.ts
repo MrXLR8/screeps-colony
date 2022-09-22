@@ -8,9 +8,10 @@ import { Spawner } from "Models/Structures/Spawner";
 import { Utils } from "Logic/Utils";
 import { Constants } from "Constans";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
-import { HeavyMinerMemory } from "Models/Creeps/HeavyMiner";
 import { PartsPicker } from "Logic/PartsPicker";
 import { Unit } from "Models/Unit";
+import { ClaimerCreep } from "Models/Creeps/Claimer";
+import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -35,17 +36,32 @@ export class ActionSpawn implements IAction
     GetSavedTarget(): void
     {
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
-        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0 };
+        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
         for (var order of Constants.ScenarioProduce)
         {
             creepRequiredMoment[order]++;
             if (creepRequiredMoment[order] > creepExist[order])
             {
+                if(!this.CheckSpawnCondition(order)) continue;
                 this.target = order;
+                return;
             }
         }
-        return null;
+    }
+
+
+    CheckSpawnCondition(type: CreepTypes): boolean
+    {
+        switch (this.target)
+        {
+            case CreepTypes.HeavyMiner:
+                return HeavyMinerCreep.SpawnCondition();
+            case CreepTypes.Claimer:
+                return ClaimerCreep.SpawnCondition();
+            default:
+                return true;
+        }
     }
 
     WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
@@ -53,6 +69,7 @@ export class ActionSpawn implements IAction
         switch (code)
         {
             case OK:
+                console.log("Spawning creep: "+this.creepName);
                 this.unit.memory.actions.worked = true;
                 return ActionResponseCode.Repeat;
             case ERR_NOT_ENOUGH_RESOURCES:
@@ -78,42 +95,42 @@ export class ActionSpawn implements IAction
         return combo;
     }
 
-    private PrepareCreepToSpawn()
+    private PrepareCreepToSpawn(): boolean
     {
 
-        var mem: BaseCreepMemory;
+        var mem: BaseCreepMemory = new BaseCreepMemory();
+        mem.taskNumber = 0;
+        mem.assignedTo = null;
+        mem.actionAttempts = 0;
 
         switch (this.target)
         {
             case CreepTypes.UniversalCreep:
-                mem = new BaseCreepMemory();
-                mem.taskNumber = 0;
-                mem.actionAttempts = 0;
                 mem.Role = CreepTypes.UniversalCreep;
                 this.creepName = this.GetAviableCreepName("Universal");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.HeavyMiner:
-                var _mem = new HeavyMinerMemory();
-                _mem.taskNumber = 0;
-                _mem.actionAttempts = 0;
-                _mem.flagX = null;
-                _mem.flagY = null;
-                _mem.Role = CreepTypes.HeavyMiner;
+                mem.Role = CreepTypes.HeavyMiner;
                 this.creepName = this.GetAviableCreepName("Miner");
-                this.spawnsettings = new SpawnSettings(_mem);
+                this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Courier:
-                mem = new BaseCreepMemory();
-                mem.taskNumber = 0;
-                mem.actionAttempts = 0;
                 mem.Role = CreepTypes.Courier;
                 this.creepName = this.GetAviableCreepName("Courier");
                 this.spawnsettings = new SpawnSettings(mem);
+            case CreepTypes.Claimer:
+                mem.Role = CreepTypes.Claimer;
+                this.creepName = this.GetAviableCreepName("Claimer");
+                this.spawnsettings = new SpawnSettings(mem);
+
                 break;
             default:
                 console.log("Uknown creep type to spawn");
+                return false;
         }
+
+        return true;
     }
 
     RepeatAction(): boolean

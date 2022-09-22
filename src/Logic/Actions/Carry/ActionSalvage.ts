@@ -84,7 +84,7 @@ export class ActionSalvage implements IAction
 
         this.GetSavedTarget();
 
-        if (this.target == null) { this.unit.log("failed to find storage"); return ActionResponseCode.NextTask; }
+        if (this.target == null) return ActionResponseCode.NextTask;
         var actionCode;
         if (this.target instanceof Resource) actionCode = this.unit.creep.pickup(this.target);
         else
