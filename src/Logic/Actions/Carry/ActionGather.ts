@@ -51,12 +51,14 @@ export class ActionGather implements IAction
         if (this.takeBigFirst)
         {
             found = Finder.GetBiggestFilledStorage(this.unit.creep.room, this.containerTypes, this.unit.AmmountCanCarry());
-            this.target = new Storage(found, RESOURCE_ENERGY);
+            if (found != null) this.target = new Storage(found, RESOURCE_ENERGY);
+
         }
         else
         {
             var structure = Finder.GetFilledStorage(this.unit.creep.pos, this.containerTypes, this.unit.AmmountCanCarry());
             var dropped = Finder.FindDropped(this.unit.creep.pos, this.unit.AmmountCanCarry());
+
 
             found = Utils.WhosClose(this.unit.creep.pos, structure, dropped) as StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin;
 
@@ -65,7 +67,8 @@ export class ActionGather implements IAction
 
         if (this.target != null)
         {
-            this.unit.targetId = found.id;
+
+            this.unit.targetId = this.target.storage.id;
         }
     }
 
