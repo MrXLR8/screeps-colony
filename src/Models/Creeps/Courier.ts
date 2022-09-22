@@ -34,5 +34,11 @@ export class CourierCreep extends BaseCreep
         new ActionFillTower(this,99)
 
     ];
+
+    static SpawnCondition(room:Room): boolean
+    {
+        var found =  room.find(FIND_MY_STRUCTURES,{filter:(structure)=> {return structure.structureType==STRUCTURE_STORAGE}});
+        return found!=null;
+    }
 }
 

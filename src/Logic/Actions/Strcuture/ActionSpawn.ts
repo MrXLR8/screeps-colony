@@ -13,6 +13,7 @@ import { Unit } from "Models/Unit";
 import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { ExpiditorCreep } from "Models/Creeps/ExpiditorCreep";
+import { CourierCreep } from "Models/Creeps/Courier";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -39,7 +40,7 @@ export class ActionSpawn implements IAction
     {
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
         var creepGlobal: { [type: number]: number } = Utils.GetCreepPopulation();
-        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0,5:0,6:0,7:0,8:0 };
+        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
 
         for (var order of Constants.ScenarioProduce)
         {
@@ -70,10 +71,12 @@ export class ActionSpawn implements IAction
         {
             case CreepTypes.HeavyMiner:
                 return HeavyMinerCreep.SpawnCondition();
+            case CreepTypes.Courier:
+                return CourierCreep.SpawnCondition(this.unit.structure.room);
             case CreepTypes.Claimer:
                 return ClaimerCreep.SpawnCondition();
             case CreepTypes.ExpeditorCreep:
-                return ExpiditorCreep.SpawnCondition() != null;
+                return ExpiditorCreep.SpawnCondition(this.unit.structure.room) != null;
             default:
                 return true;
         }

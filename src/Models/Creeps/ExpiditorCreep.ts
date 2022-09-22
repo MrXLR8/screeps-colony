@@ -16,10 +16,7 @@ export class ExpiditorCreep extends BaseCreep
 
     static parts: BodyPartConstant[][] =
         [
-            [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
-            [MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY], //500
-            [MOVE, MOVE, WORK, WORK, CARRY, CARRY], //400
-            [MOVE, MOVE, WORK, CARRY, CARRY] //300
+            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //800
         ];
 
     tasks: IAction[] =
@@ -35,8 +32,9 @@ export class ExpiditorCreep extends BaseCreep
             new ActionUpgrade(this)
         ];
 
-    static SpawnCondition(): boolean
+    static SpawnCondition(room:Room): boolean
     {
+        if(room.energyAvailable<800) return false;
         return this.GetMyNoSpawnRoom() != null;
     }
 
