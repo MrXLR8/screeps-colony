@@ -10,8 +10,8 @@ import { IAction } from "../IAction";
 export class ActionMoveToRoom implements IAction
 {
     unit: BaseCreep;
-    target:StructureController;
-    constructor(unit: Unit, )
+    target: StructureController;
+    constructor(unit: Unit,)
     {
         this.unit = unit as BaseCreep;
     }
@@ -24,7 +24,11 @@ export class ActionMoveToRoom implements IAction
 
     EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.room.name==this.target.room.name) { return ActionResponseCode.NextTask; }
+        if (this.unit.creep.room.name == this.target.room.name)
+        {
+            //this.unit.MoveToTarget(this.unit.creep.room.controller);
+            return ActionResponseCode.NextTask;
+        }
         return null;
     }
 

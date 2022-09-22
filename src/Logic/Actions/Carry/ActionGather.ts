@@ -60,8 +60,8 @@ export class ActionGather implements IAction
             var dropped = Finder.FindDropped(this.unit.creep.pos, this.unit.AmmountCanCarry());
 
             found = Utils.WhosClose(this.unit.creep.pos, structure, dropped) as StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin;
+            if(found!=null) this.target = new Storage(found, RESOURCE_ENERGY);
 
-            this.target = new Storage(found, RESOURCE_ENERGY);
         }
 
         if (this.target != null)

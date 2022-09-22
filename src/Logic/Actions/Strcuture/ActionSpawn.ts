@@ -38,8 +38,8 @@ export class ActionSpawn implements IAction
     GetSavedTarget(): void
     {
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
-        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 ,4:0};
-
+        var creepGlobal: { [type: number]: number } = Utils.GetCreepPopulation();
+        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
 
         for (var order of Constants.ScenarioProduce)
         {
@@ -47,6 +47,17 @@ export class ActionSpawn implements IAction
             if (creepRequiredMoment[order] > creepExist[order])
             {
                 if (!this.CheckSpawnCondition(order)) continue;
+                if (order == CreepTypes.ExpeditorCreep)
+                {
+                    if (creepRequiredMoment[order] > creepGlobal[order])
+                    {
+                        if (!this.CheckSpawnCondition(order)) continue;
+                        this.target = order;
+                        return;
+                    }
+                    continue;
+                }
+                console.log("TYPE: " + order + "\n" + creepRequiredMoment[order] + " > " + creepExist[order])
                 this.target = order;
                 return;
             }

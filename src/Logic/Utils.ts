@@ -2,6 +2,7 @@ import { copyFileSync } from "fs";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { CreepTypes } from "Models/Creeps/BaseCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
+import { type } from "os";
 import { UnitFactory } from "./UnitFactory";
 
 export class Utils
@@ -31,13 +32,13 @@ export class Utils
         }
     }
 
-    static GetCreepPopulation(room: Room): { [type: number]: number }
+    static GetCreepPopulation(room?: Room): { [type: number]: number }
     {
-        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0,4:0 };
+        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
         for (var creepName in Game.creeps)
         {
             var creep: Creep = Game.creeps[creepName];
-            if (creep.room.name != room.name) continue;
+            if (typeof room !== 'undefined') if (creep.room.name != room.name) continue;
             var role: CreepTypes = ((creep.memory) as BaseCreepMemory).Role;
             result[role]++;
         }
@@ -50,13 +51,13 @@ export class Utils
         return (pos1.x == pos2.x) && (pos1.y == pos2.y);
     }
 
-    static WhosClose(from:RoomPosition,pos1:RoomObject,pos2:RoomObject):RoomObject
+    static WhosClose(from: RoomPosition, pos1: RoomObject, pos2: RoomObject): RoomObject
     {
-        if(pos1==null&&pos2==null) return null;
-        if(pos1==null) return pos2;
-        if(pos2==null) return pos1;
+        if (pos1 == null && pos2 == null) return null;
+        if (pos1 == null) return pos2;
+        if (pos2 == null) return pos1;
 
-        if(from.getRangeTo(pos1)<from.getRangeTo(pos2)) return pos1;
+        if (from.getRangeTo(pos1) < from.getRangeTo(pos2)) return pos1;
         return pos2;
     }
 
