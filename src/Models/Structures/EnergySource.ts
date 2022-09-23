@@ -41,15 +41,28 @@ export class EnergySource
         ];
 
 
+    static GetFreeMinerSourceInRoom(room: Room):EnergySource
+    {
+       var found =  room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myMiner == null } })[0];
+       if(found!=null) return new EnergySource(found);
+       return null;
+    }
+
+    static GetFreeHaulerSourceInRoom(room: Room):EnergySource
+    {
+        var found = room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myHauler } })[0];
+        if(found!=null) return new EnergySource(found);
+        return null;
+    }
 
     TryToAssignMiner(creep: BaseCreep): boolean
     {
         if (this.memory.myMiner == null)
         {
-            this.memory.myMiner = creep.creep.id;
+            this.memory.myMiner = creep.creep.name;
             return true;
         }
-        if (this.memory.myMiner != creep.creep.id) return false;
+        if (this.memory.myMiner != creep.creep.name) return false;
         return true;
     }
 
@@ -58,10 +71,10 @@ export class EnergySource
 
         if (this.memory.myHauler == null)
         {
-            this.memory.myHauler = creep.creep.id;
+            this.memory.myHauler = creep.creep.name;
             return true;
         }
-        if (this.memory.myHauler != creep.creep.id) return false;
+        if (this.memory.myHauler != creep.creep.name) return false;
         return true;
     }
 
@@ -71,13 +84,13 @@ export class EnergySource
         var found: Creep;
         if (this.memory.myMiner != null)
         {
-            found = Game.getObjectById<Id<Creep>>(this.memory.myMiner as Id<Creep>);
-            if(found==null) this.memory.myMiner=null;
+            found = Game.creeps[this.memory.myMiner]
+            if (found == null) this.memory.myMiner = null;
         }
         if (this.memory.myHauler != null)
         {
-            found = Game.getObjectById<Id<Creep>>(this.memory.myHauler as Id<Creep>);
-            if(found==null) this.memory.myHauler=null;
+            found = Game.creeps[this.memory.myHauler];
+            if (found == null) this.memory.myHauler = null;
         }
     }
 

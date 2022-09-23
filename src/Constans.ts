@@ -13,7 +13,6 @@ export class Constants
     static userName:string;
     static ScenarioProduce: CreepTypes[] =
         [
-              CreepTypes.UniversalCreep,
               CreepTypes.HeavyMiner,
               CreepTypes.UniversalCreep,
               CreepTypes.UniversalCreep,

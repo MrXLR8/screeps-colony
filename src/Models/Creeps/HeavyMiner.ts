@@ -9,6 +9,7 @@ import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { IAction } from "Logic/Actions/IAction";
 import { EnergySource } from "Models/Structures/EnergySource";
+import { ActionAssignedMining } from "Logic/Actions/Work/ActionAssignedMining";
 
 
 export class HeavyMinerCreep extends BaseCreep
@@ -25,13 +26,9 @@ export class HeavyMinerCreep extends BaseCreep
 
     tasks: IAction[] =
         [
-            new ActionMoveFlag(this, COLOR_YELLOW, COLOR_YELLOW, 1, false),
-            new ActionMining(this, true),
+            new ActionAssignedMining(this),
             new ActionStore(this, [STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK], RESOURCE_ENERGY, 2)
         ];
-
-
-
 
     Assign(): boolean
     {
@@ -45,16 +42,9 @@ export class HeavyMinerCreep extends BaseCreep
         return source!=null;
     }
 
-    static SpawnCondition(): boolean
+    static SpawnCondition(room:Room): EnergySource
     {
-        for (var flagName in Game.flags)
-        {
-            var flag = Game.flags[flagName];
-            var assFalg = new AssignableFlag(flag);
-            if (!assFalg.CompareColors(COLOR_YELLOW, COLOR_YELLOW)) continue;
-            if (assFalg.assignedAmmount < 1) return true;
-        }
-        return false;
+        return EnergySource.GetFreeMinerSourceInRoom(room);
     }
     static Dispose(_mem: CreepMemory)
     {
