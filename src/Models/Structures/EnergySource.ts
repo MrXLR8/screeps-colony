@@ -1,20 +1,12 @@
 import { IAction } from "Logic/Actions/IAction";
-import { ActionLinkSend } from "Logic/Actions/Strcuture/ActionLinkSend";
-import { ActionTowerAttack } from "Logic/Actions/Strcuture/ActionTowerAttack";
-import { ActionRepair } from "Logic/Actions/Work/ActionRepair";
-import { Utils } from "Logic/Utils";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
-import { IStorable } from "Models/Interfaces/IStorable";
-import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { BaseStructureMemory } from "Models/Memory/BaseStructureMemory";
 import { GlobalMemory } from "Models/Memory/GlobalMemory";
-import { Memory } from "../../../test/unit/mock";
-import { BaseStructure } from "./BaseStructure";
 
-class SourceMemory extends BaseCreepMemory
+export class SourceMemory extends BaseStructureMemory
 {
-    myMiner: string;
-    myHauler: string;
+    myMiner: string=null;
+    myHauler: string=null;
 }
 
 export class EnergySource
@@ -24,8 +16,30 @@ export class EnergySource
 
     constructor(_structure: Source)
     {
-        this.structure = this.structure;
+        this.structure = _structure;
+        if(typeof this.memory==='undefined') this.memory=new SourceMemory();
+       // EnergySource.StructureMemoryExistsCheck(_structure.id);
+
     }
+
+/*
+    static StructureMemoryExistsCheck(id: Id<any>)
+    {
+        var mem = (Memory as GlobalMemory);
+        if (mem.structures == undefined)
+        {
+            mem.structures = {};
+        }
+        var request = mem.structures[id];
+
+        if (typeof request === 'undefined')
+        {
+            console.log(id + " creating memory");
+            var mem2 = new SourceMemory();
+            mem.structures[id.toString()] = mem2;
+        }
+    }
+    */
 
     get memory(): SourceMemory
     {
@@ -41,17 +55,17 @@ export class EnergySource
         ];
 
 
-    static GetFreeMinerSourceInRoom(room: Room):EnergySource
+    static GetFreeMinerSourceInRoom(room: Room): EnergySource
     {
-       var found =  room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myMiner == null } })[0];
-       if(found!=null) return new EnergySource(found);
-       return null;
+        var found = room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myMiner == null } })[0];
+        if (found != null) return new EnergySource(found);
+        return null;
     }
 
-    static GetFreeHaulerSourceInRoom(room: Room):EnergySource
+    static GetFreeHaulerSourceInRoom(room: Room): EnergySource
     {
         var found = room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myHauler } })[0];
-        if(found!=null) return new EnergySource(found);
+        if (found != null) return new EnergySource(found);
         return null;
     }
 
@@ -60,10 +74,11 @@ export class EnergySource
         if (this.memory.myMiner == null)
         {
             this.memory.myMiner = creep.creep.name;
+            creep.memory.assignedTo = this.structure.id;
             return true;
         }
         if (this.memory.myMiner != creep.creep.name) return false;
-        return true;
+        else return true
     }
 
     TryToAssignHauler(creep: BaseCreep): boolean
@@ -72,12 +87,12 @@ export class EnergySource
         if (this.memory.myHauler == null)
         {
             this.memory.myHauler = creep.creep.name;
+            creep.memory.assignedTo = this.structure.id;
             return true;
         }
         if (this.memory.myHauler != creep.creep.name) return false;
         return true;
     }
-
 
     CheckForDead()
     {

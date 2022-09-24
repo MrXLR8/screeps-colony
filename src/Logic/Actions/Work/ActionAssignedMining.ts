@@ -1,20 +1,23 @@
 import { Constants } from "Constans";
+import { assign } from "lodash";
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
+import { IAssignable } from "Models/Interfaces/IAssignable";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionAssignedMining implements IAction
 {
-    unit: BaseCreep;
+    unit: IAssignable;
     target: Source;
 
     lookForClosest: boolean;
 
-    constructor(unit: Unit)
+    constructor(unit: IAssignable)
     {
-        this.unit = unit as BaseCreep;
+        this.unit = unit as IAssignable;
     }
 
     EntryValidation(): ActionResponseCode
@@ -26,6 +29,7 @@ export class ActionAssignedMining implements IAction
     GetSavedTarget(): void
     {
         this.target = Game.getObjectById<Id<Source>>(this.unit.memory.assignedTo as Id<Source>);
+        if(this.target==null) this.unit.Assign();
     }
 
     WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
