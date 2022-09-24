@@ -17,14 +17,6 @@ export class ActionMoveFlag implements IAction
 
     thisRoomOnly: boolean;
 
-    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number, thisRoomOnly: boolean)
-    {
-        this.unit = unit as BaseCreep;
-        this.thisRoomOnly = thisRoomOnly;
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
-        this.maxAssigned = maxAssigned;
-    }
 
     GetSavedTarget(): void
     {
@@ -120,5 +112,33 @@ export class ActionMoveFlag implements IAction
         var actionCode = this.unit.MoveToPos(this.target.flag.pos);
         return this.WorkCodeProcessing(actionCode);
     }
+
+
+
+    //#region factory
+    constructor(unit: Unit)
+    {
+        this.unit = unit as BaseCreep;
+        this.thisRoomOnly=false;
+        this.maxAssigned = 1;
+    }
+    WithColors(primaryColor: ColorConstant, secondaryColor: ColorConstant): ActionMoveFlag
+    {
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+        return this;
+    }
+    MaxAssigned(maxAssigned:number) : ActionMoveFlag
+    {
+        this.maxAssigned = maxAssigned;
+        return this;
+    }
+
+    BindToRoom(): ActionMoveFlag
+    {
+        this.thisRoomOnly = true;
+        return this;
+    }
+    //#endregion
 
 }

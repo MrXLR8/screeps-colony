@@ -10,26 +10,15 @@ export class ActionMining implements IAction
     unit: BaseCreep;
     target: Source;
 
-    lookForClosest: boolean;
+    findRandomSource: boolean;
 
-    constructor(unit: Unit, lookForClosest?: boolean)
-    {
-        if (typeof lookForClosest !== 'undefined')
-        {
-            this.lookForClosest = lookForClosest;
-        }
-        else
-        {
-            this.lookForClosest = false;
-        }
-        this.unit = unit as BaseCreep;
-    }
+
 
 
 
     EntryValidation(): ActionResponseCode
     {
-        if ((this.unit.creep.getActiveBodyparts(WORK)*2) >this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
+        if ((this.unit.creep.getActiveBodyparts(WORK) * 2) > this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
         return null;
     }
 
@@ -48,7 +37,7 @@ export class ActionMining implements IAction
             }
         }
 
-        if (this.lookForClosest)
+        if (!this.findRandomSource)
         {
             this.target = Finder.GetClosestSource(this.unit.creep.pos);
         }
@@ -109,5 +98,19 @@ export class ActionMining implements IAction
 
         return this.WorkCodeProcessing(actionCode);
     }
+
+    //#region
+    constructor(unit: Unit)
+    {
+        this.unit = unit as BaseCreep;
+        this.findRandomSource = false;
+    }
+
+    FindRandomSource(): ActionMining
+    {
+        this.findRandomSource = true;
+        return this;
+    }
+    //#endregion
 
 }

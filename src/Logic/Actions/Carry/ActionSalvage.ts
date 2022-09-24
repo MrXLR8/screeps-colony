@@ -9,12 +9,8 @@ export class ActionSalvage implements IAction
     unit: BaseCreep;
     target: Tombstone | Resource | Ruin;
 
-    minAmmount:number;
-    constructor(unit: Unit,minAmmount:number)
-    {
-        this.unit = unit as BaseCreep;
-        this.minAmmount=minAmmount;
-    }
+    minAmmount: number;
+
 
     EntryValidation(): ActionResponseCode
     {
@@ -44,9 +40,9 @@ export class ActionSalvage implements IAction
 
         this.target = this.unit.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (res) => { return res.amount > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => {return tomb.store.energy > this.minAmmount } });
+        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => { return tomb.store.energy > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => {return ruin.store.energy > this.minAmmount } });
+        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => { return ruin.store.energy > this.minAmmount } });
 
         if (this.target != null)
         {
@@ -94,4 +90,18 @@ export class ActionSalvage implements IAction
 
         return this.WorkCodeProcessing(actionCode);
     }
+
+
+    //#region  factory
+    constructor(unit: Unit)
+    {
+        this.unit = unit as BaseCreep;
+        this.minAmmount = 0;
+    }
+
+    MinAmmount(minAmmount: number)
+    {
+        this.minAmmount = minAmmount;
+    }
+    //#endregion
 }

@@ -12,11 +12,6 @@ export class ActionFillTower implements IAction
     target: StructureTower;
 
     fillUntil: number;
-    constructor(unit: Unit, fillUntil: number)
-    {
-        this.unit = unit as BaseCreep;
-        this.fillUntil = fillUntil;
-    }
 
 
 
@@ -105,4 +100,19 @@ export class ActionFillTower implements IAction
 
         return this.WorkCodeProcessing(actionCode);
     }
+
+
+    //#region  factory
+    constructor(unit: Unit)
+    {
+        this.unit = unit as BaseCreep;
+        this.fillUntil = 100;
+    }
+
+    FillUntil(fillUntil: number)
+    {
+        this.fillUntil = fillUntil;
+        return this;
+    }
+    //#endregion
 }

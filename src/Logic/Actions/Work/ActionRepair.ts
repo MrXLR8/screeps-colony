@@ -24,27 +24,6 @@ export class ActionRepair implements IAction
 
     keepTask:boolean;
     whatToRepair: StructureConstant[];
-    constructor(unit: Unit, whatToRepair: StructureConstant[], byRandom: boolean, keepTask:boolean,towerReserves?: number)
-    {
-        this.whatToRepair = whatToRepair;
-        this.byRandom = byRandom;
-        this.keepTask=keepTask;
-        if (unit instanceof BaseCreep)
-        {
-            this.unit = unit as BaseCreep;
-            this.room = this.unit.creep.room;
-            this.energyStored = this.unit.creep.store[RESOURCE_ENERGY];
-        }
-        else if (unit instanceof BaseStructure)
-        {
-            this.unit = unit as Tower;
-            this.room = this.unit.structure.room;
-            this.towerReserves = towerReserves;
-            this.energyStored = this.unit.structure.store[RESOURCE_ENERGY];
-            this.energyPercent = Utils.Percent(this.energyStored, this.unit.structure.store.getCapacity(RESOURCE_ENERGY));
-        }
-        else { console.log("UNKNOWN INSTANCE"); }
-    }
 
 
 
@@ -145,4 +124,54 @@ export class ActionRepair implements IAction
         }
         return this.WorkCodeProcessing(actionCode);
     }
+
+
+    //#region factory
+    constructor(unit: Unit)
+    {
+
+        this.byRandom = false;
+        this.keepTask=false;
+        this.towerReserves = 0;
+        if (unit instanceof BaseCreep)
+        {
+            this.unit = unit as BaseCreep;
+            this.room = this.unit.creep.room;
+            this.energyStored = this.unit.creep.store[RESOURCE_ENERGY];
+        }
+        else if (unit instanceof BaseStructure)
+        {
+            this.unit = unit as Tower;
+            this.room = this.unit.structure.room;
+            this.energyStored = this.unit.structure.store[RESOURCE_ENERGY];
+            this.energyPercent = Utils.Percent(this.energyStored, this.unit.structure.store.getCapacity(RESOURCE_ENERGY));
+        }
+        else { console.log("UNKNOWN INSTANCE"); }
+    }
+
+    Structures(whatToRepair: StructureConstant[]):ActionRepair
+    {
+        this.whatToRepair = whatToRepair;
+        return this;
+    }
+
+    ChooseRandomly():ActionRepair
+    {
+        this.byRandom = true;
+        return this;
+    }
+
+    RepeatToEnd():ActionRepair
+    {
+        this.keepTask=true;
+        return this;
+    }
+
+    EnergyReserves(towerReserves: number):ActionRepair
+    {
+        this.towerReserves = towerReserves;
+        return this;
+    }
+
+    //#endregion
 }

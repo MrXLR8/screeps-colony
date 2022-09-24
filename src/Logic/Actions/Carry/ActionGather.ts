@@ -15,12 +15,6 @@ export class ActionGather implements IAction
 
     takeBigFirst: boolean;
 
-    constructor(unit: Unit, takeBigFirst: boolean, containerTypes: StructureConstant[])
-    {
-        this.unit = unit as BaseCreep;
-        this.takeBigFirst = takeBigFirst;
-        this.containerTypes = containerTypes;
-    }
 
 
 
@@ -60,7 +54,7 @@ export class ActionGather implements IAction
             var dropped = Finder.FindDropped(this.unit.creep.pos, this.unit.AmmountCanCarry());
 
             found = Utils.WhosClose(this.unit.creep.pos, structure, dropped) as StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin;
-            if(found!=null) this.target = new Storage(found, RESOURCE_ENERGY);
+            if (found != null) this.target = new Storage(found, RESOURCE_ENERGY);
 
         }
 
@@ -123,4 +117,28 @@ export class ActionGather implements IAction
 
         return this.WorkCodeProcessing(actionCode);
     }
+
+
+
+
+
+
+    //#region Factory
+    constructor(unit: Unit)
+    {
+        this.unit = unit as BaseCreep;
+        this.takeBigFirst = false;
+    }
+
+    ContainerTypes(containerTypes: StructureConstant[]) : ActionGather
+    {
+        this.containerTypes = containerTypes;
+        return this;
+    }
+    PriorityBigFirst() : ActionGather
+    {
+        this.takeBigFirst = true;
+        return this;
+    }
+    //#endregion
 }

@@ -14,12 +14,7 @@ export class ActionGatherFromFlag implements IAction
 
     secondaryColor: ColorConstant;
 
-    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant)
-    {
-        this.unit = unit as BaseCreep;
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
-    }
+
 
 
 
@@ -105,4 +100,20 @@ export class ActionGatherFromFlag implements IAction
 
         return this.WorkCodeProcessing(actionCode);
     }
+
+    //#region  factory
+    constructor(unit: Unit)
+    {
+        this.unit = unit as BaseCreep;
+    }
+
+    WithColors(primaryColor: ColorConstant, secondaryColor: ColorConstant): ActionGatherFromFlag
+    {
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+        return this;
+    }
+
+
+    //#endregion
 }
