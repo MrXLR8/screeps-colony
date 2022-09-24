@@ -10,20 +10,20 @@ export class ActionStore implements IAction
     target: StructureContainer | StructureStorage | StructureLink;
     range: number;
     resource: ResourceConstant;
+    dropOnFull:boolean;
     containerTypes: StructureConstant[];
 
-    constructor(unit: Unit, containerTypes: StructureConstant[], resource: ResourceConstant, range?: number)
+    constructor(unit: Unit, containerTypes: StructureConstant[], resource: ResourceConstant, dropOnFull:boolean, range?: number)
     {
         this.unit = unit as BaseCreep;
         this.resource = resource;
+        this.dropOnFull=dropOnFull;
         this.containerTypes = containerTypes;
         if (typeof range === 'undefined')
             this.range = 999;
         else
             this.range = range
     }
-
-
 
     EntryValidation(): ActionResponseCode
     {
