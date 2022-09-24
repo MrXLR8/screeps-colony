@@ -29,10 +29,9 @@ export class CourierCreep extends BaseCreep
         new ActionGatherFromFlag(this,COLOR_YELLOW,COLOR_WHITE),
         new ActionGather(this,true,[STRUCTURE_CONTAINER]),
         new ActionSalvage(this,0),
-        new ActionStore(this,[STRUCTURE_STORAGE],RESOURCE_ENERGY),
-        new ActionGather(this,true,[STRUCTURE_STORAGE]),
-        new ActionFillTower(this,99)
-
+        new ActionStore(this,[STRUCTURE_STORAGE],RESOURCE_ENERGY,false),
+       // new ActionGather(this,true,[STRUCTURE_STORAGE]),
+        //new ActionFillTower(this,99),
     ];
 
     static SpawnCondition(room:Room): boolean

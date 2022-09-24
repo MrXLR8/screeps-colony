@@ -8,26 +8,18 @@ export class Constants
     static moveAttmepts = 40;
     static towerEnergyReserve = 20;
 
-    static weakController:number=3;
+    static weakController: number = 3;
 
-    static userName:string;
+    static userName: string;
     static ScenarioProduce: CreepTypes[] =
         [
-              CreepTypes.HeavyMiner,
-              CreepTypes.UniversalCreep,
-              CreepTypes.UniversalCreep,
-              CreepTypes.HeavyMiner,
-              CreepTypes.Courier,
-              CreepTypes.HeavyMiner,
-              CreepTypes.HeavyMiner,
-              CreepTypes.HeavyMiner,
-              CreepTypes.HeavyMiner,
-              CreepTypes.Claimer,
-              CreepTypes.ExpeditorCreep,
-              CreepTypes.ExpeditorCreep,
-              CreepTypes.ExpeditorCreep,
-              CreepTypes.ExpeditorCreep,
-              CreepTypes.ExpeditorCreep,
+            CreepTypes.UniversalCreep,
+            CreepTypes.HeavyMiner,
+            CreepTypes.HeavyMiner,
+            CreepTypes.UniversalCreep,
+            CreepTypes.UniversalCreep,
+            CreepTypes.UniversalCreep,
+            CreepTypes.Courier,
         ];
 }
 
