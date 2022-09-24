@@ -15,7 +15,7 @@ export class UniversalCreep extends BaseCreep
     static parts: BodyPartConstant[][] =
         [
             [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
-            [MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY], //500
+            [MOVE, MOVE,MOVE, WORK, WORK, WORK, CARRY, CARRY], //550
             [MOVE, MOVE, WORK, WORK, CARRY, CARRY], //400
             [MOVE, MOVE, WORK, CARRY, CARRY] //300
         ];

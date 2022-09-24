@@ -80,6 +80,7 @@ export abstract class Unit
                 case ActionResponseCode.Reset:
                     {
                         this.memory.taskNumber = 0;
+                        this.memory.actionAttempts = 0;
                         this.memory.targetID = null;
                         break doLoop;
                     }

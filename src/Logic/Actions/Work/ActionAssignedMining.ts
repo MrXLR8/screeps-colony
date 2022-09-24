@@ -37,12 +37,6 @@ export class ActionAssignedMining implements IAction
         switch (code)
         {
             case ERR_NOT_IN_RANGE:
-                this.unit.memory.actionAttempts++;
-                if (this.unit.memory.actionAttempts > Constants.moveAttmepts)
-                {
-                    this.unit.log("move attempts");
-                    return ActionResponseCode.Reset;
-                }
                 this.unit.MoveToTarget(this.target);
                 this.unit.creep.say(">⛏️");
                 return ActionResponseCode.Repeat;

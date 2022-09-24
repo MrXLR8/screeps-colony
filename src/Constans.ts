@@ -20,6 +20,9 @@ export class Constants
             CreepTypes.UniversalCreep,
             CreepTypes.UniversalCreep,
             CreepTypes.Courier,
+            CreepTypes.ExpeditorCreep,
+            CreepTypes.ExpeditorCreep,
+            CreepTypes.ExpeditorCreep,
         ];
 }
 
