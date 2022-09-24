@@ -42,7 +42,7 @@ export class ActionSalvage implements IAction
                 }
         }
 
-        this.target = this.unit.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (res) => { return res.amount > this.minAmmount } });
+       // this.target = this.unit.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (res) => { return res.amount > this.minAmmount } });
 
         if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => {return tomb.store.energy > this.minAmmount } });
 

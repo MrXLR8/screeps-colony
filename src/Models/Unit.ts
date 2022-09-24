@@ -46,7 +46,6 @@ export abstract class Unit
         doLoop: do
         {
             i--;
-
             var result = this.tasks[taskNumber].Act();
 
          //  console.log("TaskNumber" +taskNumber +" ended with: "+result.toString() +"\nMoved: "+this.memory.actions.moved+"|Actioned: "+this.memory.actions.worked);

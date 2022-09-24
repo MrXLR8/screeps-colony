@@ -7,6 +7,7 @@ import { ActionRepair } from "Logic/Actions/Work/ActionRepair";
 import { ActionBuild } from "Logic/Actions/Work/ActionBuild";
 import { ActionUpgrade } from "Logic/Actions/Work/ActionUpgrade";
 import { IAction } from "Logic/Actions/IAction";
+import { ActionSalvage } from "Logic/Actions/Carry/ActionSalvage";
 
 
 export class UniversalCreep extends BaseCreep
@@ -22,6 +23,7 @@ export class UniversalCreep extends BaseCreep
 
     tasks: IAction[] =
     [
+        new ActionSalvage(this,200),
         new ActionGather(this,false,[STRUCTURE_CONTAINER,STRUCTURE_STORAGE]),
         new ActionMining(this,false),
         new ActionFillTower(this,20),
