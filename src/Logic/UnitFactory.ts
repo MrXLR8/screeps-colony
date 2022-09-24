@@ -81,15 +81,21 @@ export class UnitFactory
     return structureWrapper;
   }
 
-  static StructureMemoryExistsCheck(id: Id<Structure>)
+  static StructureMemoryExistsCheck(id: Id<any>)
   {
-    var request = (Memory as GlobalMemory).structures[id];
+    var mem = (Memory as GlobalMemory);
 
-    if (request == undefined)
+    if (mem.structures == undefined)
     {
-      console.log(id + " creating memory");
-      var mem = new BaseStructureMemory();
-      (Memory as GlobalMemory).structures[id] = mem;
+      mem.structures = {};
+    }
+    var request = mem.structures[id];
+
+    if (typeof request === 'undefined')
+    {
+      console.log(id+" creating memory");
+      var mem2 = new BaseStructureMemory();
+      mem.structures[id.toString()] = mem2;
     }
   }
 }
