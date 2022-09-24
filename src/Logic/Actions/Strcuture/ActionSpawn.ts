@@ -28,8 +28,6 @@ export class ActionSpawn implements IAction
         this.unit = unit as Spawner;
     }
 
-
-
     EntryValidation(): ActionResponseCode
     {
         if ((this.unit.structure as StructureSpawn).spawning) return ActionResponseCode.NextTask;
@@ -69,14 +67,15 @@ export class ActionSpawn implements IAction
     {
         switch (type)
         {
-            case CreepTypes.HeavyMiner:
-                return HeavyMinerCreep.SpawnCondition();
+            case CreepTypes.HeavyMiner: {
+                return HeavyMinerCreep.SpawnCondition(this.unit.structure.room);
+            }
             case CreepTypes.Courier:
                 return CourierCreep.SpawnCondition(this.unit.structure.room);
             case CreepTypes.Claimer:
                 return ClaimerCreep.SpawnCondition();
             case CreepTypes.ExpeditorCreep:
-                return ExpiditorCreep.SpawnCondition(this.unit.structure.room) != null;
+                return ExpiditorCreep.SpawnCondition(this.unit.structure.room);
             default:
                 return true;
         }
