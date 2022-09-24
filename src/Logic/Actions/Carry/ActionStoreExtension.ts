@@ -54,8 +54,8 @@ export class ActionStoreExtension implements IAction
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
-                this.unit.creep.say("📥");
                 if (!this.RepeatAction()) return ActionResponseCode.NextTask;
+                this.unit.creep.say("📥");
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. StoreExtension error code: " + code);

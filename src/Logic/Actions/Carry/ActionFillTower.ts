@@ -61,8 +61,8 @@ export class ActionFillTower implements IAction
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
-                this.unit.creep.say("🗼");
                 if (!this.RepeatAction()) return ActionResponseCode.Reset;
+                this.unit.creep.say("🗼");
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. FillTower error code: " + code);
