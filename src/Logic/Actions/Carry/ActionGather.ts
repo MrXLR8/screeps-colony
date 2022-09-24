@@ -102,7 +102,7 @@ export class ActionGather implements IAction
             case OK:
                 this.unit.creep.say("⚡");
                 this.unit.memory.actions.worked = true;
-                if (!this.RepeatAction()) return ActionResponseCode.Repeat;
+                if (!this.RepeatAction()) return ActionResponseCode.Reset;
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Gather error code: " + code);
