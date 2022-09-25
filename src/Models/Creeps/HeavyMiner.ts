@@ -15,6 +15,7 @@ export class HeavyMinerCreep extends BaseCreep implements IAssignable
             [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
             [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
             [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
+            [MOVE,MOVE, WORK, WORK, WORK, WORK, CARRY], //550
             [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
             [MOVE, WORK, WORK, CARRY] //300
         ];
