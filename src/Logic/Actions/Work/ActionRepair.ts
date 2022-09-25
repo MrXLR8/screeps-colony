@@ -5,7 +5,7 @@ import { UnitFactory } from "Logic/UnitFactory";
 import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
-import { UniversalCreep } from "Models/Creeps/UniversalCreep";
+import { UniversalCreep } from "Models/Creeps/Universal";
 import { BaseStructure } from "Models/Structures/BaseStructure";
 import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";

@@ -25,12 +25,12 @@ export class CourierCreep extends BaseCreep
 
     tasks: IAction[] =
     [
-        new ActionSalvage(this,200),
-        new ActionGatherFromFlag(this,COLOR_YELLOW,COLOR_WHITE),
-        new ActionGather(this,true,[STRUCTURE_CONTAINER]),
-        new ActionSalvage(this,0),
-        new ActionStore(this,[STRUCTURE_STORAGE],RESOURCE_ENERGY,false),
-       // new ActionGather(this,true,[STRUCTURE_STORAGE]),
+        new ActionSalvage(this).MinAmmount(200),
+        new ActionGatherFromFlag(this).WithColors(COLOR_YELLOW,COLOR_WHITE),
+        new ActionGather(this,).ContainerTypes([STRUCTURE_CONTAINER]).PriorityBigFirst(),
+        new ActionSalvage(this).MinAmmount(0),
+        new ActionStore(this).ContainerTypes([STRUCTURE_STORAGE]).WithResource(RESOURCE_ENERGY)
+        //new ActionGather(this,true,[STRUCTURE_STORAGE]),
         //new ActionFillTower(this,99),
     ];
 

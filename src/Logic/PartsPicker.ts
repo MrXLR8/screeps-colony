@@ -2,9 +2,9 @@ import { Constants } from "Constans";
 import { CreepTypes } from "Models/Creeps/BaseCreep";
 import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { CourierCreep } from "Models/Creeps/Courier";
-import { ExpiditorCreep } from "Models/Creeps/ExpiditorCreep";
+import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
-import { UniversalCreep } from "Models/Creeps/UniversalCreep";
+import { UniversalCreep } from "Models/Creeps/Universal";
 
 export class PartsPicker
 {

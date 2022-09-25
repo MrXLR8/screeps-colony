@@ -22,13 +22,13 @@ export class UniversalCreep extends BaseCreep
 
     tasks: IAction[] =
     [
-        new ActionGather(this,false,[STRUCTURE_CONTAINER,STRUCTURE_STORAGE]),
-        new ActionMining(this,false),
-        new ActionFillTower(this,20),
+        new ActionGather(this).ContainerTypes([STRUCTURE_CONTAINER,STRUCTURE_STORAGE]),
+        new ActionMining(this).FindRandomSource(),
+        new ActionFillTower(this).FillUntil(20),
         new ActionStoreExtension(this),
-        new ActionFillTower(this,80),
+        new ActionFillTower(this).FillUntil(80),
         new ActionBuild(this),
-        new ActionRepair(this,[STRUCTURE_CONTAINER,STRUCTURE_ROAD],false,true),
+        new ActionRepair(this,).Structures([STRUCTURE_CONTAINER,STRUCTURE_ROAD]).RepeatToEnd(),
         new ActionUpgrade(this)
     ];
 }

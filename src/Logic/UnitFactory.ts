@@ -1,9 +1,9 @@
 import { BaseCreep, CreepTypes } from "Models/Creeps/BaseCreep";
 import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { CourierCreep } from "Models/Creeps/Courier";
-import { ExpiditorCreep } from "Models/Creeps/ExpiditorCreep";
+import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
-import { UniversalCreep } from "Models/Creeps/UniversalCreep";
+import { UniversalCreep } from "Models/Creeps/Universal";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { BaseStructureMemory } from "Models/Memory/BaseStructureMemory";
 import { GlobalMemory } from "Models/Memory/GlobalMemory";

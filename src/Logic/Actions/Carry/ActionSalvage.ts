@@ -91,9 +91,10 @@ export class ActionSalvage implements IAction
         this.minAmmount = 0;
     }
 
-    MinAmmount(minAmmount: number)
+    MinAmmount(minAmmount: number):ActionSalvage
     {
         this.minAmmount = minAmmount;
+        return this;
     }
     //#endregion
 }

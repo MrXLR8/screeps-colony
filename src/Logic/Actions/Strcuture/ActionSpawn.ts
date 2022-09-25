@@ -12,7 +12,7 @@ import { PartsPicker } from "Logic/PartsPicker";
 import { Unit } from "Models/Unit";
 import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
-import { ExpiditorCreep } from "Models/Creeps/ExpiditorCreep";
+import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { CourierCreep } from "Models/Creeps/Courier";
 export class ActionSpawn implements IAction
 {

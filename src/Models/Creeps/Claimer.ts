@@ -18,7 +18,7 @@ export class ClaimerCreep extends BaseCreep
 
     tasks: IAction[] =
         [
-            new ActionMoveFlag(this, COLOR_RED, COLOR_WHITE, 1, false),
+            new ActionMoveFlag(this).WithColors(COLOR_RED, COLOR_WHITE),
             new ActionClaim(this)
         ];
 
