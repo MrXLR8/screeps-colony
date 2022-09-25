@@ -71,6 +71,13 @@ export class ActionMining implements IAction
                 if (this.unit.memory.actionAttempts > Constants.moveAttmepts)
                 {
                     this.unit.log("move attempts");
+                    var found = Finder.GetRandomSource(this.unit.creep.room, this.target.id);
+                    if (found != null)
+                    {
+                        this.unit.memory.targetID = found.id;
+                        this.unit.memory.actionAttempts=0;
+                        return ActionResponseCode.Repeat;
+                    }
                     return ActionResponseCode.Reset;
                 }
                 this.unit.MoveToTarget(this.target);

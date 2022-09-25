@@ -14,9 +14,9 @@ export class Finder
         //todo distance sort, energy check
     }
 
-    static GetRandomSource(_room: Room): Source
+    static GetRandomSource(_room: Room,ignoreId?: Id<Source>): Source
     {
-        var sourceArray = _room.find(FIND_SOURCES_ACTIVE, { filter: (source) => source.energy != 0 });
+        var sourceArray = _room.find(FIND_SOURCES_ACTIVE, { filter: (source) =>source.id!=ignoreId });
         return sourceArray[random(0, sourceArray.length - 1)];
     }
 
