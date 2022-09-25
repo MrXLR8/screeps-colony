@@ -8,17 +8,33 @@ export class ActionSalvage implements IAction
 {
     unit: BaseCreep;
     target: Tombstone | Resource | Ruin;
-
     minAmmount: number;
 
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
 
-    EntryValidation(): ActionResponseCode
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+        var actionCode;
+        if (this.target instanceof Resource) actionCode = this.unit.creep.pickup(this.target);
+        else
+        {
+            actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
+        }
+
+        return this.WorkCodeProcessing(actionCode);
+    }
+
+   private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -50,12 +66,7 @@ export class ActionSalvage implements IAction
         }
     }
 
-    RepeatAction(): boolean
-    {
-        throw ("Not implemented");
-    }
-
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -72,25 +83,6 @@ export class ActionSalvage implements IAction
                 return ActionResponseCode.NextTask;
         }
     }
-
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-        var actionCode;
-        if (this.target instanceof Resource) actionCode = this.unit.creep.pickup(this.target);
-        else
-        {
-            actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
-        }
-
-        return this.WorkCodeProcessing(actionCode);
-    }
-
 
     //#region  factory
     constructor(unit: Unit)

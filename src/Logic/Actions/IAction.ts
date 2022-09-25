@@ -7,13 +7,13 @@ export interface IAction
 
  Act():ActionResponseCode;
 
- EntryValidation():ActionResponseCode;
+// EntryValidation():ActionResponseCode;
 
- GetSavedTarget():void;
+// GetSavedTarget():void;
 
 
- RepeatAction():boolean;
+// RepeatAction():boolean;
 
- WorkCodeProcessing(code:number):ActionResponseCode;
+// WorkCodeProcessing(code:number):ActionResponseCode;
 
 }

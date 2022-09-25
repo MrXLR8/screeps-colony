@@ -12,21 +12,31 @@ export class ActionLinkSend implements IAction
     unit: Link;
     target: StructureLink;
 
-    constructor(unit: Unit)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as Link;
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+
+        if (this.target == null) return ActionResponseCode.Repeat;
+
+        if (this.target.id == this.unit.structure.id) return ActionResponseCode.Repeat;
+        if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) < 50) return ActionResponseCode.Repeat;
+        var actionCode = this.unit.structure.transferEnergy(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-
-
-    EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if (this.unit.structure.cooldown > 0) return ActionResponseCode.Repeat;
         if (this.unit.structure.store[RESOURCE_ENERGY] == 0) return ActionResponseCode.Repeat;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -48,7 +58,7 @@ export class ActionLinkSend implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -62,25 +72,9 @@ export class ActionLinkSend implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    constructor(unit: Unit)
     {
-        throw ("Not Implemented");
+        this.unit = unit as Link;
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-
-        if (this.target == null) return ActionResponseCode.Repeat;
-
-        if (this.target.id == this.unit.structure.id) return ActionResponseCode.Repeat;
-        if (this.target.store.getFreeCapacity(RESOURCE_ENERGY) < 50) return ActionResponseCode.Repeat;
-        var actionCode = this.unit.structure.transferEnergy(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 }

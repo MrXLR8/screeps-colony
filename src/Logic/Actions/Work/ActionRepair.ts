@@ -25,9 +25,29 @@ export class ActionRepair implements IAction
     keepTask:boolean;
     whatToRepair: StructureConstant[];
 
+    Act(): ActionResponseCode
+    {
+        var test = this.unit as BaseStructure;
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+        this.GetSavedTarget();
 
+        if (this.target == null) return ActionResponseCode.NextTask;
 
-    EntryValidation(): ActionResponseCode
+        var actionCode;
+
+        if (this.unit instanceof BaseCreep)
+        {
+            actionCode = this.unit.creep.repair(this.target);
+        }
+        else
+        {
+            actionCode = this.unit.structure.repair(this.target);
+        }
+        return this.WorkCodeProcessing(actionCode);
+    }
+
+   private EntryValidation(): ActionResponseCode
     {
         if (!(this.unit instanceof BaseCreep))
         {
@@ -40,7 +60,7 @@ export class ActionRepair implements IAction
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
 
         var targetId = this.unit.targetId;
@@ -72,7 +92,7 @@ export class ActionRepair implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode | CreepActionReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode | CreepActionReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -97,34 +117,6 @@ export class ActionRepair implements IAction
                 return ActionResponseCode.NextTask;
         }
     }
-
-    RepeatAction(): boolean
-    {
-        throw ("Not implemented");
-    }
-
-    Act(): ActionResponseCode
-    {
-        var test = this.unit as BaseStructure;
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode;
-
-        if (this.unit instanceof BaseCreep)
-        {
-            actionCode = this.unit.creep.repair(this.target);
-        }
-        else
-        {
-            actionCode = this.unit.structure.repair(this.target);
-        }
-        return this.WorkCodeProcessing(actionCode);
-    }
-
 
     //#region factory
     constructor(unit: Unit)

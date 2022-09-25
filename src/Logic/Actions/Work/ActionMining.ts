@@ -12,17 +12,27 @@ export class ActionMining implements IAction
 
     findRandomSource: boolean;
 
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
 
+        if (entryCode != null) return entryCode;
 
+        this.GetSavedTarget();
 
+        if (this.target == null) return ActionResponseCode.NextTask;
+        var actionCode = this.unit.creep.harvest(this.target);
 
-    EntryValidation(): ActionResponseCode
+        return this.WorkCodeProcessing(actionCode);
+    }
+
+    private EntryValidation(): ActionResponseCode
     {
         if ((this.unit.creep.getActiveBodyparts(WORK) * 2) > this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -52,7 +62,7 @@ export class ActionMining implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -78,25 +88,6 @@ export class ActionMining implements IAction
                 this.unit.log("Problem occured. Mining error code: " + code);
                 return ActionResponseCode.NextTask;
         }
-    }
-
-    RepeatAction(): boolean
-    {
-        throw ("Not implemented");
-    }
-
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-        var actionCode = this.unit.creep.harvest(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
     }
 
     //#region

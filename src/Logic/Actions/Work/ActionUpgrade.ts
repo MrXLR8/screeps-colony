@@ -10,24 +10,32 @@ export class ActionUpgrade implements IAction
     unit: BaseCreep;
     target: StructureController;
 
-    constructor(unit: Unit)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as BaseCreep;
+        var entryCode = this.EntryValidation();
+       if (entryCode!=null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.creep.upgradeController(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-
-    EntryValidation(): ActionResponseCode
+  private  EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         this.target=this.unit.creep.room.controller;
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private  WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -44,25 +52,9 @@ export class ActionUpgrade implements IAction
                 return ActionResponseCode.NextTask;
         }
     }
-
-    RepeatAction(): boolean
+    constructor(unit: Unit)
     {
-       throw ("Not implemented");
-    }
-
-
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.upgradeController(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
+        this.unit = unit as BaseCreep;
     }
 
 }

@@ -15,17 +15,27 @@ export class ActionGather implements IAction
 
     takeBigFirst: boolean;
 
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
 
+        this.GetSavedTarget();
 
+        if (this.target == null) return ActionResponseCode.NextTask;
 
+        var actionCode = this.target.Gather(this.unit);
 
-    EntryValidation(): ActionResponseCode
+        return this.WorkCodeProcessing(actionCode);
+    }
+
+    private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         var found;
@@ -65,7 +75,7 @@ export class ActionGather implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    private RepeatAction(): boolean
     {
         var newStore = this.target.ammount - this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY);
         if (newStore < 0) return false;
@@ -85,7 +95,7 @@ export class ActionGather implements IAction
         return false;
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -104,25 +114,6 @@ export class ActionGather implements IAction
         }
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.target.Gather(this.unit);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
-
-
-
-
-
-
     //#region Factory
     constructor(unit: Unit)
     {
@@ -130,12 +121,12 @@ export class ActionGather implements IAction
         this.takeBigFirst = false;
     }
 
-    ContainerTypes(containerTypes: StructureConstant[]) : ActionGather
+    ContainerTypes(containerTypes: StructureConstant[]): ActionGather
     {
         this.containerTypes = containerTypes;
         return this;
     }
-    PriorityBigFirst() : ActionGather
+    PriorityBigFirst(): ActionGather
     {
         this.takeBigFirst = true;
         return this;

@@ -13,15 +13,26 @@ export class ActionFillTower implements IAction
 
     fillUntil: number;
 
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+        this.GetSavedTarget();
 
+        if (this.target == null) return ActionResponseCode.NextTask;
 
-    EntryValidation(): ActionResponseCode
+        var actionCode = this.unit.creep.transfer(this.target, RESOURCE_ENERGY);
+
+        return this.WorkCodeProcessing(actionCode);
+    }
+
+    private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.energy == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -46,7 +57,7 @@ export class ActionFillTower implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -65,7 +76,7 @@ export class ActionFillTower implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    private RepeatAction(): boolean
     {
         var newStore = this.unit.creep.store.getUsedCapacity(RESOURCE_ENERGY) - this.target.store.getFreeCapacity(RESOURCE_ENERGY);
         if (newStore < 0) return false;
@@ -84,23 +95,6 @@ export class ActionFillTower implements IAction
         }
         return false;
     }
-
-
-    Act(): ActionResponseCode
-    {
-
-
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.transfer(this.target, RESOURCE_ENERGY);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
-
 
     //#region  factory
     constructor(unit: Unit)

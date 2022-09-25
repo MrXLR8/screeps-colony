@@ -23,18 +23,30 @@ export class ActionSpawn implements IAction
     pickedParts: BodyPartConstant[];
     spawnsettings: SpawnSettings = null;
 
-    constructor(unit: Unit)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as Spawner;
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        this.PrepareCreepToSpawn()
+
+        if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.NextTask;
+        var actionCode = (this.unit.structure as StructureSpawn).spawnCreep(this.pickedParts, this.creepName, this.spawnsettings);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-    EntryValidation(): ActionResponseCode
+   private EntryValidation(): ActionResponseCode
     {
         if ((this.unit.structure as StructureSpawn).spawning) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
         var creepGlobal: { [type: number]: number } = Utils.GetCreepPopulation();
@@ -63,7 +75,7 @@ export class ActionSpawn implements IAction
     }
 
 
-    CheckSpawnCondition(type: CreepTypes): boolean
+    private CheckSpawnCondition(type: CreepTypes): boolean
     {
         switch (type)
         {
@@ -81,7 +93,7 @@ export class ActionSpawn implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -154,26 +166,9 @@ export class ActionSpawn implements IAction
         return true;
     }
 
-    RepeatAction(): boolean
+    constructor(unit: Unit)
     {
-        throw ("Not Implemented");
-    }
-
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        this.PrepareCreepToSpawn()
-
-        if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.NextTask;
-        var actionCode = (this.unit.structure as StructureSpawn).spawnCreep(this.pickedParts, this.creepName, this.spawnsettings);
-
-        return this.WorkCodeProcessing(actionCode);
+        this.unit = unit as Spawner;
     }
 
 }

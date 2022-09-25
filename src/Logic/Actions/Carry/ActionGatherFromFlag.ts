@@ -16,16 +16,29 @@ export class ActionGatherFromFlag implements IAction
 
 
 
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
+
+        return this.WorkCodeProcessing(actionCode);
+    }
 
 
 
-    EntryValidation(): ActionResponseCode
+   private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private  GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -49,7 +62,7 @@ export class ActionGatherFromFlag implements IAction
     }
 
 
-    FlagSearch(): StructureContainer | StructureStorage | StructureLink
+    private FlagSearch(): StructureContainer | StructureStorage | StructureLink
     {
         for (var flagName in Game.flags)
         {
@@ -64,12 +77,7 @@ export class ActionGatherFromFlag implements IAction
         return null;
     }
 
-    RepeatAction(): boolean
-    {
-        throw ("Not implemented");
-    }
-
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -87,19 +95,6 @@ export class ActionGatherFromFlag implements IAction
         }
     }
 
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
-
-        return this.WorkCodeProcessing(actionCode);
-    }
 
     //#region  factory
     constructor(unit: Unit)

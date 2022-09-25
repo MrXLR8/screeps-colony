@@ -13,9 +13,25 @@ export class ActionStore implements IAction
     dropOnFull: boolean;
     containerTypes: StructureConstant[];
 
+    Act(): ActionResponseCode
+    {
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
 
 
-    EntryValidation(): ActionResponseCode
+        this.GetSavedTarget();
+
+        if (this.target == null)
+        {
+            this.unit.creep.drop(this.resource);
+            return ActionResponseCode.NextTask;
+        }
+
+        var actionCode = this.unit.creep.transfer(this.target, this.resource);
+        return this.WorkCodeProcessing(actionCode);
+    }
+
+   private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getUsedCapacity(this.resource) == 0) return ActionResponseCode.NextTask;
 
@@ -23,7 +39,7 @@ export class ActionStore implements IAction
 
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -55,7 +71,7 @@ export class ActionStore implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -74,7 +90,7 @@ export class ActionStore implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    private RepeatAction(): boolean
     {
         var newStore = this.unit.creep.store.getUsedCapacity(this.resource) - this.target.store.getFreeCapacity(this.resource);
 
@@ -96,25 +112,6 @@ export class ActionStore implements IAction
         }
         return false;
     }
-
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-
-        this.GetSavedTarget();
-
-        if (this.target == null)
-        {
-            this.unit.creep.drop(this.resource);
-            return ActionResponseCode.NextTask;
-        }
-
-        var actionCode = this.unit.creep.transfer(this.target, this.resource);
-        return this.WorkCodeProcessing(actionCode);
-    }
-
 
     //#region factory
     constructor(unit: Unit)
