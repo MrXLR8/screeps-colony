@@ -17,8 +17,25 @@ export class ActionMoveFlag implements IAction
 
     thisRoomOnly: boolean;
 
+    Act(): ActionResponseCode
+    {
+        this.GetSavedTarget();
 
-    GetSavedTarget(): void
+
+        if (this.target == null)
+        {
+            this.unit.creep.say("!🚩(NF)");
+            return ActionResponseCode.Repeat;
+        }
+
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        var actionCode = this.unit.MoveToPos(this.target.flag.pos);
+        return this.WorkCodeProcessing(actionCode);
+    }
+
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         var rawTarget;
@@ -63,15 +80,13 @@ export class ActionMoveFlag implements IAction
         }
     }
 
-    EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if (Utils.PosCompare(this.unit.creep.pos, this.target.flag.pos)) { return ActionResponseCode.NextTask; }
         return null;
     }
 
-
-
-    WorkCodeProcessing(code: CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND): ActionResponseCode
+    private WorkCodeProcessing(code: CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND): ActionResponseCode
     {
         switch (code)
         {
@@ -89,37 +104,11 @@ export class ActionMoveFlag implements IAction
         }
     }
 
-    RepeatAction(): boolean
-    {
-        throw ("Not Implemented");
-    }
-
-
-    Act(): ActionResponseCode
-    {
-        this.GetSavedTarget();
-
-
-        if (this.target == null)
-        {
-            this.unit.creep.say("!🚩(NF)");
-            return ActionResponseCode.Repeat;
-        }
-
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        var actionCode = this.unit.MoveToPos(this.target.flag.pos);
-        return this.WorkCodeProcessing(actionCode);
-    }
-
-
-
     //#region factory
     constructor(unit: Unit)
     {
         this.unit = unit as BaseCreep;
-        this.thisRoomOnly=false;
+        this.thisRoomOnly = false;
         this.maxAssigned = 1;
     }
     WithColors(primaryColor: ColorConstant, secondaryColor: ColorConstant): ActionMoveFlag
@@ -128,7 +117,7 @@ export class ActionMoveFlag implements IAction
         this.secondaryColor = secondaryColor;
         return this;
     }
-    MaxAssigned(maxAssigned:number) : ActionMoveFlag
+    MaxAssigned(maxAssigned: number): ActionMoveFlag
     {
         this.maxAssigned = maxAssigned;
         return this;
