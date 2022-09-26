@@ -14,58 +14,10 @@ export class ActionBuild implements IAction
         this.unit = unit as BaseCreep;
     }
 
-
-
-    EntryValidation(): ActionResponseCode
-    {
-        if (this.unit.creep.store.energy == 0) return ActionResponseCode.NextTask;
-        return null;
-    }
-
-    GetSavedTarget(): void
-    {
-        var targetId = this.unit.targetId;
-        if (targetId != null)
-        {
-            this.target = Game.getObjectById(this.unit.targetId as Id<ConstructionSite>);
-        }
-        if (this.target != null)
-                return; //Target is valid
-
-        this.target = Finder.GetConstructionSites(this.unit.creep.pos);
-        if (this.target != null)
-        {
-            this.unit.targetId = this.target.id;
-        }
-    }
-
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
-    {
-        switch (code)
-        {
-            case ERR_NOT_IN_RANGE:
-                this.unit.MoveToTarget(this.target);
-                this.unit.creep.say(">🏗️");
-                return ActionResponseCode.Repeat;
-            case OK:
-                this.unit.memory.actions.worked=true;
-                this.unit.creep.say("🏗️");
-                 return ActionResponseCode.Repeat;
-            default:
-                this.unit.log("Problem occured. Repair error code: " + code);
-                return ActionResponseCode.NextTask;
-        }
-    }
-
-    RepeatAction(): boolean
-    {
-        throw("Not Implemented");
-    }
-
     Act(): ActionResponseCode
     {
         var entryCode = this.EntryValidation();
-       if (entryCode!=null) return entryCode;
+        if (entryCode != null) return entryCode;
 
         this.GetSavedTarget();
 
@@ -75,4 +27,47 @@ export class ActionBuild implements IAction
 
         return this.WorkCodeProcessing(actionCode);
     }
+
+    private EntryValidation(): ActionResponseCode
+    {
+        if (this.unit.creep.store.energy == 0) return ActionResponseCode.NextTask;
+        return null;
+    }
+
+    private GetSavedTarget(): void
+    {
+        var targetId = this.unit.targetId;
+        if (targetId != null)
+        {
+            this.target = Game.getObjectById(this.unit.targetId as Id<ConstructionSite>);
+        }
+        if (this.target != null)
+            return; //Target is valid
+
+        this.target = Finder.GetConstructionSites(this.unit.creep.pos);
+        if (this.target != null)
+        {
+            this.unit.targetId = this.target.id;
+        }
+    }
+
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    {
+        switch (code)
+        {
+            case ERR_NOT_IN_RANGE:
+                this.unit.MoveToTarget(this.target);
+                this.unit.creep.say(">🏗️");
+                return ActionResponseCode.Repeat;
+            case OK:
+                this.unit.memory.actions.worked = true;
+                this.unit.creep.say("🏗️");
+                return ActionResponseCode.Repeat;
+            default:
+                this.unit.log("Problem occured. Repair error code: " + code);
+                return ActionResponseCode.NextTask;
+        }
+    }
+
+
 }

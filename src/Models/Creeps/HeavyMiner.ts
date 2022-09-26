@@ -10,20 +10,22 @@ import { IAssignable } from "Models/Interfaces/IAssignable";
 export class HeavyMinerCreep extends BaseCreep implements IAssignable
 {
 
-      static parts: BodyPartConstant[][] =
-          [
-              [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
-              [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
-              [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
-              [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
-              [MOVE, WORK, WORK, CARRY] //300
-          ];
+    static parts: BodyPartConstant[][] =
+        [
+            [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
+            [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
+            [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
+            [MOVE,MOVE, WORK, WORK, WORK, WORK, CARRY], //550
+            [MOVE, WORK, WORK, WORK, WORK, CARRY], //500
+            [MOVE, WORK, WORK, CARRY] //300
+        ];
 
 
     tasks: IAction[] =
         [
             new ActionAssignedMining(this),
-            new ActionStore(this, [STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK], RESOURCE_ENERGY, true, 2)
+            new ActionStore(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK])
+                .WithResource(RESOURCE_ENERGY).InRange(2).AllowDrop()
         ];
 
     Assign(): boolean

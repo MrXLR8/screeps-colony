@@ -17,16 +17,25 @@ export class ActionMoveFlag implements IAction
 
     thisRoomOnly: boolean;
 
-    constructor(unit: Unit, primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number, thisRoomOnly: boolean)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as BaseCreep;
-        this.thisRoomOnly = thisRoomOnly;
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
-        this.maxAssigned = maxAssigned;
+        this.GetSavedTarget();
+
+
+        if (this.target == null)
+        {
+            this.unit.creep.say("!🚩(NF)");
+            return ActionResponseCode.Repeat;
+        }
+
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        var actionCode = this.unit.MoveToPos(this.target.flag.pos);
+        return this.WorkCodeProcessing(actionCode);
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         var rawTarget;
@@ -71,15 +80,13 @@ export class ActionMoveFlag implements IAction
         }
     }
 
-    EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if (Utils.PosCompare(this.unit.creep.pos, this.target.flag.pos)) { return ActionResponseCode.NextTask; }
         return null;
     }
 
-
-
-    WorkCodeProcessing(code: CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND): ActionResponseCode
+    private WorkCodeProcessing(code: CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND): ActionResponseCode
     {
         switch (code)
         {
@@ -97,28 +104,30 @@ export class ActionMoveFlag implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    //#region factory
+    constructor(unit: Unit)
     {
-        throw ("Not Implemented");
+        this.unit = unit as BaseCreep;
+        this.thisRoomOnly = false;
+        this.maxAssigned = 1;
+    }
+    WithColors(primaryColor: ColorConstant, secondaryColor: ColorConstant): ActionMoveFlag
+    {
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+        return this;
+    }
+    MaxAssigned(maxAssigned: number): ActionMoveFlag
+    {
+        this.maxAssigned = maxAssigned;
+        return this;
     }
 
-
-    Act(): ActionResponseCode
+    BindToRoom(): ActionMoveFlag
     {
-        this.GetSavedTarget();
-
-
-        if (this.target == null)
-        {
-            this.unit.creep.say("!🚩(NF)");
-            return ActionResponseCode.Repeat;
-        }
-
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        var actionCode = this.unit.MoveToPos(this.target.flag.pos);
-        return this.WorkCodeProcessing(actionCode);
+        this.thisRoomOnly = true;
+        return this;
     }
+    //#endregion
 
 }

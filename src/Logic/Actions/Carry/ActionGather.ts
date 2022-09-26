@@ -15,23 +15,27 @@ export class ActionGather implements IAction
 
     takeBigFirst: boolean;
 
-    constructor(unit: Unit, takeBigFirst: boolean, containerTypes: StructureConstant[])
+    Act(): ActionResponseCode
     {
-        this.unit = unit as BaseCreep;
-        this.takeBigFirst = takeBigFirst;
-        this.containerTypes = containerTypes;
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.target.Gather(this.unit);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-
-
-
-    EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         var found;
@@ -60,7 +64,7 @@ export class ActionGather implements IAction
             var dropped = Finder.FindDropped(this.unit.creep.pos, this.unit.AmmountCanCarry());
 
             found = Utils.WhosClose(this.unit.creep.pos, structure, dropped) as StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin;
-            if(found!=null) this.target = new Storage(found, RESOURCE_ENERGY);
+            if (found != null) this.target = new Storage(found, RESOURCE_ENERGY);
 
         }
 
@@ -71,9 +75,9 @@ export class ActionGather implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    private RepeatAction(): boolean
     {
-        var newStore = this.target.ammount - this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY);
+        var newStore = this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY)- this.target.ammount;
         if (newStore < 0) return false;
         var newTarget = Finder.GetFilledStorage
             (
@@ -91,7 +95,7 @@ export class ActionGather implements IAction
         return false;
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -110,17 +114,22 @@ export class ActionGather implements IAction
         }
     }
 
-    Act(): ActionResponseCode
+    //#region Factory
+    constructor(unit: Unit)
     {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.target.Gather(this.unit);
-
-        return this.WorkCodeProcessing(actionCode);
+        this.unit = unit as BaseCreep;
+        this.takeBigFirst = false;
     }
+
+    ContainerTypes(containerTypes: StructureConstant[]): ActionGather
+    {
+        this.containerTypes = containerTypes;
+        return this;
+    }
+    PriorityBigFirst(): ActionGather
+    {
+        this.takeBigFirst = true;
+        return this;
+    }
+    //#endregion
 }

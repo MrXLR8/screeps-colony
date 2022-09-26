@@ -9,24 +9,32 @@ export class ActionClaim implements IAction
     unit: BaseCreep;
     target: StructureController;
 
-    constructor(unit: Unit)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as BaseCreep;
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode = this.unit.creep.claimController(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-    EntryValidation(): ActionResponseCode
+   private EntryValidation(): ActionResponseCode
     {
         if (typeof this.unit.creep.room.controller.owner === 'undefined') return null;
         if (this.unit.creep.room.controller.owner.username == this.unit.creep.owner.username) { this.unit.creep.say("✔️"); return ActionResponseCode.Repeat; }
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         this.target = this.unit.creep.room.controller;
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode | ERR_FULL | ERR_GCL_NOT_ENOUGH): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode | ERR_FULL | ERR_GCL_NOT_ENOUGH): ActionResponseCode
     {
         switch (code)
         {
@@ -44,21 +52,9 @@ export class ActionClaim implements IAction
         }
     }
 
-    RepeatAction(): boolean
+
+    constructor(unit: Unit)
     {
-        throw ("Not Implemented");
-    }
-
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode = this.unit.creep.claimController(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
+        this.unit = unit as BaseCreep;
     }
 }

@@ -5,7 +5,7 @@ import { UnitFactory } from "Logic/UnitFactory";
 import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
-import { UniversalCreep } from "Models/Creeps/UniversalCreep";
+import { UniversalCreep } from "Models/Creeps/Universal";
 import { BaseStructure } from "Models/Structures/BaseStructure";
 import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
@@ -24,31 +24,30 @@ export class ActionRepair implements IAction
 
     keepTask:boolean;
     whatToRepair: StructureConstant[];
-    constructor(unit: Unit, whatToRepair: StructureConstant[], byRandom: boolean, keepTask:boolean,towerReserves?: number)
+
+    Act(): ActionResponseCode
     {
-        this.whatToRepair = whatToRepair;
-        this.byRandom = byRandom;
-        this.keepTask=keepTask;
-        if (unit instanceof BaseCreep)
+        var test = this.unit as BaseStructure;
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+
+        var actionCode;
+
+        if (this.unit instanceof BaseCreep)
         {
-            this.unit = unit as BaseCreep;
-            this.room = this.unit.creep.room;
-            this.energyStored = this.unit.creep.store[RESOURCE_ENERGY];
+            actionCode = this.unit.creep.repair(this.target);
         }
-        else if (unit instanceof BaseStructure)
+        else
         {
-            this.unit = unit as Tower;
-            this.room = this.unit.structure.room;
-            this.towerReserves = towerReserves;
-            this.energyStored = this.unit.structure.store[RESOURCE_ENERGY];
-            this.energyPercent = Utils.Percent(this.energyStored, this.unit.structure.store.getCapacity(RESOURCE_ENERGY));
+            actionCode = this.unit.structure.repair(this.target);
         }
-        else { console.log("UNKNOWN INSTANCE"); }
+        return this.WorkCodeProcessing(actionCode);
     }
 
-
-
-    EntryValidation(): ActionResponseCode
+   private EntryValidation(): ActionResponseCode
     {
         if (!(this.unit instanceof BaseCreep))
         {
@@ -61,7 +60,7 @@ export class ActionRepair implements IAction
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
 
         var targetId = this.unit.targetId;
@@ -93,7 +92,7 @@ export class ActionRepair implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode | CreepActionReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode | CreepActionReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -119,30 +118,52 @@ export class ActionRepair implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    //#region factory
+    constructor(unit: Unit)
     {
-        throw ("Not implemented");
+
+        this.byRandom = false;
+        this.keepTask=false;
+        this.towerReserves = 0;
+        if (unit instanceof BaseCreep)
+        {
+            this.unit = unit as BaseCreep;
+            this.room = this.unit.creep.room;
+            this.energyStored = this.unit.creep.store[RESOURCE_ENERGY];
+        }
+        else if (unit instanceof BaseStructure)
+        {
+            this.unit = unit as Tower;
+            this.room = this.unit.structure.room;
+            this.energyStored = this.unit.structure.store[RESOURCE_ENERGY];
+            this.energyPercent = Utils.Percent(this.energyStored, this.unit.structure.store.getCapacity(RESOURCE_ENERGY));
+        }
+        else { console.log("UNKNOWN INSTANCE"); }
     }
 
-    Act(): ActionResponseCode
+    Structures(whatToRepair: StructureConstant[]):ActionRepair
     {
-        var test = this.unit as BaseStructure;
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-
-        var actionCode;
-
-        if (this.unit instanceof BaseCreep)
-        {
-            actionCode = this.unit.creep.repair(this.target);
-        }
-        else
-        {
-            actionCode = this.unit.structure.repair(this.target);
-        }
-        return this.WorkCodeProcessing(actionCode);
+        this.whatToRepair = whatToRepair;
+        return this;
     }
+
+    ChooseRandomly():ActionRepair
+    {
+        this.byRandom = true;
+        return this;
+    }
+
+    RepeatToEnd():ActionRepair
+    {
+        this.keepTask=true;
+        return this;
+    }
+
+    EnergyReserves(towerReserves: number):ActionRepair
+    {
+        this.towerReserves = towerReserves;
+        return this;
+    }
+
+    //#endregion
 }

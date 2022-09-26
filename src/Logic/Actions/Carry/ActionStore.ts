@@ -10,22 +10,28 @@ export class ActionStore implements IAction
     target: StructureContainer | StructureStorage | StructureLink;
     range: number;
     resource: ResourceConstant;
-    dropOnFull:boolean;
+    dropOnFull: boolean;
     containerTypes: StructureConstant[];
 
-    constructor(unit: Unit, containerTypes: StructureConstant[], resource: ResourceConstant, dropOnFull:boolean, range?: number)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as BaseCreep;
-        this.resource = resource;
-        this.dropOnFull=dropOnFull;
-        this.containerTypes = containerTypes;
-        if (typeof range === 'undefined')
-            this.range = 999;
-        else
-            this.range = range
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+
+        this.GetSavedTarget();
+
+        if (this.target == null)
+        {
+            this.unit.creep.drop(this.resource);
+            return ActionResponseCode.NextTask;
+        }
+
+        var actionCode = this.unit.creep.transfer(this.target, this.resource);
+        return this.WorkCodeProcessing(actionCode);
     }
 
-    EntryValidation(): ActionResponseCode
+   private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getUsedCapacity(this.resource) == 0) return ActionResponseCode.NextTask;
 
@@ -33,7 +39,7 @@ export class ActionStore implements IAction
 
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -65,7 +71,7 @@ export class ActionStore implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -84,7 +90,7 @@ export class ActionStore implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    private RepeatAction(): boolean
     {
         var newStore = this.unit.creep.store.getUsedCapacity(this.resource) - this.target.store.getFreeCapacity(this.resource);
 
@@ -107,21 +113,37 @@ export class ActionStore implements IAction
         return false;
     }
 
-    Act(): ActionResponseCode
+    //#region factory
+    constructor(unit: Unit)
     {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
+        this.unit = unit as BaseCreep;
+        this.resource = RESOURCE_ENERGY;
+        this.dropOnFull = false;
+        this.range = 999;
 
-
-        this.GetSavedTarget();
-
-        if (this.target == null)
-        {
-            this.unit.creep.drop(this.resource);
-            return ActionResponseCode.NextTask;
-        }
-
-        var actionCode = this.unit.creep.transfer(this.target, this.resource);
-        return this.WorkCodeProcessing(actionCode);
     }
+
+    ContainerTypes(containerTypes: StructureConstant[]): ActionStore
+    {
+        this.containerTypes = containerTypes;
+        return this;
+    }
+    WithResource(resource: ResourceConstant): ActionStore
+    {
+        this.resource = resource;
+        return this;
+    }
+    AllowDrop(): ActionStore
+    {
+        this.dropOnFull = true;
+        return this;
+    }
+
+    InRange(range: number): ActionStore
+    {
+        this.range = range
+        return this;
+    }
+
+    //#endregion
 }

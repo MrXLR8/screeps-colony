@@ -8,21 +8,33 @@ export class ActionSalvage implements IAction
 {
     unit: BaseCreep;
     target: Tombstone | Resource | Ruin;
+    minAmmount: number;
 
-    minAmmount:number;
-    constructor(unit: Unit,minAmmount:number)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as BaseCreep;
-        this.minAmmount=minAmmount;
+        var entryCode = this.EntryValidation();
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+        var actionCode;
+        if (this.target instanceof Resource) actionCode = this.unit.creep.pickup(this.target);
+        else
+        {
+            actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
+        }
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-    EntryValidation(): ActionResponseCode
+   private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -44,9 +56,9 @@ export class ActionSalvage implements IAction
 
         this.target = this.unit.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (res) => { return res.amount > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => {return tomb.store.energy > this.minAmmount } });
+        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => { return tomb.store.energy > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => {return ruin.store.energy > this.minAmmount } });
+        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => { return ruin.store.energy > this.minAmmount } });
 
         if (this.target != null)
         {
@@ -54,12 +66,7 @@ export class ActionSalvage implements IAction
         }
     }
 
-    RepeatAction(): boolean
-    {
-        throw ("Not implemented");
-    }
-
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -77,21 +84,17 @@ export class ActionSalvage implements IAction
         }
     }
 
-    Act(): ActionResponseCode
+    //#region  factory
+    constructor(unit: Unit)
     {
-        var entryCode = this.EntryValidation();
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-        var actionCode;
-        if (this.target instanceof Resource) actionCode = this.unit.creep.pickup(this.target);
-        else
-        {
-            actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
-        }
-
-        return this.WorkCodeProcessing(actionCode);
+        this.unit = unit as BaseCreep;
+        this.minAmmount = 0;
     }
+
+    MinAmmount(minAmmount: number):ActionSalvage
+    {
+        this.minAmmount = minAmmount;
+        return this;
+    }
+    //#endregion
 }

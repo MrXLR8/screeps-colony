@@ -10,30 +10,29 @@ export class ActionMining implements IAction
     unit: BaseCreep;
     target: Source;
 
-    lookForClosest: boolean;
+    findRandomSource: boolean;
 
-    constructor(unit: Unit, lookForClosest?: boolean)
+    Act(): ActionResponseCode
     {
-        if (typeof lookForClosest !== 'undefined')
-        {
-            this.lookForClosest = lookForClosest;
-        }
-        else
-        {
-            this.lookForClosest = false;
-        }
-        this.unit = unit as BaseCreep;
+        var entryCode = this.EntryValidation();
+
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) return ActionResponseCode.NextTask;
+        var actionCode = this.unit.creep.harvest(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-
-
-    EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
-        if ((this.unit.creep.getActiveBodyparts(WORK)*2) >this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
+        if ((this.unit.creep.getActiveBodyparts(WORK) * 2) > this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -48,7 +47,7 @@ export class ActionMining implements IAction
             }
         }
 
-        if (this.lookForClosest)
+        if (!this.findRandomSource)
         {
             this.target = Finder.GetClosestSource(this.unit.creep.pos);
         }
@@ -63,7 +62,7 @@ export class ActionMining implements IAction
         }
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -72,6 +71,13 @@ export class ActionMining implements IAction
                 if (this.unit.memory.actionAttempts > Constants.moveAttmepts)
                 {
                     this.unit.log("move attempts");
+                    var found = Finder.GetRandomSource(this.unit.creep.room, this.target.id);
+                    if (found != null)
+                    {
+                        this.unit.memory.targetID = found.id;
+                        this.unit.memory.actionAttempts=0;
+                        return ActionResponseCode.Repeat;
+                    }
                     return ActionResponseCode.Reset;
                 }
                 this.unit.MoveToTarget(this.target);
@@ -91,23 +97,18 @@ export class ActionMining implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    //#region
+    constructor(unit: Unit)
     {
-        throw ("Not implemented");
+        this.unit = unit as BaseCreep;
+        this.findRandomSource = false;
     }
 
-    Act(): ActionResponseCode
+    FindRandomSource(): ActionMining
     {
-        var entryCode = this.EntryValidation();
-
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) return ActionResponseCode.NextTask;
-        var actionCode = this.unit.creep.harvest(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
+        this.findRandomSource = true;
+        return this;
     }
+    //#endregion
 
 }

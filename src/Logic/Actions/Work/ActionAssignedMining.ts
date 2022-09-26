@@ -15,24 +15,33 @@ export class ActionAssignedMining implements IAction
 
     lookForClosest: boolean;
 
-    constructor(unit: IAssignable)
+    Act(): ActionResponseCode
     {
-        this.unit = unit as IAssignable;
+        var entryCode = this.EntryValidation();
+
+        if (entryCode != null) return entryCode;
+
+        this.GetSavedTarget();
+
+        if (this.target == null) { this.unit.creep.say("!⛏️"); return ActionResponseCode.NextTask; }
+        var actionCode = this.unit.creep.harvest(this.target);
+
+        return this.WorkCodeProcessing(actionCode);
     }
 
-    EntryValidation(): ActionResponseCode
+   private EntryValidation(): ActionResponseCode
     {
         if ((this.unit.creep.getActiveBodyparts(WORK) * 2) > this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
         return null;
     }
 
-    GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         this.target = Game.getObjectById<Id<Source>>(this.unit.memory.assignedTo as Id<Source>);
-        if(this.target==null) this.unit.Assign();
+        if (this.target == null) this.unit.Assign();
     }
 
-    WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
+    private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode
     {
         switch (code)
         {
@@ -54,23 +63,9 @@ export class ActionAssignedMining implements IAction
         }
     }
 
-    RepeatAction(): boolean
+    constructor(unit: IAssignable)
     {
-        throw ("Not implemented");
-    }
-
-    Act(): ActionResponseCode
-    {
-        var entryCode = this.EntryValidation();
-
-        if (entryCode != null) return entryCode;
-
-        this.GetSavedTarget();
-
-        if (this.target == null) { this.unit.creep.say("!⛏️"); return ActionResponseCode.NextTask; }
-        var actionCode = this.unit.creep.harvest(this.target);
-
-        return this.WorkCodeProcessing(actionCode);
+        this.unit = unit as IAssignable;
     }
 
 }
