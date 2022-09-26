@@ -14,6 +14,9 @@ export enum CreepTypes
 
 export abstract class BaseCreep extends Unit
 {
+
+    static CreepPopulation: { [type: number]: number };
+
     public creep: Creep;
 
     protected tasks: IAction[];
@@ -34,15 +37,15 @@ export abstract class BaseCreep extends Unit
         this.creep.memory = memory;
     }
 
-    MoveToTarget(targetObj: RoomObject):  CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
+    MoveToTarget(targetObj: RoomObject): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
         return this.MoveToPos(targetObj.pos)
     }
 
     MoveToPos(targetPos: RoomPosition): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
-        if(this.memory.actions.moved) return ERR_TIRED;
-        this.memory.actions.moved=true;
+        if (this.memory.actions.moved) return ERR_TIRED;
+        this.memory.actions.moved = true;
         return this.creep.moveTo(targetPos, { visualizePathStyle: { stroke: '#ffffff' } });
     }
 

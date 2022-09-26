@@ -66,4 +66,47 @@ export class PartsPicker
         return null;
     }
 
+
+    static GetAviableMaxParts(type: CreepTypes, energy: number,roomEnergy:number): BodyPartConstant[]
+    {
+        var collection: BodyPartConstant[][];
+        switch (type)
+        {
+            case CreepTypes.UniversalCreep:
+                collection = UniversalCreep.parts;
+                break;
+            case CreepTypes.HeavyMiner:
+                collection = HeavyMinerCreep.parts;
+                break;
+            case CreepTypes.Courier:
+                collection = CourierCreep.parts;
+                break;
+            case CreepTypes.Claimer:
+                collection = ClaimerCreep.parts;
+                break;
+            case CreepTypes.ExpeditorCreep:
+                collection = ExpiditorCreep.parts;
+                break;
+            default:
+                return null;
+        }
+
+        for (var currentCollection of collection)
+        {
+            var calc = this.CalculatePrice(currentCollection);
+            console.log("price is:" + calc+". room energy: "+energy+" max: "+roomEnergy);
+
+            if (calc <= roomEnergy)
+            {
+                if (calc <= energy)
+                {
+                    return currentCollection;
+                }
+                return null;
+            }
+        }
+
+        return null;
+    }
+
 }

@@ -14,15 +14,15 @@ export abstract class Unit
 
     abstract set memory(memory: BaseCreepMemory | BaseStructureMemory);
 
-    get targetId():string
+    get targetId(): string
     {
         return this.memory.targetID;
     }
 
-    set targetId(target:string)
+    set targetId(target: string)
     {
-        this.memory.targetID=target;
-        this.memory.actionAttempts=0;
+        this.memory.targetID = target;
+        this.memory.actionAttempts = 0;
     }
 
     private IncrementNumber(num: number, max: number): number
@@ -35,10 +35,14 @@ export abstract class Unit
     Act(): void
     {
 
+        if (this instanceof BaseCreep)
+        {
+            BaseCreep.CreepPopulation[(this.memory.Role)]++;
+        }
         var a = this;
-       // if((a as unknown as BaseCreep).creep.name!="Universal#1") return; //DEBUG
-       // console.log(">>>> "+Game.time);
-        this.memory.actions=new TickAction();
+        // if((a as unknown as BaseCreep).creep.name!="Universal#1") return; //DEBUG
+        // console.log(">>>> "+Game.time);
+        this.memory.actions = new TickAction();
 
         var taskNumber = this.memory.taskNumber;
         var i = this.tasks.length * 2;
@@ -49,7 +53,7 @@ export abstract class Unit
 
             var result = this.tasks[taskNumber].Act();
 
-         //  console.log("TaskNumber" +taskNumber +" ended with: "+result.toString() +"\nMoved: "+this.memory.actions.moved+"|Actioned: "+this.memory.actions.worked);
+            //  console.log("TaskNumber" +taskNumber +" ended with: "+result.toString() +"\nMoved: "+this.memory.actions.moved+"|Actioned: "+this.memory.actions.worked);
 
             codeSwitch: switch (result)
             {
@@ -80,14 +84,14 @@ export abstract class Unit
                 case ActionResponseCode.Reset:
                     {
                         this.memory.taskNumber = 0;
-                        this.memory.actionAttempts=0;
+                        this.memory.actionAttempts = 0;
                         this.memory.targetID = null;
                         break doLoop;
                     }
                 case ActionResponseCode.ResetThisTick:
                     {
                         this.memory.taskNumber = 0;
-                        this.memory.actionAttempts=0;
+                        this.memory.actionAttempts = 0;
                         this.memory.targetID = null;
                         break codeSwitch;
                     }
@@ -105,8 +109,8 @@ export abstract class Unit
                     }
             }
 
-        } while (i>0)
-       // console.log("<<<<<");
+        } while (i > 0)
+        // console.log("<<<<<");
     }
 
 }

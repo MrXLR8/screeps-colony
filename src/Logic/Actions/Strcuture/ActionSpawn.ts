@@ -14,6 +14,7 @@ import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { CourierCreep } from "Models/Creeps/Courier";
+import { Console } from "console";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -25,6 +26,7 @@ export class ActionSpawn implements IAction
 
     Act(): ActionResponseCode
     {
+
         var entryCode = this.EntryValidation();
         if (entryCode != null) return entryCode;
 
@@ -32,7 +34,23 @@ export class ActionSpawn implements IAction
 
         if (this.target == null) return ActionResponseCode.NextTask;
 
-        this.PrepareCreepToSpawn()
+
+        this.pickedParts = PartsPicker.GetAviableMaxParts(this.target, this.unit.structure.room.energyAvailable, this.unit.structure.room.energyCapacityAvailable);
+        if (this.pickedParts == null)
+        {
+            console.log("NOT ENOUGH RESOURCES TO SPAWN GOOD CREEP");
+            if (BaseCreep.CreepPopulation[CreepTypes.UniversalCreep] == 0)
+            {
+                this.SpawnEmergencyCreep();
+            }
+
+            else { return ActionResponseCode.NextTask; }
+
+        }
+
+        this.PrepareCreepToSpawn();
+
+
 
         if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.NextTask;
         var actionCode = (this.unit.structure as StructureSpawn).spawnCreep(this.pickedParts, this.creepName, this.spawnsettings);
@@ -40,22 +58,30 @@ export class ActionSpawn implements IAction
         return this.WorkCodeProcessing(actionCode);
     }
 
-   private EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if ((this.unit.structure as StructureSpawn).spawning) return ActionResponseCode.NextTask;
         return null;
     }
 
+    private SpawnEmergencyCreep()
+    {
+        this.target = CreepTypes.UniversalCreep;
+        this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
+        console.log("SPAWNING EMERGENCY CREEP");
+
+    }
+
     private GetSavedTarget(): void
     {
-        var creepExist: { [type: number]: number } = Utils.GetCreepPopulation(this.unit.structure.room);
+
         var creepGlobal: { [type: number]: number } = Utils.GetCreepPopulation();
         var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
 
         for (var order of Constants.ScenarioProduce)
         {
             creepRequiredMoment[order]++;
-            if (creepRequiredMoment[order] > creepExist[order])
+            if (creepRequiredMoment[order] > BaseCreep.CreepPopulation[order])
             {
                 if (!this.CheckSpawnCondition(order)) continue;
                 if (order == CreepTypes.ExpeditorCreep)
@@ -133,8 +159,6 @@ export class ActionSpawn implements IAction
         mem.assignedTo = null;
         mem.actionAttempts = 0;
         mem.Role = this.target;
-        this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
-
         switch (this.target)
         {
             case CreepTypes.UniversalCreep:
