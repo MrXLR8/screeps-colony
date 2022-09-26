@@ -77,7 +77,7 @@ export class ActionGather implements IAction
 
     private RepeatAction(): boolean
     {
-        var newStore = this.target.ammount - this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY);
+        var newStore = this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY)- this.target.ammount;
         if (newStore < 0) return false;
         var newTarget = Finder.GetFilledStorage
             (
