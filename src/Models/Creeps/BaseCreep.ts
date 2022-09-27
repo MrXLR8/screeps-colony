@@ -9,7 +9,8 @@ export enum CreepTypes
     HeavyMiner,
     Courier,
     Claimer,
-    ExpeditorCreep
+    ExpeditorCreep,
+    Upgrader
 }
 
 export abstract class BaseCreep extends Unit

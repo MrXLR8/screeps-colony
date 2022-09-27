@@ -15,8 +15,12 @@ export class Constants
         [
             CreepTypes.UniversalCreep,
             CreepTypes.HeavyMiner,
+            CreepTypes.Upgrader,
+            CreepTypes.UniversalCreep,
+            CreepTypes.UniversalCreep,
             CreepTypes.HeavyMiner,
             CreepTypes.UniversalCreep,
+
             CreepTypes.UniversalCreep,
             CreepTypes.UniversalCreep,
             CreepTypes.Courier,

@@ -104,9 +104,8 @@ export class ActionSpawn implements IAction
     {
         switch (type)
         {
-            case CreepTypes.HeavyMiner: {
+            case CreepTypes.HeavyMiner:
                 return HeavyMinerCreep.SpawnCondition(this.unit.structure.room);
-            }
             case CreepTypes.Courier:
                 return CourierCreep.SpawnCondition(this.unit.structure.room);
             case CreepTypes.Claimer:
@@ -179,6 +178,10 @@ export class ActionSpawn implements IAction
             case CreepTypes.ExpeditorCreep:
                 this.creepName = this.GetAviableCreepName("Expiditor");
                 mem.assignedTo = ExpiditorCreep.GetMyNoSpawnRoom().controller.id;
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
+            case CreepTypes.Upgrader:
+                this.creepName = this.GetAviableCreepName("Upgrader");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:

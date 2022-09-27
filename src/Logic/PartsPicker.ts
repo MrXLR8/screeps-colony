@@ -5,6 +5,7 @@ import { CourierCreep } from "Models/Creeps/Courier";
 import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { UniversalCreep } from "Models/Creeps/Universal";
+import { UpgraderCreep } from "Models/Creeps/Updgrader";
 
 export class PartsPicker
 {
@@ -50,6 +51,9 @@ export class PartsPicker
             case CreepTypes.ExpeditorCreep:
                 collection = ExpiditorCreep.parts;
                 break;
+            case CreepTypes.Upgrader:
+                collection = UpgraderCreep.parts;
+                break;
             default:
                 return null;
         }
@@ -67,7 +71,7 @@ export class PartsPicker
     }
 
 
-    static GetAviableMaxParts(type: CreepTypes, energy: number,roomEnergy:number): BodyPartConstant[]
+    static GetAviableMaxParts(type: CreepTypes, energy: number, roomEnergy: number): BodyPartConstant[]
     {
         var collection: BodyPartConstant[][];
         switch (type)
@@ -87,6 +91,9 @@ export class PartsPicker
             case CreepTypes.ExpeditorCreep:
                 collection = ExpiditorCreep.parts;
                 break;
+            case CreepTypes.Upgrader:
+                collection = UpgraderCreep.parts;
+                break;
             default:
                 return null;
         }
@@ -97,6 +104,7 @@ export class PartsPicker
 
             if (calc <= roomEnergy)
             {
+
                 if (calc <= energy)
                 {
                     return currentCollection;
