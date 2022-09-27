@@ -64,7 +64,7 @@ export class EnergySource
 
     static GetFreeHaulerSourceInRoom(room: Room): EnergySource
     {
-        var found = room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myHauler } })[0];
+        var found = room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myHauler==null } })[0];
         if (found != null) return new EnergySource(found);
         return null;
     }

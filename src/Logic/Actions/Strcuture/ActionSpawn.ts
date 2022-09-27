@@ -16,6 +16,7 @@ import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { CourierCreep } from "Models/Creeps/Courier";
 import { Console } from "console";
 import { ExternalHeavyMiner } from "Models/Creeps/ExternalHeavyMiner";
+import { ExternalHaulerCreep } from "Models/Creeps/ExternalHauler";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -39,7 +40,7 @@ export class ActionSpawn implements IAction
         this.pickedParts = PartsPicker.GetAviableMaxParts(this.target, this.unit.structure.room.energyAvailable, this.unit.structure.room.energyCapacityAvailable);
 
 
-        if(this.target==CreepTypes.ExternalHeavyMiner) {console.log(JSON.stringify(this.pickedParts));}
+        if (this.target == CreepTypes.ExternalHeavyMiner) { console.log(JSON.stringify(this.pickedParts)); }
         if (this.pickedParts == null)
         {
             if (BaseCreep.CreepPopulation[CreepTypes.UniversalCreep] == 0)
@@ -118,6 +119,8 @@ export class ActionSpawn implements IAction
                 return ExpiditorCreep.SpawnCondition(this.unit.structure.room);
             case CreepTypes.ExternalHeavyMiner:
                 return ExternalHeavyMiner.SpawnCondition();
+            case CreepTypes.ExternalHauler:
+                return ExternalHaulerCreep.SpawnCondition();
             default:
                 return true;
         }
@@ -162,6 +165,7 @@ export class ActionSpawn implements IAction
         mem.taskNumber = 0;
         mem.assignedTo = null;
         mem.actionAttempts = 0;
+        mem.originRoom = this.unit.structure.room.name;
         mem.Role = this.target;
         switch (this.target)
         {
@@ -192,6 +196,10 @@ export class ActionSpawn implements IAction
                 break;
             case CreepTypes.ExternalHeavyMiner:
                 this.creepName = this.GetAviableCreepName("ExternalHeavyMiner");
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
+            case CreepTypes.ExternalHauler:
+                this.creepName = this.GetAviableCreepName("ExternalHauler");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:

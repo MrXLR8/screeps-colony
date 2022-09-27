@@ -120,6 +120,7 @@ export class ActionGatherEnergy implements IAction
     {
         this.unit = unit as BaseCreep;
         this.takeBigFirst = false;
+        this.containerTypes=[];
     }
 
     ContainerTypes(containerTypes: StructureConstant[]): ActionGatherEnergy

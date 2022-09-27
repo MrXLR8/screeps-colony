@@ -10,5 +10,7 @@ export class BaseCreepMemory implements CreepMemory
     assignedTo:string;
     actions:TickAction = new TickAction();
 
+    originRoom:string;
+
 }
 
