@@ -17,12 +17,14 @@ export class ActionRepair implements IAction
     target: Structure;
 
     room: Room;
+
+    roomMinumumEnergy: number;
     energyStored: number;
     energyPercent: number;
     towerReserves: number;
     byRandom: boolean;
 
-    keepTask:boolean;
+    keepTask: boolean;
     whatToRepair: StructureConstant[];
 
     Act(): ActionResponseCode
@@ -47,8 +49,16 @@ export class ActionRepair implements IAction
         return this.WorkCodeProcessing(actionCode);
     }
 
-   private EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
+        if (typeof this.room.storage !== 'undefined')
+        {
+            if (this.room.storage.store[RESOURCE_ENERGY] < this.roomMinumumEnergy) return ActionResponseCode.NextTask;
+        }
+        else
+        {
+            return ActionResponseCode.NextTask;
+        }
         if (!(this.unit instanceof BaseCreep))
         {
             if (this.energyPercent < this.towerReserves)
@@ -110,7 +120,7 @@ export class ActionRepair implements IAction
                 {
                     this.unit.creep.say("🔧");
                 }
-                if(!this.keepTask) return ActionResponseCode.Reset;
+                if (!this.keepTask) return ActionResponseCode.Reset;
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Repair error code: " + code);
@@ -123,8 +133,9 @@ export class ActionRepair implements IAction
     {
 
         this.byRandom = false;
-        this.keepTask=false;
+        this.keepTask = false;
         this.towerReserves = 0;
+        this.roomMinumumEnergy = 0;
         if (unit instanceof BaseCreep)
         {
             this.unit = unit as BaseCreep;
@@ -141,27 +152,33 @@ export class ActionRepair implements IAction
         else { console.log("UNKNOWN INSTANCE"); }
     }
 
-    Structures(whatToRepair: StructureConstant[]):ActionRepair
+    Structures(whatToRepair: StructureConstant[]): ActionRepair
     {
         this.whatToRepair = whatToRepair;
         return this;
     }
 
-    ChooseRandomly():ActionRepair
+    ChooseRandomly(): ActionRepair
     {
         this.byRandom = true;
         return this;
     }
 
-    RepeatToEnd():ActionRepair
+    RepeatToEnd(): ActionRepair
     {
-        this.keepTask=true;
+        this.keepTask = true;
         return this;
     }
 
-    EnergyReserves(towerReserves: number):ActionRepair
+    EnergyReserves(towerReserves: number): ActionRepair
     {
         this.towerReserves = towerReserves;
+        return this;
+    }
+
+    RoomMinumumEnergy(min: number): ActionRepair
+    {
+        this.roomMinumumEnergy = min;
         return this;
     }
 
