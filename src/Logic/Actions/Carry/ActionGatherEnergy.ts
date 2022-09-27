@@ -117,6 +117,7 @@ export class ActionGatherEnergy implements IAction
             case OK:
                 this.unit.memory.actions.worked = true;
                 if (!this.RepeatAction()) return ActionResponseCode.Reset;
+                this.unit.creep.say("⚡");
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Gather error code: " + code);
