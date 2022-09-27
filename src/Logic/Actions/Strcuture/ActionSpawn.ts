@@ -15,6 +15,7 @@ import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { CourierCreep } from "Models/Creeps/Courier";
 import { Console } from "console";
+import { ExternalHeavyMiner } from "Models/Creeps/ExternalHeavyMiner";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -36,6 +37,9 @@ export class ActionSpawn implements IAction
 
 
         this.pickedParts = PartsPicker.GetAviableMaxParts(this.target, this.unit.structure.room.energyAvailable, this.unit.structure.room.energyCapacityAvailable);
+
+
+        if(this.target==CreepTypes.ExternalHeavyMiner) {console.log(JSON.stringify(this.pickedParts));}
         if (this.pickedParts == null)
         {
             if (BaseCreep.CreepPopulation[CreepTypes.UniversalCreep] == 0)
@@ -112,6 +116,8 @@ export class ActionSpawn implements IAction
                 return ClaimerCreep.SpawnCondition();
             case CreepTypes.ExpeditorCreep:
                 return ExpiditorCreep.SpawnCondition(this.unit.structure.room);
+            case CreepTypes.ExternalHeavyMiner:
+                return ExternalHeavyMiner.SpawnCondition();
             default:
                 return true;
         }
@@ -182,6 +188,10 @@ export class ActionSpawn implements IAction
                 break;
             case CreepTypes.Upgrader:
                 this.creepName = this.GetAviableCreepName("Upgrader");
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
+            case CreepTypes.ExternalHeavyMiner:
+                this.creepName = this.GetAviableCreepName("ExternalHeavyMiner");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:

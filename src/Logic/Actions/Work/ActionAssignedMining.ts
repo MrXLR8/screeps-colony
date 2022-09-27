@@ -29,7 +29,7 @@ export class ActionAssignedMining implements IAction
         return this.WorkCodeProcessing(actionCode);
     }
 
-   private EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if ((this.unit.creep.getActiveBodyparts(WORK) * 2) > this.unit.AmmountCanCarry()) return ActionResponseCode.NextTask;
         return null;
@@ -38,7 +38,11 @@ export class ActionAssignedMining implements IAction
     private GetSavedTarget(): void
     {
         this.target = Game.getObjectById<Id<Source>>(this.unit.memory.assignedTo as Id<Source>);
-        if (this.target == null) this.unit.Assign();
+        if (this.target == null)
+        {
+            this.unit.Assign();
+            this.target = Game.getObjectById<Id<Source>>(this.unit.memory.assignedTo as Id<Source>);
+        }
     }
 
     private WorkCodeProcessing(code: ScreepsReturnCode): ActionResponseCode

@@ -4,6 +4,23 @@ export class AssignableFlag
 {
     flag: Flag;
 
+
+    static FindFlag(primaryColor: ColorConstant, secondaryColor: ColorConstant, maxAssigned: number): AssignableFlag
+    {
+        for (var flagName in Game.flags)
+        {
+            var flag = Game.flags[flagName];
+            var assFalg = new AssignableFlag(flag);
+            if (!assFalg.CompareColors(primaryColor, secondaryColor)) continue;
+
+            if (assFalg.assignedAmmount < maxAssigned)
+                return assFalg;
+
+        }
+        return null;
+    }
+
+
     constructor(flag: Flag)
     {
         this.flag = flag;

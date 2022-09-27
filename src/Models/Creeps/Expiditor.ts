@@ -47,7 +47,6 @@ export class ExpiditorCreep extends BaseCreep
         {
             room = Game.rooms[roomName];
             if(room.name==ignoreRoom.name) continue;
-            console.log("Room ignore: "+room.name+"and i am ignoring "+ignoreRoom.name);
             if (typeof room.controller === 'undefined') continue;
             if (typeof room.controller.owner==='undefined') continue;
             if (room.controller.owner.username != Constants.userName) continue;
