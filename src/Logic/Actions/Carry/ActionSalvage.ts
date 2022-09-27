@@ -99,5 +99,11 @@ export class ActionSalvage implements IAction
         this.minAmmount = minAmmount;
         return this;
     }
+
+    CreepCapacityAmmount(): ActionSalvage
+    {
+        this.minAmmount = this.unit.AmmountCanCarry();
+        return this;
+    }
     //#endregion
 }

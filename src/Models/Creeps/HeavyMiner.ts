@@ -12,6 +12,7 @@ export class HeavyMinerCreep extends BaseCreep implements IAssignable
 
     static parts: BodyPartConstant[][] =
         [
+            [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK,WORK, WORK, CARRY],//900
             [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],//800
             [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY], //700
             [MOVE, WORK, WORK, WORK, WORK, WORK, CARRY], //600
