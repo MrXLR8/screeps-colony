@@ -38,7 +38,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
     tasks: IAction[] =
         [
             new ActionMoveAssign(this).InRange(2),
-            new ActionGatherEnergy(this),
+            new ActionGatherEnergy(this).WaitForIt(),
             new ActionMoveOrigin(this),
             new ActionStore(this).ContainerTypes([STRUCTURE_STORAGE])
         ];
