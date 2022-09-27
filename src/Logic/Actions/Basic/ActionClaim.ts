@@ -40,11 +40,10 @@ export class ActionClaim implements IAction
         {
             case ERR_NOT_IN_RANGE:
                 this.unit.MoveToTarget(this.target);
-                this.unit.creep.say(">🎪");
+                this.unit.creep.say("🎪");
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
-                this.unit.creep.say("🎪");
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Claim error code: " + code);

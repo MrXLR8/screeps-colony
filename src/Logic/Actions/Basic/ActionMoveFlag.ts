@@ -96,7 +96,7 @@ export class ActionMoveFlag implements IAction
             case ERR_TIRED:
             case OK:
                 this.unit.memory.actions.moved = true;
-                this.unit.creep.say(">🚩");
+                this.unit.creep.say("🚩");
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. MoveToFlag error code: " + code);

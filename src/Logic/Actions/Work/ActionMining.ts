@@ -81,7 +81,7 @@ export class ActionMining implements IAction
                     return ActionResponseCode.Reset;
                 }
                 this.unit.MoveToTarget(this.target);
-                this.unit.creep.say(">⛏️");
+                this.unit.creep.say("⛏️");
                 return ActionResponseCode.Repeat;
             case ERR_NOT_ENOUGH_RESOURCES:
                 this.unit.creep.say("!⛏️");
@@ -89,7 +89,6 @@ export class ActionMining implements IAction
             case OK:
                 this.unit.memory.actions.worked = true;
                 this.unit.memory.actionAttempts = 0;
-                this.unit.creep.say("⛏️");
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Mining error code: " + code);

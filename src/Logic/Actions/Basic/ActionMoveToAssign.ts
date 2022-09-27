@@ -21,7 +21,7 @@ export class ActionMoveAssign implements IAction
 
         if (this.target == null)
         {
-            this.unit.creep.say("!🧾(NF)");
+            this.unit.creep.say("!📍(NF)");
             return ActionResponseCode.Repeat;
         }
 
@@ -50,12 +50,12 @@ export class ActionMoveAssign implements IAction
         switch (code)
         {
             case ERR_NO_PATH:
-                this.unit.creep.say("!🧾(NP)");
+                this.unit.creep.say("!📍(NP)");
                 return ActionResponseCode.Repeat;
             case ERR_TIRED:
             case OK:
                 this.unit.memory.actions.moved = true;
-                this.unit.creep.say(">🧾");
+                this.unit.creep.say("📍");
                 return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. MoveToOrigin error code: " + code);

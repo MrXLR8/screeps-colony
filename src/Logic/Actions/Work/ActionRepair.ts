@@ -110,16 +110,12 @@ export class ActionRepair implements IAction
                 if (this.unit instanceof BaseCreep)
                 {
                     this.unit.MoveToTarget(this.target);
-                    this.unit.creep.say(">🔧");
+                    this.unit.creep.say("🔧");
                 }
 
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
-                if (this.unit instanceof BaseCreep)
-                {
-                    this.unit.creep.say("🔧");
-                }
                 if (!this.keepTask) return ActionResponseCode.Reset;
                 return ActionResponseCode.Repeat;
             default:

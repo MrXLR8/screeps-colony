@@ -83,10 +83,9 @@ export class ActionGatherFromFlag implements IAction
         {
             case ERR_NOT_IN_RANGE:
                 this.unit.MoveToTarget(this.target);
-                this.unit.creep.say(">⚡");
+                this.unit.creep.say("⚡");
                 return ActionResponseCode.Repeat;
             case OK:
-                this.unit.creep.say("⚡");
                 this.unit.memory.actions.worked = true;
                 return ActionResponseCode.NextTask;
             default:
