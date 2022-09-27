@@ -1,4 +1,4 @@
-import { ActionGather } from "Logic/Actions/Carry/ActionGather";
+import { ActionGatherEnergy } from "Logic/Actions/Carry/ActionGatherEnergy";
 import { BaseCreep } from "./BaseCreep";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
 import { ActionFillTower } from "Logic/Actions/Carry/ActionFillTower";
@@ -22,7 +22,7 @@ export class UniversalCreep extends BaseCreep
 
     tasks: IAction[] =
     [
-        new ActionGather(this).ContainerTypes([STRUCTURE_CONTAINER,STRUCTURE_STORAGE]),
+        new ActionGatherEnergy(this).ContainerTypes([STRUCTURE_CONTAINER,STRUCTURE_STORAGE]),
         new ActionMining(this).FindRandomSource(),
         new ActionFillTower(this).FillUntil(20),
         new ActionStoreExtension(this),

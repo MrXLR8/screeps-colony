@@ -177,7 +177,7 @@ export class ActionSpawn implements IAction
                 break;
             case CreepTypes.ExpeditorCreep:
                 this.creepName = this.GetAviableCreepName("Expiditor");
-                mem.assignedTo = ExpiditorCreep.GetMyNoSpawnRoom().controller.id;
+                mem.assignedTo = ExpiditorCreep.GetMyNoSpawnRoom(this.unit.structure.room).controller.id;
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Upgrader:

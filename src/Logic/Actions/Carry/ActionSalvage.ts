@@ -22,13 +22,16 @@ export class ActionSalvage implements IAction
         if (this.target instanceof Resource) actionCode = this.unit.creep.pickup(this.target);
         else
         {
-            actionCode = this.unit.creep.withdraw(this.target, RESOURCE_ENERGY);
+            var store = this.target.store;
+            var stored_resources = _.filter(Object.keys(store), resource => store[resource as ResourceConstant] > 0)[0] as ResourceConstant;
+
+            actionCode = this.unit.creep.withdraw(this.target,stored_resources);
         }
 
         return this.WorkCodeProcessing(actionCode);
     }
 
-   private EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
@@ -48,7 +51,7 @@ export class ActionSalvage implements IAction
                 if (this.target.amount > this.minAmmount) return;
             }
             else
-                if (this.target.store.getUsedCapacity(RESOURCE_ENERGY) > this.minAmmount)
+                if (this.target.store.getUsedCapacity() > this.minAmmount)
                 {
                     return; //Target is valid
                 }
@@ -56,9 +59,9 @@ export class ActionSalvage implements IAction
 
         this.target = this.unit.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (res) => { return res.amount > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => { return tomb.store.energy > this.minAmmount } });
+        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => { return tomb.store.getUsedCapacity() > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => { return ruin.store.energy > this.minAmmount } });
+        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => { return ruin.store.getUsedCapacity() > this.minAmmount } });
 
         if (this.target != null)
         {
@@ -77,7 +80,7 @@ export class ActionSalvage implements IAction
             case OK:
                 this.unit.creep.say("♻️");
                 this.unit.memory.actions.worked = true;
-                return ActionResponseCode.NextTask;
+                return ActionResponseCode.Repeat;
             default:
                 this.unit.log("Problem occured. Salvage error code: " + code);
                 return ActionResponseCode.NextTask;
@@ -91,7 +94,7 @@ export class ActionSalvage implements IAction
         this.minAmmount = 0;
     }
 
-    MinAmmount(minAmmount: number):ActionSalvage
+    MinAmmount(minAmmount: number): ActionSalvage
     {
         this.minAmmount = minAmmount;
         return this;

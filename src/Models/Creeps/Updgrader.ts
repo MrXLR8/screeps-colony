@@ -1,4 +1,4 @@
-import { ActionGather } from "Logic/Actions/Carry/ActionGather";
+import { ActionGatherEnergy } from "Logic/Actions/Carry/ActionGatherEnergy";
 import { BaseCreep } from "./BaseCreep";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
 import { ActionFillTower } from "Logic/Actions/Carry/ActionFillTower";
@@ -25,7 +25,7 @@ export class UpgraderCreep extends BaseCreep
 
     tasks: IAction[] =
     [
-        new ActionGather(this,).ContainerTypes([STRUCTURE_CONTAINER]),
+        new ActionGatherEnergy(this,).ContainerTypes([STRUCTURE_CONTAINER]),
         new ActionUpgrade(this),
     ];
 

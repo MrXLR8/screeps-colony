@@ -1,4 +1,4 @@
-import { ActionGather } from "Logic/Actions/Carry/ActionGather";
+import { ActionGatherEnergy } from "Logic/Actions/Carry/ActionGatherEnergy";
 import { BaseCreep } from "./BaseCreep";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
 import { ActionFillTower } from "Logic/Actions/Carry/ActionFillTower";
@@ -22,7 +22,7 @@ export class ExpiditorCreep extends BaseCreep
     tasks: IAction[] =
         [
             new ActionMoveToRoom(this),
-            new ActionGather(this).ContainerTypes([STRUCTURE_CONTAINER,STRUCTURE_STORAGE]),
+            new ActionGatherEnergy(this).ContainerTypes([STRUCTURE_CONTAINER,STRUCTURE_STORAGE]),
             new ActionMining(this).FindRandomSource(),
             new ActionFillTower(this).FillUntil(20),
             new ActionStoreExtension(this),
@@ -32,26 +32,29 @@ export class ExpiditorCreep extends BaseCreep
             new ActionUpgrade(this)
         ];
 
-    static SpawnCondition(room:Room): boolean
+    static  SpawnCondition(room:Room): boolean
     {
-        if(room.energyAvailable<800) return false;
-        return this.GetMyNoSpawnRoom() != null;
+    //    if(room.energyAvailable<800) return false;
+        return this.GetMyNoSpawnRoom(room) != null;
     }
 
-    static GetMyNoSpawnRoom(): Room
+    static GetMyNoSpawnRoom(ignoreRoom:Room): Room
     {
         var room: Room;
+        var result: Room;
         var secondTarget: Room=null;
         for (var roomName in Game.rooms)
         {
             room = Game.rooms[roomName];
+            if(room.name==ignoreRoom.name) continue;
+            console.log("Room ignore: "+room.name+"and i am ignoring "+ignoreRoom.name);
             if (typeof room.controller === 'undefined') continue;
             if (typeof room.controller.owner==='undefined') continue;
             if (room.controller.owner.username != Constants.userName) continue;
             if (room.controller.level < Constants.weakController) secondTarget = room;
-            if (room.find(FIND_MY_SPAWNS)[0] == null) return room;
+            if (room.find(FIND_MY_SPAWNS)[0] == null) return result=room;
         }
-        if(room!=null) return room;
+        if(result!=null) return result;
         return secondTarget;
     }
 

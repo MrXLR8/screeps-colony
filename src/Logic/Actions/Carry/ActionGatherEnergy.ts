@@ -7,7 +7,7 @@ import { Storage } from "Models/Structures/Storage";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
-export class ActionGather implements IAction
+export class ActionGatherEnergy implements IAction
 {
     unit: BaseCreep;
     target: Storage;
@@ -41,7 +41,7 @@ export class ActionGather implements IAction
         var found;
         if (targetId != null)
         {
-            found = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin>);
+            found = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureContainer | StructureLink  | Resource >);
         }
         if (found != null)
         {
@@ -54,14 +54,14 @@ export class ActionGather implements IAction
 
         if (this.takeBigFirst)
         {
-            found = Finder.GetBiggestFilledStorage(this.unit.creep.room, this.containerTypes, this.unit.AmmountCanCarry());
+            found = Finder.GetBiggestFilledStorage(this.unit.creep.room,RESOURCE_ENERGY,this.containerTypes, this.unit.AmmountCanCarry());
             if (found != null) this.target = new Storage(found, RESOURCE_ENERGY);
 
         }
         else
         {
-            var structure = Finder.GetFilledStorage(this.unit.creep.pos, this.containerTypes, this.unit.AmmountCanCarry());
-            var dropped = Finder.FindDropped(this.unit.creep.pos, this.unit.AmmountCanCarry());
+            var structure = Finder.GetFilledStorage(this.unit.creep.pos,RESOURCE_ENERGY, this.containerTypes, this.unit.AmmountCanCarry());
+            var dropped = Finder.FindDropped(this.unit.creep.pos,RESOURCE_ENERGY,this.unit.AmmountCanCarry());
 
             found = Utils.WhosClose(this.unit.creep.pos, structure, dropped) as StructureContainer | StructureContainer | StructureLink | Tombstone | Resource | Ruin;
             if (found != null) this.target = new Storage(found, RESOURCE_ENERGY);
@@ -77,11 +77,12 @@ export class ActionGather implements IAction
 
     private RepeatAction(): boolean
     {
-        var newStore = this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY)- this.target.ammount;
+        var newStore = this.unit.creep.store.getFreeCapacity(RESOURCE_ENERGY) - this.target.ammount;
         if (newStore < 0) return false;
         var newTarget = Finder.GetFilledStorage
             (
                 this.unit.creep.pos,
+                RESOURCE_ENERGY,
                 this.containerTypes,
                 this.unit.AmmountCanCarry(),
                 this.unit.targetId as Id<StructureContainer | StructureStorage>
@@ -121,12 +122,13 @@ export class ActionGather implements IAction
         this.takeBigFirst = false;
     }
 
-    ContainerTypes(containerTypes: StructureConstant[]): ActionGather
+    ContainerTypes(containerTypes: StructureConstant[]): ActionGatherEnergy
     {
         this.containerTypes = containerTypes;
         return this;
     }
-    PriorityBigFirst(): ActionGather
+
+    PriorityBigFirst(): ActionGatherEnergy
     {
         this.takeBigFirst = true;
         return this;

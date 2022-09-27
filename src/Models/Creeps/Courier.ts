@@ -1,4 +1,4 @@
-import { ActionGather } from "Logic/Actions/Carry/ActionGather";
+import { ActionGatherEnergy } from "Logic/Actions/Carry/ActionGatherEnergy";
 import { BaseCreep } from "./BaseCreep";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
 import { ActionFillTower } from "Logic/Actions/Carry/ActionFillTower";
@@ -27,9 +27,9 @@ export class CourierCreep extends BaseCreep
     [
         new ActionSalvage(this).MinAmmount(200),
         new ActionGatherFromFlag(this).WithColors(COLOR_YELLOW,COLOR_WHITE),
-        new ActionGather(this,).ContainerTypes([STRUCTURE_CONTAINER]).PriorityBigFirst(),
+        new ActionGatherEnergy(this,).ContainerTypes([STRUCTURE_CONTAINER]).PriorityBigFirst(),
         new ActionSalvage(this).MinAmmount(0),
-        new ActionStore(this).ContainerTypes([STRUCTURE_STORAGE]).WithResource(RESOURCE_ENERGY)
+        new ActionStore(this).ContainerTypes([STRUCTURE_STORAGE])
         //new ActionGather(this,true,[STRUCTURE_STORAGE]),
         //new ActionFillTower(this,99),
     ];
