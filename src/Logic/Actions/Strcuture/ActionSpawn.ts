@@ -38,7 +38,6 @@ export class ActionSpawn implements IAction
         this.pickedParts = PartsPicker.GetAviableMaxParts(this.target, this.unit.structure.room.energyAvailable, this.unit.structure.room.energyCapacityAvailable);
         if (this.pickedParts == null)
         {
-            console.log("NOT ENOUGH RESOURCES TO SPAWN GOOD CREEP");
             if (BaseCreep.CreepPopulation[CreepTypes.UniversalCreep] == 0)
             {
                 this.SpawnEmergencyCreep();

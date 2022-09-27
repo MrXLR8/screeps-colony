@@ -94,7 +94,6 @@ export class PartsPicker
         for (var currentCollection of collection)
         {
             var calc = this.CalculatePrice(currentCollection);
-            console.log("price is:" + calc+". room energy: "+energy+" max: "+roomEnergy);
 
             if (calc <= roomEnergy)
             {
