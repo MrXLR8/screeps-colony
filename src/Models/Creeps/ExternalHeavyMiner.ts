@@ -8,9 +8,10 @@ import { IAssignable } from "Models/Interfaces/IAssignable";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { ActionMoveFlag } from "Logic/Actions/Basic/ActionMoveFlag";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
+import { Constants } from "Constans";
 
 
-export class ExternalHeavyMiner extends BaseCreep
+export class ExternalHeavyMiner extends BaseCreep implements IAssignable
 {
 
     static primaryColor: ColorConstant = COLOR_YELLOW;
@@ -19,37 +20,76 @@ export class ExternalHeavyMiner extends BaseCreep
     static parts: BodyPartConstant[][] =
         [
 
-            [MOVE, MOVE, MOVE,MOVE, WORK, WORK, WORK, WORK, CARRY], //650
+            [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, CARRY], //650
 
         ];
 
 
     tasks: IAction[] =
         [
-            new ActionMoveFlag(this).WithColors(ExternalHeavyMiner.primaryColor, ExternalHeavyMiner.secondaryColor),
-            new ActionMining(this),
+            new ActionAssignedMining(this),
             new ActionStore(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK]).InRange(2).AllowDrop()
         ];
 
 
     static SpawnCondition(): boolean
     {
-        var flag = AssignableFlag.FindFlag(this.primaryColor, this.secondaryColor, 1);
-        return flag != null;
+        var found = ExternalHeavyMiner.GetFreeMinerSpace();
+        if (found != null) return true;
+        return false;
+    }
+
+
+    Assign(): boolean
+    {
+
+        // if (this.memory.assignedTo != null) return true;
+        var found = ExternalHeavyMiner.GetFreeMinerSpace();
+
+        if (found != null) return found.TryToAssignMiner(this);
+
+        return false;
+
+    }
+
+
+    static GetFreeMinerSpace(): EnergySource
+    {
+
+        for (var flagName in Game.flags)
+        {
+            var flag = Game.flags[flagName];
+            if (typeof flag.room === 'undefined') continue;
+            if (typeof flag.room.controller !== 'undefined')
+            {
+                if (typeof flag.room.controller.owner !== 'undefined')
+                {
+                    if (flag.room.controller.owner.username == Constants.userName) continue;
+                }
+            }
+            var assFalg = new AssignableFlag(flag);
+            if (!assFalg.CompareColors(ExternalHeavyMiner.primaryColor, ExternalHeavyMiner.secondaryColor)) continue;
+            var found = EnergySource.GetFreeMinerSourceInRoom(flag.room);
+            if (found != null) return found;
+            continue;
+        }
+        return null;
     }
 
     static Dispose(_mem: CreepMemory)
     {
         var mem = _mem as BaseCreepMemory;
-        if (!mem.assignedTo) return;
+        if (mem.assignedTo == null) return;
 
-        console.log("Disposing heavy miner. " + !mem.assignedTo);
+        console.log("Disposing external heavy miner. " + mem.assignedTo);
+
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 
-        var obj = new EnergySource(source);
+        // console.log(JSON.stringify(source));
+        // var obj = new EnergySource(source);
 
-        obj.memory.myMiner = null;
+        //obj.memory.myMiner = null;
     }
 }
 

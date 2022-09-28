@@ -41,7 +41,6 @@ export class ActionMoveFlag implements IAction
         var rawTarget;
         if (targetId != null)
         {
-
             rawTarget = Game.flags[targetId];
         }
         if (rawTarget != null)
@@ -50,11 +49,10 @@ export class ActionMoveFlag implements IAction
             if (this.target.CompareColors(this.primaryColor, this.secondaryColor))
             {
                 if (this.target.isAssigned(this.unit.creep.id)) return;
-                //Target is valid
             }
         }
 
-        this.target = Finder.FindWhereIAmAssigned(this.unit.creep.id);
+      //  this.target = Finder.FindWhereIAmAssigned(this.unit.creep.id);
 
         if (this.target == null)
         {
@@ -68,6 +66,7 @@ export class ActionMoveFlag implements IAction
             if (this.target != null)
             {
                 this.target.Assign(this.unit.creep.id);
+                this.unit.memory.assignedTo=this.target.flag.name;
             }
         }
 

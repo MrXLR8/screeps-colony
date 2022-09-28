@@ -55,6 +55,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
+            if (typeof flag.room === 'undefined') continue;
             if (typeof flag.room.controller !== 'undefined')
             {
                 if (typeof flag.room.controller.owner !== 'undefined')
