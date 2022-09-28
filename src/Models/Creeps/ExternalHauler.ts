@@ -1,22 +1,14 @@
 import { ActionGatherEnergy } from "Logic/Actions/Carry/ActionGatherEnergy";
 import { BaseCreep } from "./BaseCreep";
-import { ActionMining } from "Logic/Actions/Work/ActionMining";
-import { ActionFillTower } from "Logic/Actions/Carry/ActionFillTower";
-import { ActionStoreExtension } from "Logic/Actions/Carry/ActionStoreExtension";
-import { ActionRepair } from "Logic/Actions/Work/ActionRepair";
-import { ActionBuild } from "Logic/Actions/Work/ActionBuild";
-import { ActionUpgrade } from "Logic/Actions/Work/ActionUpgrade";
 import { IAction } from "Logic/Actions/IAction";
 import { ActionStore } from "Logic/Actions/Carry/ActionStore";
-import { ActionGatherFromFlag } from "Logic/Actions/Carry/ActionGatherFromFlag";
-import { ActionSalvage } from "Logic/Actions/Carry/ActionSalvage";
 import { IAssignable } from "Models/Interfaces/IAssignable";
 import { EnergySource } from "Models/Structures/EnergySource";
 import { AssignableFlag } from "Models/AssignableFlag";
-import { Finder } from "Logic/Finder";
 import { ActionMoveAssign } from "Logic/Actions/Basic/ActionMoveToAssign";
 import { ActionMoveOrigin } from "Logic/Actions/Basic/ActionMoveOrigin";
 import { Constants } from "Constans";
+import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 
 
 export class ExternalHaulerCreep extends BaseCreep implements IAssignable
@@ -86,6 +78,20 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
         if (found != null) return true;
         return false;
 
+    }
+
+    static Dispose(_mem: CreepMemory)
+    {
+        var mem = _mem as BaseCreepMemory;
+        if (!mem.assignedTo) return;
+
+        console.log("Disposing hauler. " + !mem.assignedTo);
+
+        var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
+
+        var obj = new EnergySource(source);
+
+        obj.memory.myHauler = null;
     }
 }
 

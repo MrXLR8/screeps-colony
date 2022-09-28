@@ -64,6 +64,12 @@ export class UnitFactory
       case CreepTypes.HeavyMiner:
         HeavyMinerCreep.Dispose(mem);
         break;
+      case CreepTypes.ExternalHeavyMiner:
+        ExternalHeavyMiner.Dispose(mem);
+        break;
+      case CreepTypes.ExternalHauler:
+        ExternalHaulerCreep.Dispose(mem);
+        break;
       default:
         return;
     }
