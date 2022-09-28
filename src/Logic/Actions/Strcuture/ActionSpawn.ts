@@ -17,6 +17,7 @@ import { CourierCreep } from "Models/Creeps/Courier";
 import { Console } from "console";
 import { ExternalHeavyMiner } from "Models/Creeps/ExternalHeavyMiner";
 import { ExternalHaulerCreep } from "Models/Creeps/ExternalHauler";
+import { ScoutCreep } from "Models/Creeps/Scout";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -121,6 +122,8 @@ export class ActionSpawn implements IAction
                 return ExternalHeavyMiner.SpawnCondition();
             case CreepTypes.ExternalHauler:
                 return ExternalHaulerCreep.SpawnCondition();
+            case CreepTypes.Scout:
+                return ScoutCreep.SpawnCondition();
             default:
                 return true;
         }
@@ -200,6 +203,10 @@ export class ActionSpawn implements IAction
                 break;
             case CreepTypes.ExternalHauler:
                 this.creepName = this.GetAviableCreepName("ExternalHauler");
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
+            case CreepTypes.Scout:
+                this.creepName = this.GetAviableCreepName("Scout");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:

@@ -24,7 +24,7 @@ export class AssignableFlag
     constructor(flag: Flag)
     {
         this.flag = flag;
-        if (typeof this.memory.assignedCreeps === 'undefined') this.memory.assignedCreeps = [];
+        if (typeof this.memory.assignedCreeps === 'undefined') { this.memory.assignedCreeps = []; this.memory.scout = null; }
     }
 
     get memory(): AssignableFlagMemory
@@ -49,7 +49,7 @@ export class AssignableFlag
 
     public Assign(creepId: string)
     {
-
+        if (this.isAssigned(creepId)) return;
         console.log("assigning to the flag " + this.flag.name + " next creep: " + creepId + " count: " + this.memory.assignedCreeps.length);
         this.memory.assignedCreeps.push(creepId);
     }

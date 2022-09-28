@@ -36,12 +36,15 @@ export class ActionMoveAssign implements IAction
     {
         this.unit.Assign();
         this.target = Game.getObjectById<Id<_HasId>>(this.unit.memory.assignedTo as Id<_HasId>) as any as RoomObject;
-
+        if (this.target == null)
+        {
+            this.target=Game.flags[this.unit.memory.assignedTo];
+        }
     }
 
     private EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.pos.inRangeTo(this.target.pos,this.range)) { return ActionResponseCode.NextTask; }
+        if (this.unit.creep.pos.inRangeTo(this.target.pos, this.range)) { return ActionResponseCode.NextTask; }
         return null;
     }
 
@@ -70,9 +73,9 @@ export class ActionMoveAssign implements IAction
         this.range = 1;
     }
 
-    InRange(range: number):ActionMoveAssign
+    InRange(range: number): ActionMoveAssign
     {
-        this.range=range;
+        this.range = range;
         return this;
     }
 

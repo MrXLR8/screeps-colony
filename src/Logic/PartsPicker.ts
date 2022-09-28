@@ -6,6 +6,7 @@ import { ExpiditorCreep } from "Models/Creeps/Expiditor";
 import { ExternalHaulerCreep } from "Models/Creeps/ExternalHauler";
 import { ExternalHeavyMiner } from "Models/Creeps/ExternalHeavyMiner";
 import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
+import { ScoutCreep } from "Models/Creeps/Scout";
 import { UniversalCreep } from "Models/Creeps/Universal";
 import { UpgraderCreep } from "Models/Creeps/Updgrader";
 
@@ -101,6 +102,9 @@ export class PartsPicker
                 break;
             case CreepTypes.ExternalHauler:
                 collection = ExternalHaulerCreep.parts;
+                break;
+            case CreepTypes.Scout:
+                collection = ScoutCreep.parts;
                 break;
             default:
                 return null;
