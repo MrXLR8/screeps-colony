@@ -86,10 +86,10 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 
-        // console.log(JSON.stringify(source));
-        // var obj = new EnergySource(source);
+         console.log(JSON.stringify(source));
+         var obj = new EnergySource(source);
 
-        //obj.memory.myMiner = null;
+        obj.memory.myMiner = null;
     }
 }
 
