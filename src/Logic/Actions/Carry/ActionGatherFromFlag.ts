@@ -32,13 +32,13 @@ export class ActionGatherFromFlag implements IAction
 
 
 
-   private EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
-    private  GetSavedTarget(): void
+    private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
         if (targetId != null)
@@ -67,13 +67,15 @@ export class ActionGatherFromFlag implements IAction
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
+            if (typeof flag.room === 'undefined') continue;
+            if (flag.room.name != this.unit.creep.room.name) return null;
             if (flag.color == this.primaryColor && flag.secondaryColor == this.secondaryColor)
             {
-                if (flag.room != this.unit.creep.room) return null;
                 var found = flag.pos.lookFor<"structure">("structure")[0] as StructureContainer | StructureStorage | StructureLink;
-                if (found.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry()) return found;
+                if ((found.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry())||found.store.getFreeCapacity(RESOURCE_ENERGY)==0) return found;
             }
         }
+        console.log("failed flag search");
         return null;
     }
 
