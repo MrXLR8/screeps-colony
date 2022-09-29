@@ -11,7 +11,7 @@ export class ActionStore implements IAction
     range: number;
     dropOnFull: boolean;
     containerTypes: StructureConstant[];
-    stored_resources:ResourceConstant;
+    stored_resources: ResourceConstant;
 
     Act(): ActionResponseCode
     {
@@ -27,7 +27,7 @@ export class ActionStore implements IAction
             return ActionResponseCode.NextTask;
         }
 
-        var actionCode = this.unit.creep.transfer(this.target,this.stored_resources);
+        var actionCode = this.unit.creep.transfer(this.target, this.stored_resources);
         return this.WorkCodeProcessing(actionCode);
     }
 
@@ -49,16 +49,15 @@ export class ActionStore implements IAction
         }
         if (this.target != null)
         {
-            if (this.target.store.getFreeCapacity() > 0)
+            if (this.target.store.getFreeCapacity(this.stored_resources) > 0)
             {
-
                 return; //Target is valid
             }
         }
 
 
 
-        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range ,this.containerTypes);
+        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.containerTypes);
 
         if (this.target != null)
         {
@@ -79,6 +78,7 @@ export class ActionStore implements IAction
                 if (!this.RepeatAction()) return ActionResponseCode.Reset;
                 return ActionResponseCode.Repeat;
             default:
+
                 this.unit.log("Problem occured. Store error code: " + code);
                 return ActionResponseCode.NextTask;
         }

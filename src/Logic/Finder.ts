@@ -130,7 +130,7 @@ export class Finder
                     var structure = structureRaw as StructureContainer | StructureStorage | StructureLink;
                     return structureTypes.includes(structure.structureType)
                         &&
-                        structure.store.getFreeCapacity() != 0
+                        structure.store.getFreeCapacity() > 0
                         &&
                         structure.id != ignoreId
                 }
