@@ -36,8 +36,8 @@ export class ExpiditorCreep extends BaseCreep implements IAssignable
 
     static SpawnCondition(room: Room): boolean
     {
-
-        return ExpiditorCreep.LookForRoomWithConstructionSites() != null;
+        return false;
+       // return ExpiditorCreep.LookForRoomWithConstructionSites() != null;
     }
 
 
@@ -60,7 +60,7 @@ export class ExpiditorCreep extends BaseCreep implements IAssignable
     Assign(): boolean
     {
         var found = ExpiditorCreep.LookForRoomWithConstructionSites();
-        if (found!=null)
+        if (found != null)
         {
         }
         return false;
@@ -74,7 +74,7 @@ export class ExpiditorCreep extends BaseCreep implements IAssignable
         for (var roomName in Game.rooms)
         {
             room = Game.rooms[roomName];
-            if(room==null) continue;
+            if (room == null) continue;
             if (room.name == ignoreRoom.name) continue;
             if (typeof room.controller === 'undefined') continue;
             if (typeof room.controller.owner === 'undefined') continue;
