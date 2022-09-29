@@ -25,7 +25,8 @@ export class HeavyMinerCreep extends BaseCreep implements IAssignable
     tasks: IAction[] =
         [
             new ActionAssignedMining(this),
-            new ActionStore(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK]).InRange(2).AllowDrop()
+            new ActionStore(this).ContainerTypes([STRUCTURE_LINK]).InRange(2),
+            new ActionStore(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE]).InRange(2).AllowDrop()
         ];
 
     Assign(): boolean

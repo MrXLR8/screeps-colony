@@ -34,7 +34,7 @@ export class Utils
 
     static GetCreepPopulation(room?: Room): { [type: number]: number }
     {
-        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 ,5:0,6:0,7:0,8:0};
+        var result: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
         for (var creepName in Game.creeps)
         {
             var creep: Creep = Game.creeps[creepName];
@@ -44,6 +44,17 @@ export class Utils
         }
 
         return result;
+    }
+
+
+    static BelongsToThisRoom(toCheck: string, roomName: string): boolean
+    {
+        var split = toCheck.split('|');
+        if (split.length > 1)
+        {
+            return roomName == split[1]
+        }
+        return false;
     }
 
     static PosCompare(pos1: RoomPosition, pos2: RoomPosition): boolean
