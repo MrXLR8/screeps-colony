@@ -24,7 +24,6 @@ export class ScoutCreep extends BaseCreep implements IAssignable
     {
         if (this.memory.assignedTo != null) return true;
         var found = ScoutCreep.GetUnknownRoom();
-        console.log(JSON.stringify(found));
         if (found != null)
         {
             found.memory.scout = this.creep.id;

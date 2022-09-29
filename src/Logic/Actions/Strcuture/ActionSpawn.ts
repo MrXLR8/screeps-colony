@@ -40,8 +40,6 @@ export class ActionSpawn implements IAction
 
         this.pickedParts = PartsPicker.GetAviableMaxParts(this.target, this.unit.structure.room.energyAvailable, this.unit.structure.room.energyCapacityAvailable);
 
-
-        if (this.target == CreepTypes.ExternalHeavyMiner) { console.log(JSON.stringify(this.pickedParts)); }
         if (this.pickedParts == null)
         {
             if (BaseCreep.CreepPopulation[CreepTypes.UniversalCreep] == 0)
