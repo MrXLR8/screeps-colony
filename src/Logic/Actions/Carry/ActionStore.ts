@@ -51,6 +51,7 @@ export class ActionStore implements IAction
         {
             if (this.target.store.getFreeCapacity() > 0)
             {
+
                 return; //Target is valid
             }
         }
