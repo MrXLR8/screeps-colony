@@ -23,7 +23,7 @@ export class ActionStore implements IAction
 
         if (this.target == null)
         {
-            this.unit.creep.drop(this.stored_resources);
+            if (this.dropOnFull) this.unit.creep.drop(this.stored_resources);
             return ActionResponseCode.NextTask;
         }
 
