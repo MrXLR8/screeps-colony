@@ -52,7 +52,7 @@ export class Utils
         var split = toCheck.split('|');
         if (split.length > 1)
         {
-            return roomName == split[1]
+            return roomName == split[0]
         }
         return false;
     }

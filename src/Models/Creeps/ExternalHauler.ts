@@ -9,6 +9,7 @@ import { ActionMoveAssign } from "Logic/Actions/Basic/ActionMoveToAssign";
 import { ActionMoveOrigin } from "Logic/Actions/Basic/ActionMoveOrigin";
 import { Constants } from "Constans";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
+import { Utils } from "Logic/Utils";
 
 
 export class ExternalHaulerCreep extends BaseCreep implements IAssignable
@@ -40,7 +41,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
     {
 
         if (this.memory.assignedTo != null) return true;
-        var found = ExternalHaulerCreep.GetFreeHaulerSpace();
+        var found = ExternalHaulerCreep.GetFreeHaulerSpace(this.memory.originRoom);
 
         if (found != null) return found.TryToAssignHauler(this);
 
@@ -49,12 +50,13 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
     }
 
 
-    static GetFreeHaulerSpace(): EnergySource
+    static GetFreeHaulerSpace(originRoom:string): EnergySource
     {
 
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
+            if(!Utils.BelongsToThisRoom(flag.name,originRoom)) continue;
             if (typeof flag.room === 'undefined') continue;
             if (typeof flag.room.controller !== 'undefined')
             {
@@ -72,10 +74,10 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
         return null;
     }
 
-    static SpawnCondition(): boolean
+    static SpawnCondition(originRoom:string): boolean
     {
 
-        var found = ExternalHaulerCreep.GetFreeHaulerSpace();
+        var found = ExternalHaulerCreep.GetFreeHaulerSpace(originRoom);
         if (found != null) return true;
         return false;
 
@@ -86,7 +88,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
         var mem = _mem as BaseCreepMemory;
         if (!mem.assignedTo) return;
 
-        console.log("Disposing hauler. " + !mem.assignedTo);
+        console.log("Disposing hauler");
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 

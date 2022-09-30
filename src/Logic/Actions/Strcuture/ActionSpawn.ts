@@ -117,11 +117,11 @@ export class ActionSpawn implements IAction
             case CreepTypes.ExpeditorCreep:
                 return ExpiditorCreep.SpawnCondition(this.unit.structure.room);
             case CreepTypes.ExternalHeavyMiner:
-                return ExternalHeavyMiner.SpawnCondition();
+                return ExternalHeavyMiner.SpawnCondition(this.unit.structure.room.name);
             case CreepTypes.ExternalHauler:
-                return ExternalHaulerCreep.SpawnCondition();
+                return ExternalHaulerCreep.SpawnCondition(this.unit.structure.room.name);
             case CreepTypes.Scout:
-                return ScoutCreep.SpawnCondition();
+                return ScoutCreep.SpawnCondition(this.unit.structure.room.name);
             default:
                 return true;
         }

@@ -9,6 +9,7 @@ import { AssignableFlag } from "Models/AssignableFlag";
 import { ActionMoveFlag } from "Logic/Actions/Basic/ActionMoveFlag";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
 import { Constants } from "Constans";
+import { Utils } from "Logic/Utils";
 
 
 export class ExternalHeavyMiner extends BaseCreep implements IAssignable
@@ -32,9 +33,9 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
         ];
 
 
-    static SpawnCondition(): boolean
+    static SpawnCondition(originRoom:string): boolean
     {
-        var found = ExternalHeavyMiner.GetFreeMinerSpace();
+        var found = ExternalHeavyMiner.GetFreeMinerSpace(originRoom);
         if (found != null) return true;
         return false;
     }
@@ -44,7 +45,7 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
     {
 
         // if (this.memory.assignedTo != null) return true;
-        var found = ExternalHeavyMiner.GetFreeMinerSpace();
+        var found = ExternalHeavyMiner.GetFreeMinerSpace(this.memory.originRoom);
 
         if (found != null) return found.TryToAssignMiner(this);
 
@@ -53,12 +54,13 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
     }
 
 
-    static GetFreeMinerSpace(): EnergySource
+    static GetFreeMinerSpace(originRoom:string): EnergySource
     {
 
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
+            if(!Utils.BelongsToThisRoom(flag.name,originRoom)) continue;
             if (typeof flag.room === 'undefined') continue;
             if (typeof flag.room.controller !== 'undefined')
             {

@@ -4,6 +4,7 @@ import { IAssignable } from "Models/Interfaces/IAssignable";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { ActionMoveAssign } from "Logic/Actions/Basic/ActionMoveToAssign";
+import { Utils } from "Logic/Utils";
 
 
 export class ScoutCreep extends BaseCreep implements IAssignable
@@ -23,7 +24,7 @@ export class ScoutCreep extends BaseCreep implements IAssignable
     Assign(): boolean
     {
         if (this.memory.assignedTo != null) return true;
-        var found = ScoutCreep.GetUnknownRoom();
+        var found = ScoutCreep.GetUnknownRoom(this.memory.originRoom);
         if (found != null)
         {
             found.memory.scout = this.creep.id;
@@ -47,7 +48,7 @@ export class ScoutCreep extends BaseCreep implements IAssignable
     }
 
 
-    static GetUnknownRoom(): AssignableFlag
+    static GetUnknownRoom(originRoom:string): AssignableFlag
     {
 
         for (var flagName in Game.flags)
@@ -55,6 +56,7 @@ export class ScoutCreep extends BaseCreep implements IAssignable
             var flag = Game.flags[flagName];
             if (typeof flag.room === 'undefined')
             {
+                if(!Utils.BelongsToThisRoom(flag.name,originRoom)) continue;
                 var assFalg = new AssignableFlag(flag);
                 if (assFalg.memory.scout == null)
                 {
@@ -65,10 +67,10 @@ export class ScoutCreep extends BaseCreep implements IAssignable
         return null;
     }
 
-    static SpawnCondition(): boolean
+    static SpawnCondition(originRoom:string): boolean
     {
 
-        return this.GetUnknownRoom()!=null;
+        return this.GetUnknownRoom(originRoom)!=null;
     }
 }
 
