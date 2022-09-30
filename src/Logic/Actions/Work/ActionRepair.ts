@@ -53,14 +53,12 @@ export class ActionRepair implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
+
         if (typeof this.room.storage !== 'undefined')
         {
             if (this.room.storage.store[RESOURCE_ENERGY] < this.roomMinumumEnergy) return ActionResponseCode.NextTask;
         }
-        else
-        {
-            return ActionResponseCode.NextTask;
-        }
+
         if (!(this.unit instanceof BaseCreep))
         {
             if (this.energyPercent < this.towerReserves)
@@ -84,18 +82,19 @@ export class ActionRepair implements IAction
         {
             if (this.target.hits != this.target.hitsMax)
             {
+
                 return; //Target is valid
             }
         }
 
         var arrayOfTargets = Finder.GetDamagedStructures(this.room, this.whatToRepair);
-        if (arrayOfTargets == null && this.globalSearch)
+        if ((arrayOfTargets.length==0) && this.globalSearch)
         {
             for (var roomname in Game.rooms)
             {
                 var room = Game.rooms[roomname];
-                if(room==null) continue;
-                arrayOfTargets=Finder.GetDamagedStructures(room,this.whatToRepair);
+                if (room == null) continue;
+                arrayOfTargets = Finder.GetDamagedStructures(room, this.whatToRepair);
             }
         }
         if (this.byRandom)

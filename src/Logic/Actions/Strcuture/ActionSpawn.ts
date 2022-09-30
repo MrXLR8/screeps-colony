@@ -19,6 +19,7 @@ import { ExternalHeavyMiner } from "Models/Creeps/ExternalHeavyMiner";
 import { ExternalHaulerCreep } from "Models/Creeps/ExternalHauler";
 import { ScoutCreep } from "Models/Creeps/Scout";
 import { PopulatioInfo, Population } from "Population";
+import { ExternalRepairer } from "Models/Creeps/ExternalRepairer";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -79,7 +80,7 @@ export class ActionSpawn implements IAction
     private GetCreepTypeToSpawn(): void
     {
 
-        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
+        var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
 
         for (var creepType of Constants.LocalCreepsRequired)
         {
@@ -92,18 +93,17 @@ export class ActionSpawn implements IAction
             }
         }
 
-        creepRequiredMoment = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
+        creepRequiredMoment = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
 
         for (var creepType of Constants.ExternalCreepRequired)
         {
-            creepRequiredMoment[creepType]++;
 
+            creepRequiredMoment[creepType]++;
             if (creepRequiredMoment[creepType] > Population.count[this.unit.structure.room.name].bound[creepType])
             {
 
                 if (!this.CheckSpawnCondition(creepType)) continue;
-                console.log("spawning " + creepType);
-                 this.target = creepType;
+                this.target = creepType;
                 return;
             }
         }
@@ -128,6 +128,8 @@ export class ActionSpawn implements IAction
                 return ExternalHaulerCreep.SpawnCondition(this.unit.structure.room.name);
             case CreepTypes.Scout:
                 return ScoutCreep.SpawnCondition(this.unit.structure.room.name);
+            case CreepTypes.ExternalRepairer:
+                return ExternalRepairer.SpawnCondition();
             default:
                 return true;
         }
@@ -210,6 +212,10 @@ export class ActionSpawn implements IAction
                 break;
             case CreepTypes.Scout:
                 this.creepName = this.GetAviableCreepName("Scout");
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
+            case CreepTypes.ExternalRepairer:
+                this.creepName = this.GetAviableCreepName("ExternalRepairer");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:

@@ -121,7 +121,7 @@ export class Finder
         return _pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.resourceType == resourceType && dropped.amount > minAmmount && dropped.id != ignoreId } });
     }
 
-    static GetContrainer(_pos: RoomPosition, range: number, structureTypes: StructureConstant[],resource:ResourceConstant, ignoreId?: Id<StructureContainer | StructureStorage | StructureLink>): StructureContainer | StructureStorage | StructureLink
+    static GetContrainer(_pos: RoomPosition, range: number, structureTypes: StructureConstant[], resource: ResourceConstant, ignoreId?: Id<StructureContainer | StructureStorage | StructureLink>): StructureContainer | StructureStorage | StructureLink
     {
         var target = _pos.findInRange<StructureContainer | StructureStorage | StructureLink>(FIND_STRUCTURES, range,
             {
@@ -143,6 +143,8 @@ export class Finder
         var target = room.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
+                if (room.name == "E22S38"&&structure.structureType==STRUCTURE_CONTAINER)
+                    console.log(structure.structureType);
                 return types.includes(structure.structureType)
                     &&
                     (structure.hits + 800 < structure.hitsMax)

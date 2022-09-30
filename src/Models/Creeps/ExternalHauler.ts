@@ -31,7 +31,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
     tasks: IAction[] =
         [
             new ActionMoveAssign(this).InRange(2),
-            new ActionGatherEnergy(this).WaitForIt(),
+            new ActionGatherEnergy(this).ContainerTypes([STRUCTURE_CONTAINER]).WaitForIt(),
             new ActionMoveOrigin(this),
             new ActionStore(this).ContainerTypes([STRUCTURE_STORAGE])
         ];
@@ -92,9 +92,9 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 
-        var obj = new EnergySource(source);
+      //  var obj = new EnergySource(source);
 
-        obj.memory.myHauler = null;
+        //obj.memory.myHauler = null;
     }
 }
 

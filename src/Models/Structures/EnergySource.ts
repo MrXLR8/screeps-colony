@@ -5,8 +5,8 @@ import { GlobalMemory } from "Models/Memory/GlobalMemory";
 
 export class SourceMemory extends BaseStructureMemory
 {
-    myMiner: string=null;
-    myHauler: string=null;
+    myMiner: string = null;
+    myHauler: string = null;
 }
 
 export class EnergySource
@@ -17,29 +17,29 @@ export class EnergySource
     constructor(_structure: Source)
     {
         this.structure = _structure;
-        if(typeof this.memory==='undefined') this.memory=new SourceMemory();
-       // EnergySource.StructureMemoryExistsCheck(_structure.id);
+        if (typeof this.memory === 'undefined') this.memory = new SourceMemory();
+        // EnergySource.StructureMemoryExistsCheck(_structure.id);
 
     }
 
-/*
-    static StructureMemoryExistsCheck(id: Id<any>)
-    {
-        var mem = (Memory as GlobalMemory);
-        if (mem.structures == undefined)
+    /*
+        static StructureMemoryExistsCheck(id: Id<any>)
         {
-            mem.structures = {};
-        }
-        var request = mem.structures[id];
+            var mem = (Memory as GlobalMemory);
+            if (mem.structures == undefined)
+            {
+                mem.structures = {};
+            }
+            var request = mem.structures[id];
 
-        if (typeof request === 'undefined')
-        {
-            console.log(id + " creating memory");
-            var mem2 = new SourceMemory();
-            mem.structures[id.toString()] = mem2;
+            if (typeof request === 'undefined')
+            {
+                console.log(id + " creating memory");
+                var mem2 = new SourceMemory();
+                mem.structures[id.toString()] = mem2;
+            }
         }
-    }
-    */
+        */
 
     get memory(): SourceMemory
     {
@@ -57,14 +57,28 @@ export class EnergySource
 
     static GetFreeMinerSourceInRoom(room: Room): EnergySource
     {
-        var found = room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myMiner == null } })[0];
+        var found = room.find(FIND_SOURCES, {
+            filter: (source) =>
+            {
+                var obj = new EnergySource(source);
+                obj.CheckForDead();
+                return obj.memory.myMiner == null
+            }
+        })[0];
         if (found != null) return new EnergySource(found);
         return null;
     }
 
     static GetFreeHaulerSourceInRoom(room: Room): EnergySource
     {
-        var found = room.find(FIND_SOURCES, { filter: (source) => { return new EnergySource(source).memory.myHauler==null } })[0];
+        var found = room.find(FIND_SOURCES, {
+            filter: (source) =>
+            {
+                var obj = new EnergySource(source);
+                obj.CheckForDead();
+                return obj.memory.myHauler == null
+            }
+        })[0];
         if (found != null) return new EnergySource(found);
         return null;
     }
