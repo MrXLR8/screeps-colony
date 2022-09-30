@@ -47,7 +47,7 @@ export class ActionGatherFromFlag implements IAction
         }
         if (this.target != null)
         {
-            if (this.target.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry())
+            if ((this.target.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry())||this.target.store.getFreeCapacity()==0)
             {
                 return; //Target is valid
             }
@@ -75,7 +75,6 @@ export class ActionGatherFromFlag implements IAction
                 if ((found.store.getUsedCapacity(RESOURCE_ENERGY) > this.unit.AmmountCanCarry())||found.store.getFreeCapacity(RESOURCE_ENERGY)==0) return found;
             }
         }
-        console.log("failed flag search");
         return null;
     }
 
