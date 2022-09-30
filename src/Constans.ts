@@ -11,7 +11,7 @@ export class Constants
     static weakController: number = 3;
 
     static userName: string;
-    static ScenarioProduce: CreepTypes[] =
+    static LocalCreepsRequired: CreepTypes[] =
         [
             CreepTypes.UniversalCreep,
             CreepTypes.HeavyMiner,
@@ -21,14 +21,17 @@ export class Constants
             CreepTypes.HeavyMiner,
             CreepTypes.UniversalCreep,
             CreepTypes.Courier,
+
+        ];
+
+    static ExternalCreepRequired: CreepTypes[] =
+        [
             CreepTypes.Scout,
             CreepTypes.ExternalHeavyMiner,
             CreepTypes.ExternalHauler,
             CreepTypes.Scout,
             CreepTypes.ExternalHeavyMiner,
             CreepTypes.ExternalHauler,
-            CreepTypes.ExpeditorCreep,
-            CreepTypes.ExpeditorCreep,
             CreepTypes.ExpeditorCreep,
         ];
 }

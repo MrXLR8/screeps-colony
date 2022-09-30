@@ -34,7 +34,7 @@ export class ActionSpawn implements IAction
         var entryCode = this.EntryValidation();
         if (entryCode != null) return entryCode;
 
-        this.GetSavedTarget();
+        this.GetCreepTypeToSpawn();
 
         if (this.target == null) return ActionResponseCode.NextTask;
 
@@ -43,7 +43,7 @@ export class ActionSpawn implements IAction
 
         if (this.pickedParts == null)
         {
-            if (Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep]==0)
+            if (Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep] == 0)
             {
                 this.SpawnEmergencyCreep();
             }
@@ -76,18 +76,31 @@ export class ActionSpawn implements IAction
 
     }
 
-    private GetSavedTarget(): void
+    private GetCreepTypeToSpawn(): void
     {
 
         var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
 
-        for (var order of Constants.ScenarioProduce)
+        for (var creepType of Constants.LocalCreepsRequired)
         {
-            creepRequiredMoment[order]++;
-            if (creepRequiredMoment[order] > Population.count[this.unit.structure.room.name].pressence[order])
+            creepRequiredMoment[creepType]++;
+            if (creepRequiredMoment[creepType] > Population.count[this.unit.structure.room.name].pressence[creepType])
             {
-                if (!this.CheckSpawnCondition(order)) continue;
-                this.target = order;
+                if (!this.CheckSpawnCondition(creepType)) continue;
+                this.target = creepType;
+                return;
+            }
+        }
+
+        creepRequiredMoment = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
+
+        for (var creepType of Constants.ExternalCreepRequired)
+        {
+            creepRequiredMoment[creepType]++;
+            if (creepRequiredMoment[creepType] > Population.count[this.unit.structure.room.name].bound[creepType])
+            {
+                if (!this.CheckSpawnCondition(creepType)) continue;
+                this.target = creepType;
                 return;
             }
         }
