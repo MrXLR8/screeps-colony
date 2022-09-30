@@ -1,3 +1,4 @@
+import { filter } from "lodash";
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
@@ -11,7 +12,9 @@ export class ActionBuild implements IAction
 
     private globalSearch: boolean;
 
+    private allowEmptyStart: boolean;
 
+    private priorityStructure: StructureConstant;
     Act(): ActionResponseCode
     {
         var entryCode = this.EntryValidation();
@@ -28,7 +31,7 @@ export class ActionBuild implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.store.energy == 0) return ActionResponseCode.NextTask;
+        if (this.unit.creep.store.energy == 0 && !this.allowEmptyStart) return ActionResponseCode.NextTask;
         return null;
     }
 
@@ -42,7 +45,11 @@ export class ActionBuild implements IAction
         if (this.target != null)
             return; //Target is valid
 
-        this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
+        if (this.priorityStructure != null)
+            this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES, { filter: (site) => { return site.structureType == this.priorityStructure } });
+
+        if (this.target == null)
+            this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
 
         if ((this.target == null) && this.globalSearch)
         {
@@ -50,7 +57,7 @@ export class ActionBuild implements IAction
             {
                 var site = Game.constructionSites[siteName];
                 if (site.pos.findPathTo(this.unit.creep).length > this.unit.creep.ticksToLive * 2) continue;
-                this.target=site;
+                this.target = site;
             }
         }
 
@@ -72,7 +79,7 @@ export class ActionBuild implements IAction
                 this.unit.memory.actions.worked = true;
                 return ActionResponseCode.Repeat;
             default:
-                this.unit.log("Problem occured. Repair error code: " + code);
+                this.unit.log("Problem occured. Build error code: " + code);
                 return ActionResponseCode.NextTask;
         }
     }
@@ -82,10 +89,23 @@ export class ActionBuild implements IAction
     {
         this.unit = unit as BaseCreep;
         this.globalSearch = false;
+        this.allowEmptyStart = false;
+        this.priorityStructure = null;
     }
-    GlobalSearch():ActionBuild
+    GlobalSearch(): ActionBuild
     {
         this.globalSearch = true;
+        return this;
+    }
+    AllowEmptyTry(): ActionBuild
+    {
+        this.allowEmptyStart = true;
+        return this;
+    }
+
+    PriorityStructure(structure: StructureConstant): ActionBuild
+    {
+        this.priorityStructure = structure;
         return this;
     }
     //#endregion

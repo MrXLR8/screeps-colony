@@ -2,6 +2,7 @@ import { ActionClaim } from "Logic/Actions/Basic/ActionClaim";
 import { ActionMoveFlag } from "Logic/Actions/Basic/ActionMoveFlag";
 import { IAction } from "Logic/Actions/IAction";
 import { Finder } from "Logic/Finder";
+import { Utils } from "Logic/Utils";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { AssignableFlagMemory } from "Models/Memory/AssignableFlagMemory";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
@@ -16,20 +17,25 @@ export class ClaimerCreep extends BaseCreep
             [MOVE, CLAIM] //600
         ];
 
+
+    static primaryColor: ColorConstant = COLOR_RED;
+    static secondaryColor: ColorConstant = COLOR_WHITE;
+
     tasks: IAction[] =
         [
-            new ActionMoveFlag(this).WithColors(COLOR_RED, COLOR_WHITE),
+            new ActionMoveFlag(this).WithColors(ClaimerCreep.primaryColor, ClaimerCreep.secondaryColor),
             new ActionClaim(this)
         ];
 
 
-    static SpawnCondition(): boolean
+    static SpawnCondition(roomOrigin: string): boolean
     {
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
             var assFalg = new AssignableFlag(flag);
-            if (!assFalg.CompareColors(COLOR_RED, COLOR_WHITE)) continue;
+            Utils.BelongsToThisRoom(flag.name, roomOrigin)
+            if (!assFalg.CompareColors(ClaimerCreep.primaryColor, ClaimerCreep.secondaryColor)) continue;
             if (assFalg.assignedAmmount < 1) return true;
         }
         return false;

@@ -17,7 +17,7 @@ export class ScoutCreep extends BaseCreep implements IAssignable
 
     tasks: IAction[] =
         [
-            new ActionMoveAssign(this).InRange(10)
+            new ActionMoveAssign(this).InRange(4)
         ];
 
 
@@ -51,6 +51,7 @@ export class ScoutCreep extends BaseCreep implements IAssignable
     static GetUnknownRoom(originRoom:string): AssignableFlag
     {
 
+        console.log("scout check");
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];

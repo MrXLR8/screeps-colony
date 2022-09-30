@@ -33,7 +33,11 @@ export class Constants
             CreepTypes.ExternalHeavyMiner,
             CreepTypes.ExternalHauler,
             CreepTypes.ExpeditorCreep,
-            CreepTypes.ExternalRepairer
+            CreepTypes.ExpeditorCreep,
+            CreepTypes.ExternalRepairer,
+            CreepTypes.ExternalRepairer,
+            CreepTypes.Scout,
+            CreepTypes.Claimer
         ];
 }
 

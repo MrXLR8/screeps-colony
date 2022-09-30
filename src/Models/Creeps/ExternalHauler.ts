@@ -55,6 +55,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
 
         for (var flagName in Game.flags)
         {
+
             var flag = Game.flags[flagName];
             if(!Utils.BelongsToThisRoom(flag.name,originRoom)) continue;
             if (typeof flag.room === 'undefined') continue;
@@ -65,6 +66,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
                     if (flag.room.controller.owner.username == Constants.userName) continue;
                 }
             }
+
             var assFalg = new AssignableFlag(flag);
             if (!assFalg.CompareColors(ExternalHaulerCreep.primaryColor, ExternalHaulerCreep.secondaryColor)) continue;
             var found = EnergySource.GetFreeHaulerSourceInRoom(flag.room);

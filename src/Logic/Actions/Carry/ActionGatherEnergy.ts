@@ -15,6 +15,7 @@ export class ActionGatherEnergy implements IAction
 
     private takeBigFirst: boolean;
 
+    private ignoreOrigin: boolean;
     private waitForIt: boolean;
 
     Act(): ActionResponseCode
@@ -41,6 +42,10 @@ export class ActionGatherEnergy implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
+        if (this.ignoreOrigin)
+        {
+            if (this.unit.creep.room.name == this.unit.memory.originRoom) return ActionResponseCode.NextTask;
+        }
         if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
@@ -132,6 +137,7 @@ export class ActionGatherEnergy implements IAction
         this.takeBigFirst = false;
         this.containerTypes = [];
         this.waitForIt = false;
+        this.ignoreOrigin = false;
     }
 
     ContainerTypes(containerTypes: StructureConstant[]): ActionGatherEnergy
@@ -143,6 +149,11 @@ export class ActionGatherEnergy implements IAction
     WaitForIt(): ActionGatherEnergy
     {
         this.waitForIt = true;
+        return this;
+    }
+    IgnoreOrigin(): ActionGatherEnergy
+    {
+        this.ignoreOrigin = true;
         return this;
     }
 

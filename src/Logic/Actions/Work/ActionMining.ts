@@ -85,7 +85,9 @@ export class ActionMining implements IAction
                 return ActionResponseCode.Repeat;
             case ERR_NOT_ENOUGH_RESOURCES:
                 this.unit.creep.say("!⛏️");
-                return ActionResponseCode.Reset;
+                this.target = Finder.GetRandomSource(this.unit.creep.room);
+                this.unit.memory.actionAttempts=0;
+                return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
                 this.unit.memory.actionAttempts = 0;

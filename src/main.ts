@@ -24,6 +24,10 @@ export function loop()
   {
     Population.count[roomName] = new PopulatioInfo();
 
+  }
+  for (var roomName in Game.rooms)
+  {
+
     var room = Game.rooms[roomName];
     var creepList = room.find(FIND_MY_CREEPS);
     for (var gameCreep of creepList)

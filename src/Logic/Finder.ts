@@ -143,8 +143,6 @@ export class Finder
         var target = room.find(FIND_STRUCTURES, {
             filter: (structure) =>
             {
-                if (room.name == "E22S38"&&structure.structureType==STRUCTURE_CONTAINER)
-                    console.log(structure.structureType);
                 return types.includes(structure.structureType)
                     &&
                     (structure.hits + 800 < structure.hitsMax)
