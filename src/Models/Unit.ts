@@ -37,7 +37,10 @@ export abstract class Unit
 
         if (this instanceof BaseCreep)
         {
-            BaseCreep.CreepPopulation[(this.memory.Role)]++;
+            if (this.creep.ticksToLive > (this.creep.body.length*3)-5)
+            {
+                BaseCreep.CreepPopulation[(this.memory.Role)]++;
+            }
         }
         var a = this;
         // if((a as unknown as BaseCreep).creep.name!="Universal#1") return; //DEBUG
