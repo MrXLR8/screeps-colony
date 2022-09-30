@@ -38,11 +38,9 @@ export abstract class Unit
 
         if (this instanceof BaseCreep)
         {
-            if (this.creep.ticksToLive > (this.creep.body.length * 3) - 5)
-            {
+          //  if (this.creep.ticksToLive > (this.creep.body.length * 3) - 5)
                 Population.count[this.creep.room.name].pressence[this.memory.Role]++;
                 Population.count[this.memory.originRoom].bound[this.memory.Role]++;
-            }
         }
 
         this.memory.actions = new TickAction();
