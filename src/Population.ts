@@ -1,11 +1,8 @@
-import { CreepTypes } from "Models/Creeps/BaseCreep";
+
 
 export class Population
 {
-
-
     static count: Record<string, PopulatioInfo>
-    static present: Record<string, PopulatioInfo>
 }
 
 export class PopulatioInfo

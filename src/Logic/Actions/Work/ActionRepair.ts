@@ -1,5 +1,5 @@
 import { Constants } from "Constans";
-import { random } from "lodash";
+import { forEach, random } from "lodash";
 import { Finder } from "Logic/Finder";
 import { UnitFactory } from "Logic/UnitFactory";
 import { Utils } from "Logic/Utils";
@@ -13,19 +13,21 @@ import { IAction } from "../IAction";
 
 export class ActionRepair implements IAction
 {
-    unit: BaseCreep | Tower;
-    target: Structure;
+    private unit: BaseCreep | Tower;
+    private target: Structure;
 
-    room: Room;
+    private room: Room;
 
-    roomMinumumEnergy: number;
-    energyStored: number;
-    energyPercent: number;
-    towerReserves: number;
-    byRandom: boolean;
+    private roomMinumumEnergy: number;
+    private energyStored: number;
+    private energyPercent: number;
+    private towerReserves: number;
+    private byRandom: boolean;
 
-    keepTask: boolean;
-    whatToRepair: StructureConstant[];
+    private keepTask: boolean;
+
+    private globalSearch: boolean;
+    private whatToRepair: StructureConstant[];
 
     Act(): ActionResponseCode
     {
@@ -87,6 +89,15 @@ export class ActionRepair implements IAction
         }
 
         var arrayOfTargets = Finder.GetDamagedStructures(this.room, this.whatToRepair);
+        if (arrayOfTargets == null && this.globalSearch)
+        {
+            for (var roomname in Game.rooms)
+            {
+                var room = Game.rooms[roomname];
+                if(room==null) continue;
+                arrayOfTargets=Finder.GetDamagedStructures(room,this.whatToRepair);
+            }
+        }
         if (this.byRandom)
         {
             this.target = arrayOfTargets[random(0, arrayOfTargets.length - 1)];
@@ -175,6 +186,12 @@ export class ActionRepair implements IAction
     RoomMinumumEnergy(min: number): ActionRepair
     {
         this.roomMinumumEnergy = min;
+        return this;
+    }
+
+    GlobalSearch(): ActionRepair
+    {
+        this.globalSearch = true;
         return this;
     }
 

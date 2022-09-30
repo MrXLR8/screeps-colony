@@ -97,10 +97,13 @@ export class ActionSpawn implements IAction
         for (var creepType of Constants.ExternalCreepRequired)
         {
             creepRequiredMoment[creepType]++;
+
             if (creepRequiredMoment[creepType] > Population.count[this.unit.structure.room.name].bound[creepType])
             {
+
                 if (!this.CheckSpawnCondition(creepType)) continue;
-                this.target = creepType;
+                console.log("spawning " + creepType);
+                 this.target = creepType;
                 return;
             }
         }
@@ -191,7 +194,6 @@ export class ActionSpawn implements IAction
                 break;
             case CreepTypes.ExpeditorCreep:
                 this.creepName = this.GetAviableCreepName("Expiditor");
-                mem.assignedTo = ExpiditorCreep.GetMyNoSpawnRoom(this.unit.structure.room).controller.id;
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Upgrader:

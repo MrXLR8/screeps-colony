@@ -184,8 +184,4 @@ export class Finder
 
     }
 
-    static GetConstructionSites(_pos: RoomPosition, ignoreId?: Id<ConstructionSite>): ConstructionSite
-    {
-        return _pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (structure) => { return structure.id != ignoreId } });
-    }
 }

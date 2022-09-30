@@ -9,7 +9,6 @@ import { PopulatioInfo, Population } from "Population";
 
 export function loop()
 {
-
   Population.count = {};
   Utils.MemoryCleanUp();
 
@@ -26,7 +25,6 @@ export function loop()
     Population.count[roomName] = new PopulatioInfo();
 
     var room = Game.rooms[roomName];
-
     var creepList = room.find(FIND_MY_CREEPS);
     for (var gameCreep of creepList)
     {
@@ -34,7 +32,12 @@ export function loop()
       if (!creepWrapper) continue;
       creepWrapper.Act();
     }
+  }
 
+  for (var roomName in Game.rooms)
+  {
+
+    var room = Game.rooms[roomName];
     var structureList: Structure[] = room.find(FIND_MY_STRUCTURES);
 
     for (var gameStructure of structureList)
@@ -46,8 +49,8 @@ export function loop()
 
   }
 
-
 }
+
 
 
 

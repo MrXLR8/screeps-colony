@@ -7,12 +7,10 @@ import { IAction } from "../IAction";
 export class ActionBuild implements IAction
 {
     unit: BaseCreep;
-    target: ConstructionSite;
+    private target: ConstructionSite;
 
-    constructor(unit: Unit)
-    {
-        this.unit = unit as BaseCreep;
-    }
+    private globalSearch: boolean;
+
 
     Act(): ActionResponseCode
     {
@@ -44,7 +42,18 @@ export class ActionBuild implements IAction
         if (this.target != null)
             return; //Target is valid
 
-        this.target = Finder.GetConstructionSites(this.unit.creep.pos);
+        this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
+
+        if ((this.target == null) && this.globalSearch)
+        {
+            for (var siteName in Game.constructionSites)
+            {
+                var site = Game.constructionSites[siteName];
+                if (site.pos.findPathTo(this.unit.creep).length > this.unit.creep.ticksToLive * 2) continue;
+                this.target=site;
+            }
+        }
+
         if (this.target != null)
         {
             this.unit.targetId = this.target.id;
@@ -67,6 +76,18 @@ export class ActionBuild implements IAction
                 return ActionResponseCode.NextTask;
         }
     }
+    //#region  factory
 
+    constructor(unit: Unit)
+    {
+        this.unit = unit as BaseCreep;
+        this.globalSearch = false;
+    }
+    GlobalSearch():ActionBuild
+    {
+        this.globalSearch = true;
+        return this;
+    }
+    //#endregion
 
 }
