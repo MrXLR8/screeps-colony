@@ -19,8 +19,6 @@ export enum CreepTypes
 export abstract class BaseCreep extends Unit
 {
 
-    static CreepPopulation: { [type: number]: number };
-
     public creep: Creep;
 
     protected tasks: IAction[];

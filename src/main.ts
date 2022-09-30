@@ -4,13 +4,16 @@ import { Utils } from "Logic/Utils";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Spawner } from "Models/Structures/Spawner";
 import { Tower } from "Models/Structures/Tower";
+import { PopulatioInfo, Population } from "Population";
 //npm run push-main
 
 export function loop()
 {
+
+  Population.count = {};
   Utils.MemoryCleanUp();
 
-  Constants.userName="XLR8";
+  Constants.userName = "XLR8";
 
   if (Game.cpu.bucket == 10000)
   {
@@ -20,8 +23,7 @@ export function loop()
 
   for (var roomName in Game.rooms)
   {
-
-    BaseCreep.CreepPopulation = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0,9:0,10:0 };
+    Population.count[roomName] = new PopulatioInfo();
 
     var room = Game.rooms[roomName];
 

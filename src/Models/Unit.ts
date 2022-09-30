@@ -1,4 +1,5 @@
 import { IAction } from "Logic/Actions/IAction";
+import { Population } from "Population";
 import { ActionResponseCode } from "./ActionResponseCode";
 import { BaseCreep } from "./Creeps/BaseCreep";
 import { TickAction } from "./Data/TickAction";
@@ -37,14 +38,13 @@ export abstract class Unit
 
         if (this instanceof BaseCreep)
         {
-            if (this.creep.ticksToLive > (this.creep.body.length*3)-5)
+            if (this.creep.ticksToLive > (this.creep.body.length * 3) - 5)
             {
-                BaseCreep.CreepPopulation[(this.memory.Role)]++;
+                Population.count[this.creep.room.name].pressence[this.memory.Role]++;
+                Population.count[this.memory.originRoom].bound[this.memory.Role]++;
             }
         }
-        var a = this;
-        // if((a as unknown as BaseCreep).creep.name!="Universal#1") return; //DEBUG
-        // console.log(">>>> "+Game.time);
+
         this.memory.actions = new TickAction();
 
         var taskNumber = this.memory.taskNumber;
@@ -55,8 +55,6 @@ export abstract class Unit
             i--;
 
             var result = this.tasks[taskNumber].Act();
-
-            //  console.log("TaskNumber" +taskNumber +" ended with: "+result.toString() +"\nMoved: "+this.memory.actions.moved+"|Actioned: "+this.memory.actions.worked);
 
             codeSwitch: switch (result)
             {
@@ -113,7 +111,6 @@ export abstract class Unit
             }
 
         } while (i > 0)
-        // console.log("<<<<<");
     }
 
 }

@@ -18,6 +18,7 @@ import { Console } from "console";
 import { ExternalHeavyMiner } from "Models/Creeps/ExternalHeavyMiner";
 import { ExternalHaulerCreep } from "Models/Creeps/ExternalHauler";
 import { ScoutCreep } from "Models/Creeps/Scout";
+import { PopulatioInfo, Population } from "Population";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -42,7 +43,7 @@ export class ActionSpawn implements IAction
 
         if (this.pickedParts == null)
         {
-            if (BaseCreep.CreepPopulation[CreepTypes.UniversalCreep] == 0)
+            if (Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep]==0)
             {
                 this.SpawnEmergencyCreep();
             }
@@ -78,25 +79,14 @@ export class ActionSpawn implements IAction
     private GetSavedTarget(): void
     {
 
-        var creepGlobal: { [type: number]: number } = Utils.GetCreepPopulation();
         var creepRequiredMoment: { [type: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
 
         for (var order of Constants.ScenarioProduce)
         {
             creepRequiredMoment[order]++;
-            if (creepRequiredMoment[order] > BaseCreep.CreepPopulation[order])
+            if (creepRequiredMoment[order] > Population.count[this.unit.structure.room.name].pressence[order])
             {
                 if (!this.CheckSpawnCondition(order)) continue;
-                if (order == CreepTypes.ExpeditorCreep)
-                {
-                    if (creepRequiredMoment[order] > creepGlobal[order])
-                    {
-                        if (!this.CheckSpawnCondition(order)) continue;
-                        this.target = order;
-                        return;
-                    }
-                    continue;
-                }
                 this.target = order;
                 return;
             }
