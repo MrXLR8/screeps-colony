@@ -23,6 +23,7 @@ export class ActionStore implements IAction
 
         if (this.target == null)
         {
+
             if (this.dropOnFull) this.unit.creep.drop(this.stored_resources);
             return ActionResponseCode.NextTask;
         }
@@ -57,8 +58,8 @@ export class ActionStore implements IAction
 
 
 
-        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.containerTypes);
-
+        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.containerTypes,this.stored_resources);
+        //this.unit.log(JSON.stringify(this.containerTypes)+"|"+JSON.stringify(this.target));
         if (this.target != null)
         {
             this.unit.targetId = this.target.id;
@@ -95,6 +96,7 @@ export class ActionStore implements IAction
                 this.unit.creep.pos,
                 this.range,
                 this.containerTypes,
+                this.stored_resources,
                 this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink>
             );
         if (newTarget != null)

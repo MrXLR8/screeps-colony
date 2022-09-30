@@ -14,9 +14,9 @@ export class Finder
         //todo distance sort, energy check
     }
 
-    static GetRandomSource(_room: Room,ignoreId?: Id<Source>): Source
+    static GetRandomSource(_room: Room, ignoreId?: Id<Source>): Source
     {
-        var sourceArray = _room.find(FIND_SOURCES_ACTIVE, { filter: (source) =>source.id!=ignoreId });
+        var sourceArray = _room.find(FIND_SOURCES_ACTIVE, { filter: (source) => source.id != ignoreId });
         return sourceArray[random(0, sourceArray.length - 1)];
     }
 
@@ -83,7 +83,7 @@ export class Finder
     }
 
 
-    static GetFilledStorage(_pos: RoomPosition,resource:ResourceConstant, structureTypes: StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage | StructureLink
+    static GetFilledStorage(_pos: RoomPosition, resource: ResourceConstant, structureTypes: StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage | StructureLink
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
         var target = _pos.findClosestByPath(FIND_STRUCTURES, {
@@ -99,7 +99,7 @@ export class Finder
         return target as StructureContainer | StructureStorage | StructureLink;
     }
 
-    static GetBiggestFilledStorage(room: Room, resource:ResourceConstant, structureTypes: StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage | StructureLink
+    static GetBiggestFilledStorage(room: Room, resource: ResourceConstant, structureTypes: StructureConstant[], minAmmount?: number, ignoreId?: Id<Structure>): StructureContainer | StructureStorage | StructureLink
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
         var target = room.find(FIND_STRUCTURES, {
@@ -115,13 +115,13 @@ export class Finder
         return target[0] as StructureContainer | StructureStorage | StructureLink;
     }
 
-    static FindDropped(_pos: RoomPosition, resourceType:ResourceConstant,minAmmount?: number, ignoreId?: Id<Resource>): Resource
+    static FindDropped(_pos: RoomPosition, resourceType: ResourceConstant, minAmmount?: number, ignoreId?: Id<Resource>): Resource
     {
         if (minAmmount == null || minAmmount == undefined) { minAmmount = 0 };
-        return _pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.resourceType==resourceType&& dropped.amount > minAmmount && dropped.id != ignoreId } });
+        return _pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (dropped) => { return dropped.resourceType == resourceType && dropped.amount > minAmmount && dropped.id != ignoreId } });
     }
 
-    static GetContrainer(_pos: RoomPosition, range: number, structureTypes: StructureConstant[], ignoreId?: Id<StructureContainer | StructureStorage | StructureLink>): StructureContainer | StructureStorage | StructureLink
+    static GetContrainer(_pos: RoomPosition, range: number, structureTypes: StructureConstant[],resource:ResourceConstant, ignoreId?: Id<StructureContainer | StructureStorage | StructureLink>): StructureContainer | StructureStorage | StructureLink
     {
         var target = _pos.findInRange<StructureContainer | StructureStorage | StructureLink>(FIND_STRUCTURES, range,
             {
@@ -130,7 +130,7 @@ export class Finder
                     var structure = structureRaw as StructureContainer | StructureStorage | StructureLink;
                     return structureTypes.includes(structure.structureType)
                         &&
-                        structure.store.getFreeCapacity() > 0
+                        structure.store.getFreeCapacity(resource) > 0
                         &&
                         structure.id != ignoreId
                 }
