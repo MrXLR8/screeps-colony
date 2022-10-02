@@ -1,3 +1,4 @@
+import { Constants } from "Constans";
 import { filter } from "lodash";
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
@@ -56,6 +57,10 @@ export class ActionBuild implements IAction
             for (var siteName in Game.constructionSites)
             {
                 var site = Game.constructionSites[siteName];
+                if (typeof site.room.controller !== 'undefined')
+                {
+                    if(site.room.controller.level>Constants.ExpiditorMaxHelpLevel) continue;
+                }
                 if (site.pos.findPathTo(this.unit.creep).length > this.unit.creep.ticksToLive * 2) continue;
                 this.target = site;
             }

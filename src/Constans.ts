@@ -8,6 +8,7 @@ export class Constants
     static moveAttmepts = 40;
     static towerEnergyReserve = 20;
 
+    static ExpiditorMaxHelpLevel=3;
     static weakController: number = 3;
 
     static userName: string;

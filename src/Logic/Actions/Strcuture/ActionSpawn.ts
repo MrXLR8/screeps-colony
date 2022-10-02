@@ -32,15 +32,27 @@ export class ActionSpawn implements IAction
     Act(): ActionResponseCode
     {
 
+
         var entryCode = this.EntryValidation();
+
         if (entryCode != null) return entryCode;
+
 
         this.GetCreepTypeToSpawn();
 
-        if (this.target == null) return ActionResponseCode.NextTask;
-
+        if (this.target == null)
+        {
+            if (this.IsThereAllFullContainers())
+            {
+                this.target = CreepTypes.UniversalCreep;
+                console.log(this.unit.structure.room.name + " is full. spawning extra creep");
+            }
+            else
+                return ActionResponseCode.Repeat;
+        }
 
         this.pickedParts = PartsPicker.GetAviableMaxParts(this.target, this.unit.structure.room.energyAvailable, this.unit.structure.room.energyCapacityAvailable);
+
 
         if (this.pickedParts == null)
         {
@@ -48,8 +60,15 @@ export class ActionSpawn implements IAction
             {
                 this.SpawnEmergencyCreep();
             }
+            else if (this.IsThereAllFullContainers())
+            {
+                this.target = CreepTypes.UniversalCreep;
+                this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
+                if(this.pickedParts==null) return ActionResponseCode.Repeat;
+                console.log(this.unit.structure.room.name + " is full. spawning extra creep");
+            }
 
-            else { return ActionResponseCode.NextTask; }
+            else { return ActionResponseCode.Repeat; }
 
         }
 
@@ -57,7 +76,7 @@ export class ActionSpawn implements IAction
 
 
 
-        if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.NextTask;
+        if (this.creepName == null || this.spawnsettings == null) return ActionResponseCode.Repeat;
         var actionCode = (this.unit.structure as StructureSpawn).spawnCreep(this.pickedParts, this.creepName, this.spawnsettings);
 
         return this.WorkCodeProcessing(actionCode);
@@ -65,7 +84,8 @@ export class ActionSpawn implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
-        if ((this.unit.structure as StructureSpawn).spawning) return ActionResponseCode.NextTask;
+        if ((this.unit.structure as StructureSpawn).spawning) return ActionResponseCode.Repeat;
+        if(this.unit.structure.room.energyAvailable<200) return ActionResponseCode.Repeat;
         return null;
     }
 
@@ -73,7 +93,8 @@ export class ActionSpawn implements IAction
     {
         this.target = CreepTypes.UniversalCreep;
         this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
-        console.log("SPAWNING EMERGENCY CREEP");
+        if (this.unit.structure.room.controller.level != 1)
+            console.log((this.unit.structure.room.name + "| SPAWNING EMERGENCY CREEP"));
 
     }
 
@@ -109,6 +130,24 @@ export class ActionSpawn implements IAction
         }
     }
 
+
+    IsThereAllFullContainers(): boolean
+    {
+        var room = this.unit.structure.room;
+        var foundLeftSpace = room.find(FIND_STRUCTURES, {
+            filter: (strcucture) =>
+            {
+                if (strcucture instanceof StructureContainer)
+                {
+                    return strcucture.store.getFreeCapacity(RESOURCE_ENERGY) != 0;
+                }
+                return false;
+            }
+        });
+
+        return foundLeftSpace[0] == null;;
+
+    }
 
     private CheckSpawnCondition(type: CreepTypes): boolean
     {
@@ -151,7 +190,7 @@ export class ActionSpawn implements IAction
             //console.log("invalid args for spawned: " + this.creepName + ". " + JSON.stringify(this.spawnsettings));
             default:
                 this.unit.log("Problem occured. Spawner error code: " + code);
-                return ActionResponseCode.NextTask;
+                return ActionResponseCode.Repeat;
         }
     }
 
