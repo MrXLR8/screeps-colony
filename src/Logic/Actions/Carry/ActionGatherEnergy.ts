@@ -35,6 +35,7 @@ export class ActionGatherEnergy implements IAction
             return ActionResponseCode.NextTask;
         }
 
+
         var actionCode = this.target.Gather(this.unit);
 
         return this.WorkCodeProcessing(actionCode);
@@ -86,7 +87,7 @@ export class ActionGatherEnergy implements IAction
         if (this.target != null)
         {
 
-            this.unit.targetId = this.target.storage.id;
+            this.unit.targetId = this.target.id;
         }
     }
 
@@ -116,7 +117,7 @@ export class ActionGatherEnergy implements IAction
         switch (code)
         {
             case ERR_NOT_IN_RANGE:
-                this.unit.MoveToTarget(this.target.storage);
+                this.unit.MoveToPos(this.target.pos);
                 this.unit.creep.say("⚡");
                 return ActionResponseCode.Repeat;
             case OK:

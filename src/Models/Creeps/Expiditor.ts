@@ -3,6 +3,7 @@ import { BaseCreep } from "./BaseCreep";
 import { ActionMining } from "Logic/Actions/Work/ActionMining";
 import { ActionBuild } from "Logic/Actions/Work/ActionBuild";
 import { IAction } from "Logic/Actions/IAction";
+import { Constants } from "Constans";
 
 export class ExpiditorCreep extends BaseCreep
 {
@@ -38,6 +39,10 @@ export class ExpiditorCreep extends BaseCreep
             var room = Game.rooms[roomName];
 
             if (room == null) continue;
+            if (typeof room.controller !== 'undefined')
+            {
+                if (room.controller.level > Constants.ExpiditorMaxHelpLevel) continue;
+            }
             if (room.find(FIND_MY_CONSTRUCTION_SITES)[0] != null)
             {
                 return room;

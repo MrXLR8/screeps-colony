@@ -5,38 +5,49 @@ import { BaseCreep } from "Models/Creeps/BaseCreep";
 export class Storage
 {
 
-
-    storage: StructureContainer | StructureStorage | StructureLink | Tombstone | Resource | Ruin;
-
     building: StructureContainer | StructureStorage | StructureLink;
     salvage: Tombstone | Ruin;
-    resource: Resource;
+    resourceObject: Resource;
 
     resourceConstant: ResourceConstant;
-    constructor(store: StructureContainer | StructureStorage | StructureLink | Tombstone | Resource | Ruin, resourceType: ResourceConstant)
+    constructor(gameObject: StructureContainer | StructureStorage | StructureLink | Tombstone | Resource | Ruin, resourceType?: ResourceConstant)
     {
-        this.storage = store;
+
+        this.building = null;
+        this.salvage = null;
+        this.resourceObject = null;
+
         this.resourceConstant = resourceType;
-        if (store instanceof Resource)
-            this.resource = store;
-        else if (store instanceof Tombstone)
+        if (gameObject instanceof Resource)
         {
-            this.salvage = store;
+            this.resourceConstant = gameObject.resourceType;
+            this.resourceObject = gameObject;
+            return;
         }
-        else if (store instanceof Ruin)
+
+        if (gameObject instanceof Tombstone)
         {
-            this.salvage = store;
+            this.salvage = gameObject;
+        }
+        else if (gameObject instanceof Ruin)
+        {
+            this.salvage = gameObject;
         }
         else
         {
-            this.building = store;
+            this.building = gameObject;
+        }
+
+        if (typeof this.resourceConstant === 'undefined')
+        {
+            this.resourceConstant = _.filter(Object.keys(gameObject.store), resource => gameObject.store[resource as ResourceConstant] > 0)[0] as ResourceConstant;
         }
     }
 
     Gather(creep: BaseCreep): ScreepsReturnCode
     {
-        if (this.resource != null) return creep.creep.pickup(this.resource);
-        if (this.salvage != null) return creep.creep.withdraw(this.salvage, this.resourceConstant);
+        if (this.resourceObject != null) { return creep.creep.pickup(this.resourceObject); }
+        if (this.salvage != null) { return creep.creep.withdraw(this.salvage, this.resourceConstant); }
         else
         {
             return creep.creep.withdraw(this.building, this.resourceConstant);
@@ -45,7 +56,7 @@ export class Storage
 
     Put(creep: BaseCreep): ScreepsReturnCode
     {
-        if (this.resource != null) return ERR_INVALID_TARGET;
+        if (this.resourceObject != null) return ERR_INVALID_TARGET;
         if (this.salvage != null) return ERR_INVALID_TARGET;
         else
         {
@@ -57,7 +68,8 @@ export class Storage
 
     get ammount(): number
     {
-        if (this.resource != null) return this.resource.amount;
+
+        if (this.resourceObject != null) return this.resourceObject.amount;
         if (this.salvage != null) return this.salvage.store.getUsedCapacity(this.resourceConstant);
         else
         {
@@ -67,7 +79,7 @@ export class Storage
 
     get maxAmmount(): number
     {
-        if (this.resource != null) return this.resource.amount;
+        if (this.resourceObject != null) return this.resourceObject.amount;
         if (this.salvage != null) return this.salvage.store.getCapacity(this.resourceConstant);
         else
         {
@@ -77,7 +89,7 @@ export class Storage
 
     get freeSpace(): number
     {
-        if (this.resource != null) return 0;
+        if (this.resourceObject != null) return 0;
         if (this.salvage != null) return 0;
         else
         {
@@ -88,6 +100,22 @@ export class Storage
     get percentUsed(): number
     {
         return Utils.Percent(this.ammount, this.maxAmmount);
+    }
+
+    get id(): string
+    {
+        if (this.resourceObject != null) return this.resourceObject.id;
+        if (this.salvage != null) return this.salvage.id;
+
+        return this.building.id;
+    }
+
+    get pos(): RoomPosition
+    {
+        if (this.resourceObject != null) return this.resourceObject.pos;
+        if (this.salvage != null) return this.salvage.pos;
+
+        return this.building.pos;
     }
 
 }

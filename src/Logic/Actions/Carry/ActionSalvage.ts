@@ -1,14 +1,17 @@
 import { Finder } from "Logic/Finder";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
+import { Storage } from "Models/Structures/Storage";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
 
 export class ActionSalvage implements IAction
 {
     unit: BaseCreep;
-    target: Tombstone | Resource | Ruin;
+    target: Storage;
     minAmmount: number;
+
+    resource: ResourceConstant;
 
     Act(): ActionResponseCode
     {
@@ -18,15 +21,9 @@ export class ActionSalvage implements IAction
         this.GetSavedTarget();
 
         if (this.target == null) return ActionResponseCode.NextTask;
-        var actionCode;
-        if (this.target instanceof Resource) actionCode = this.unit.creep.pickup(this.target);
-        else
-        {
-            var store = this.target.store;
-            var stored_resources = _.filter(Object.keys(store), resource => store[resource as ResourceConstant] > 0)[0] as ResourceConstant;
+        var actionCode = this.target.Gather(this.unit);
 
-            actionCode = this.unit.creep.withdraw(this.target,stored_resources);
-        }
+
 
         return this.WorkCodeProcessing(actionCode);
     }
@@ -40,31 +37,30 @@ export class ActionSalvage implements IAction
     private GetSavedTarget(): void
     {
         var targetId = this.unit.targetId;
+        var foundGameObj;
         if (targetId != null)
         {
-            this.target = Game.getObjectById(this.unit.targetId as Id<Tombstone | Resource | Ruin>);
+            foundGameObj = Game.getObjectById(this.unit.targetId as Id<Tombstone | Resource | Ruin>);
+            if (foundGameObj != null) this.target = new Storage(foundGameObj, this.resource);
         }
         if (this.target != null)
         {
-            if (this.target instanceof Resource)
+            if (this.target.ammount > this.minAmmount)
             {
-                if (this.target.amount > this.minAmmount) return;
+                return; //Target is valid
             }
-            else
-                if (this.target.store.getUsedCapacity() > this.minAmmount)
-                {
-                    return; //Target is valid
-                }
+
         }
 
-        this.target = this.unit.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (res) => { return res.amount > this.minAmmount } });
+        foundGameObj = this.unit.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, { filter: (res) => { return new Storage(res, this.resource).ammount > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => { return tomb.store.getUsedCapacity() > this.minAmmount } });
+        if (foundGameObj == null) foundGameObj = this.unit.creep.pos.findClosestByPath(FIND_TOMBSTONES, { filter: (tomb) => { return new Storage(tomb, this.resource).ammount > this.minAmmount } });
 
-        if (this.target == null) this.target = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => { return ruin.store.getUsedCapacity() > this.minAmmount } });
+        if (foundGameObj == null) foundGameObj = this.unit.creep.pos.findClosestByPath(FIND_RUINS, { filter: (ruin) => { return new Storage(ruin, this.resource).ammount > this.minAmmount } });
 
-        if (this.target != null)
+        if (foundGameObj != null)
         {
+            this.target = new Storage(foundGameObj);
             this.unit.targetId = this.target.id;
         }
     }
@@ -74,7 +70,7 @@ export class ActionSalvage implements IAction
         switch (code)
         {
             case ERR_NOT_IN_RANGE:
-                this.unit.MoveToTarget(this.target);
+                this.unit.MoveToPos(this.target.pos);
                 this.unit.creep.say("♻️");
                 return ActionResponseCode.Repeat;
             case OK:
@@ -99,9 +95,9 @@ export class ActionSalvage implements IAction
         return this;
     }
 
-    CreepCapacityAmmount(): ActionSalvage
+    WithResource(resource: ResourceConstant): ActionSalvage
     {
-        this.minAmmount = this.unit.AmmountCanCarry();
+        this.resource = resource;
         return this;
     }
     //#endregion

@@ -26,7 +26,7 @@ export class CourierCreep extends BaseCreep
 
     tasks: IAction[] =
         [
-            new ActionSalvage(this).CreepCapacityAmmount(),
+            new ActionSalvage(this).MinAmmount(this.AmmountCanCarry()),
             new ActionGatherFromFlag(this).WithColors(COLOR_YELLOW, COLOR_WHITE),
             new ActionGatherEnergy(this,).ContainerTypes([STRUCTURE_CONTAINER]).PriorityBigFirst(),
             new ActionSalvage(this).MinAmmount(0),
