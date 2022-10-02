@@ -68,8 +68,11 @@ export class Storage
 
     get ammount(): number
     {
-
-        if (this.resourceObject != null) return this.resourceObject.amount;
+        if (this.resourceObject != null)
+        {
+            if (this.resourceObject.resourceType != this.resourceConstant) return 0;
+            return this.resourceObject.amount;
+        }
         if (this.salvage != null) return this.salvage.store.getUsedCapacity(this.resourceConstant);
         else
         {
