@@ -20,7 +20,8 @@ export class Storage
         this.resourceConstant = resourceType;
         if (gameObject instanceof Resource)
         {
-            this.resourceConstant = gameObject.resourceType;
+            if (typeof this.resourceConstant === 'undefined')
+                this.resourceConstant = gameObject.resourceType;
             this.resourceObject = gameObject;
             return;
         }
