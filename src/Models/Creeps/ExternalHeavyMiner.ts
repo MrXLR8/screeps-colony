@@ -62,13 +62,13 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
             var flag = Game.flags[flagName];
             if(!Utils.BelongsToThisRoom(flag.name,originRoom)) continue;
             if (typeof flag.room === 'undefined') continue;
-            if (typeof flag.room.controller !== 'undefined')
-            {
-                if (typeof flag.room.controller.owner !== 'undefined')
-                {
-                    if (flag.room.controller.owner.username == Constants.userName) continue;
-                }
-            }
+            // if (typeof flag.room.controller !== 'undefined')
+            // {
+            //     if (typeof flag.room.controller.owner !== 'undefined')
+            //     {
+            //         if (flag.room.controller.owner.username == Constants.userName) continue;
+            //     }
+            // }
             var assFalg = new AssignableFlag(flag);
             if (!assFalg.CompareColors(ExternalHeavyMiner.primaryColor, ExternalHeavyMiner.secondaryColor)) continue;
             var found = EnergySource.GetFreeMinerSourceInRoom(flag.room);

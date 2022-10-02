@@ -50,8 +50,6 @@ export class ScoutCreep extends BaseCreep implements IAssignable
 
     static GetUnknownRoom(originRoom:string): AssignableFlag
     {
-
-        console.log("scout check");
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];

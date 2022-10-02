@@ -54,6 +54,7 @@ export class ActionAssignedMining implements IAction
                 this.unit.creep.say("⛏️");
                 return ActionResponseCode.Repeat;
             case ERR_NOT_ENOUGH_RESOURCES:
+                if(!this.target.pos.isNearTo(this.unit.creep)) this.unit.MoveToTarget(this.target);
                 this.unit.creep.say("!⛏️");
                 return ActionResponseCode.Reset;
             case OK:
