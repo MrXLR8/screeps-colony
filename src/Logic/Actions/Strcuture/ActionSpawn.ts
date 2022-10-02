@@ -42,7 +42,7 @@ export class ActionSpawn implements IAction
 
         if (this.target == null)
         {
-            if (this.IsThereAllFullContainers())
+            if (this.IsThereAllFullContainers()&&Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep]<10)
             {
                 this.target = CreepTypes.UniversalCreep;
                 console.log(this.unit.structure.room.name + " is full. spawning extra creep");
@@ -60,7 +60,7 @@ export class ActionSpawn implements IAction
             {
                 this.SpawnEmergencyCreep();
             }
-            else if (this.IsThereAllFullContainers())
+            else if (this.IsThereAllFullContainers()&&Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep]<10)
             {
                 this.target = CreepTypes.UniversalCreep;
                 this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
