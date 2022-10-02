@@ -215,46 +215,47 @@ export class ActionSpawn implements IAction
         mem.actionAttempts = 0;
         mem.originRoom = this.unit.structure.room.name;
         mem.Role = this.target;
+        var date = new Date();
         switch (this.target)
         {
             case CreepTypes.UniversalCreep:
-                this.creepName = this.GetAviableCreepName("Universal");
+                this.creepName = "Universal ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.HeavyMiner:
-                this.creepName = this.GetAviableCreepName("Miner");
+                this.creepName = "Miner ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Courier:
-                this.creepName = this.GetAviableCreepName("Courier");
+                this.creepName = "Courier ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Claimer:
-                this.creepName = this.GetAviableCreepName("Claimer");
+                this.creepName = "Claimer ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExpeditorCreep:
-                this.creepName = this.GetAviableCreepName("Expiditor");
+                this.creepName = "Expiditor ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Upgrader:
-                this.creepName = this.GetAviableCreepName("Upgrader");
+                this.creepName = "Upgrader ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExternalHeavyMiner:
-                this.creepName = this.GetAviableCreepName("ExternalHeavyMiner");
+                this.creepName = "ExternalHeavyMiner ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExternalHauler:
-                this.creepName = this.GetAviableCreepName("ExternalHauler");
+                this.creepName = "ExternalHauler ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Scout:
-                this.creepName = this.GetAviableCreepName("Scout");
+                this.creepName = "Scout ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExternalRepairer:
-                this.creepName = this.GetAviableCreepName("ExternalRepairer");
+                this.creepName = "ExternalRepairer ("+this.unit.structure.room.name+") | "+date.getHours()+3 + ":" + date.getMinutes() + ":" + date.getSeconds();
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:
