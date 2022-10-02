@@ -25,7 +25,7 @@ export class UniversalCreep extends BaseCreep
     tasks: IAction[] =
         [
             new ActionSalvage(this).MinAmmount(this.AmmountCanCarry()).WithResource(RESOURCE_ENERGY),
-            new ActionGatherEnergy(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE]),
+            new ActionGatherEnergy(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE,STRUCTURE_LINK]),
             new ActionMining(this).FindRandomSource(),
             new ActionFillTower(this).FillUntil(20),
             new ActionStoreExtension(this),

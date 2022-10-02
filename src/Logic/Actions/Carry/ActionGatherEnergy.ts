@@ -101,7 +101,7 @@ export class ActionGatherEnergy implements IAction
                 RESOURCE_ENERGY,
                 this.containerTypes,
                 this.unit.AmmountCanCarry(),
-                this.unit.targetId as Id<StructureContainer | StructureStorage>
+                this.unit.targetId as Id<StructureContainer | StructureContainer | StructureLink >
             );
         if (newTarget != null)
         {
