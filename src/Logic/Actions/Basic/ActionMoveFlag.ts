@@ -85,7 +85,7 @@ export class ActionMoveFlag implements IAction
         return null;
     }
 
-    private WorkCodeProcessing(code: CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND): ActionResponseCode
+    private WorkCodeProcessing(code: number): ActionResponseCode
     {
         switch (code)
         {

@@ -2,7 +2,7 @@ import { IAction } from "Logic/Actions/IAction";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { Unit } from "Models/Unit";
 import { BaseCreepMemory } from "../Memory/BaseCreepMemory";
-
+import { Traveler } from "../../../Traveler/Traveler";
 export enum CreepTypes
 {
     UniversalCreep,
@@ -40,16 +40,16 @@ export abstract class BaseCreep extends Unit
         this.creep.memory = memory;
     }
 
-    MoveToTarget(targetObj: RoomObject): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
+    MoveToTarget(targetObj: RoomObject,ops?: TravelToOptions): number
     {
-        return this.MoveToPos(targetObj.pos)
+        return this.MoveToPos(targetObj.pos,ops)
     }
 
-    MoveToPos(targetPos: RoomPosition): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
+    MoveToPos(targetPos: RoomPosition,ops?: TravelToOptions): number
     {
         if (this.memory.actions.moved) return ERR_TIRED;
         this.memory.actions.moved = true;
-        return this.creep.moveTo(targetPos, { visualizePathStyle: { stroke: '#ffffff' } });
+        return Traveler.travelTo(this.creep,targetPos, ops);
     }
 
     AmmountCanCarry(): number
