@@ -50,21 +50,35 @@ export class ActionBuild implements IAction
             this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES, { filter: (site) => { return site.structureType == this.priorityStructure } });
 
         if (this.target == null)
-            this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
-
-        if ((this.target == null) && this.globalSearch)
         {
-            for (var siteName in Game.constructionSites)
+            if (this.globalSearch)
             {
-                var site = Game.constructionSites[siteName];
-                if (typeof site.room.controller !== 'undefined')
+                if (this.unit.creep.room.name != this.unit.memory.originRoom)
+                    this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
+                else
                 {
-                    if(site.room.controller.level>Constants.ExpiditorMaxHelpLevel) continue;
+                    for (var siteName in Game.constructionSites)
+                    {
+                        var site = Game.constructionSites[siteName];
+                        if (typeof site.room.controller !== 'undefined')
+                        {
+                            if (site.room.controller.level > Constants.ExpiditorMaxHelpLevel) continue;
+                            if (site.room.name == this.unit.memory.originRoom) continue;
+                        }
+                        if (site.pos.findPathTo(this.unit.creep).length > this.unit.creep.ticksToLive * 2) continue;
+                        this.target = site;
+                    }
                 }
-                if (site.pos.findPathTo(this.unit.creep).length > this.unit.creep.ticksToLive * 2) continue;
-                this.target = site;
+            }
+            else
+            {
+                this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
             }
         }
+        if (this.target == null && !this.globalSearch)
+            this.target = this.unit.creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
+
+
 
         if (this.target != null)
         {
