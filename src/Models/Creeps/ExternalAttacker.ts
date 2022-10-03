@@ -33,7 +33,7 @@ export class ExternalAttacker extends BaseCreep implements IAssignable
         {
             var flag = Game.flags[flagName];
             var assFalg = new AssignableFlag(flag);
-            Utils.BelongsToThisRoom(flag.name, roomOrigin)
+            if(Utils.BelongsToThisRoom(flag.name, roomOrigin)) continue;
             if (!assFalg.CompareColors(ExternalAttacker.primaryColor, ExternalAttacker.secondaryColor)) continue;
             if (assFalg.assignedAmmount < 1) return true;
         }
@@ -47,7 +47,7 @@ export class ExternalAttacker extends BaseCreep implements IAssignable
         {
             var flag = Game.flags[flagName];
             var assFalg = new AssignableFlag(flag);
-            Utils.BelongsToThisRoom(flag.name, this.memory.originRoom);
+            if(!Utils.BelongsToThisRoom(flag.name, this.memory.originRoom)) continue;
             if (!assFalg.CompareColors(ExternalAttacker.primaryColor, ExternalAttacker.secondaryColor)) continue;
             if (assFalg.assignedAmmount < 1)
             {

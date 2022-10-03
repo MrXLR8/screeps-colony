@@ -34,7 +34,7 @@ export class ClaimerCreep extends BaseCreep
         {
             var flag = Game.flags[flagName];
             var assFalg = new AssignableFlag(flag);
-            Utils.BelongsToThisRoom(flag.name, roomOrigin)
+            if(!Utils.BelongsToThisRoom(flag.name, roomOrigin)) continue;
             if (!assFalg.CompareColors(ClaimerCreep.primaryColor, ClaimerCreep.secondaryColor)) continue;
             if (assFalg.assignedAmmount < 1) return true;
         }
