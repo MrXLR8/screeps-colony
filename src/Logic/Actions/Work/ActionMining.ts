@@ -66,11 +66,12 @@ export class ActionMining implements IAction
     {
         switch (code)
         {
+            case ERR_NOT_OWNER:
+                return ActionResponseCode.NextTask;
             case ERR_NOT_IN_RANGE:
                 this.unit.memory.actionAttempts++;
                 if (this.unit.memory.actionAttempts > Constants.moveAttmepts)
                 {
-                    this.unit.log("move attempts");
                     var found = Finder.GetRandomSource(this.unit.creep.room, this.target.id);
                     if (found != null)
                     {
