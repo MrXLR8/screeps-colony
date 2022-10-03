@@ -22,10 +22,15 @@ export class ActionClaim implements IAction
         return this.WorkCodeProcessing(actionCode);
     }
 
-   private EntryValidation(): ActionResponseCode
+    private EntryValidation(): ActionResponseCode
     {
         if (typeof this.unit.creep.room.controller.owner === 'undefined') return null;
-        if (this.unit.creep.room.controller.owner.username == this.unit.creep.owner.username) { this.unit.creep.say("✔️"); return ActionResponseCode.NextTask; }
+        // if (this.unit.creep.room.controller.owner.username == this.unit.creep.owner.username)
+        // {
+        //     this.unit.creep.say("✔️");
+        //     this.unit.memory.haltUntil = Number.MAX_SAFE_INTEGER;
+        //     return ActionResponseCode.NextTask;
+        // }
         return null;
     }
 

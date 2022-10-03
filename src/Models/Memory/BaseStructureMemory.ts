@@ -6,4 +6,6 @@ export class BaseStructureMemory
     actionAttempts: number = 0;
     taskNumber: number = 0;
     actions:TickAction = new TickAction();
+
+    haltUntil:number;
 }

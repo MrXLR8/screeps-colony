@@ -5,6 +5,7 @@ import { AssignableFlag } from "Models/AssignableFlag";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { ActionMoveAssign } from "Logic/Actions/Basic/ActionMoveToAssign";
 import { Utils } from "Logic/Utils";
+import { ActionSleepForever } from "Logic/Actions/Basic/ActionSleepForever";
 
 
 export class ScoutCreep extends BaseCreep implements IAssignable
@@ -17,7 +18,8 @@ export class ScoutCreep extends BaseCreep implements IAssignable
 
     tasks: IAction[] =
         [
-            new ActionMoveAssign(this).InRange(4)
+            new ActionMoveAssign(this).InRange(4),
+            new ActionSleepForever(this)
         ];
 
 

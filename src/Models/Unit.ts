@@ -46,6 +46,15 @@ export abstract class Unit
             }
         }
 
+        if (this.memory.haltUntil != null)
+        {
+            if (Game.time < this.memory.haltUntil)
+            {
+                return;
+            }
+
+        }
+
         this.memory.actions = new TickAction();
 
         var taskNumber = this.memory.taskNumber;

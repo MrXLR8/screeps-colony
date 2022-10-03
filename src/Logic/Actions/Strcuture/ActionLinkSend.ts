@@ -33,7 +33,11 @@ export class ActionLinkSend implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
-        if (this.unit.structure.cooldown > 0) return ActionResponseCode.Repeat;
+        if (this.unit.structure.cooldown > 0)
+        {
+            this.unit.memory.haltUntil = Game.time + this.unit.structure.cooldown;
+            return ActionResponseCode.Repeat;
+        }
         if (this.unit.structure.store[RESOURCE_ENERGY] == 0) return ActionResponseCode.Repeat;
         return null;
     }
@@ -65,6 +69,7 @@ export class ActionLinkSend implements IAction
         switch (code)
         {
             case ERR_TIRED:
+                this.unit.memory.haltUntil = Game.time + this.unit.structure.cooldown;
             case OK:
                 this.unit.memory.actions.worked = true;
                 return ActionResponseCode.Repeat;

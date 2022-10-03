@@ -51,7 +51,7 @@ export class ActionAssignedMining implements IAction
         switch (code)
         {
             case ERR_NOT_OWNER:
-                this.unit.creep.say("!⛏️");
+                this.unit.memory.haltUntil = Game.time + this.unit.creep.room.controller.reservation.ticksToEnd;
                 return ActionResponseCode.Repeat;
             case ERR_NOT_IN_RANGE:
                 this.unit.MoveToTarget(this.target);
@@ -60,6 +60,7 @@ export class ActionAssignedMining implements IAction
             case ERR_NOT_ENOUGH_RESOURCES:
                 if (!this.target.pos.isNearTo(this.unit.creep)) this.unit.MoveToTarget(this.target);
                 this.unit.creep.say("!⛏️");
+                this.unit.memory.haltUntil = Game.time + this.target.ticksToRegeneration;
                 return ActionResponseCode.Reset;
             case OK:
                 this.unit.memory.actions.worked = true;

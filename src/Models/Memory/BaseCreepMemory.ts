@@ -12,5 +12,8 @@ export class BaseCreepMemory implements CreepMemory
 
     originRoom:string;
 
+    haltUntil:number;
+
+
 }
 

@@ -87,7 +87,13 @@ export class ActionSpawn implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
-        if ((this.unit.structure as StructureSpawn).spawning) return ActionResponseCode.Repeat;
+        var spawn = this.unit.structure as StructureSpawn;
+        if (spawn.spawning)
+        {
+            this.unit.memory.haltUntil = Game.time + spawn.spawning.remainingTime;
+            return ActionResponseCode.Repeat
+        }
+
         if (this.unit.structure.room.energyAvailable < 200) return ActionResponseCode.Repeat;
         return null;
     }
@@ -96,8 +102,8 @@ export class ActionSpawn implements IAction
     {
         this.target = CreepTypes.UniversalCreep;
         this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
-      //  if (this.unit.structure.room.controller.level != 1)
-            //console.log((this.unit.structure.room.name + "| SPAWNING EMERGENCY CREEP"));
+        //  if (this.unit.structure.room.controller.level != 1)
+        //console.log((this.unit.structure.room.name + "| SPAWNING EMERGENCY CREEP"));
 
     }
 
@@ -215,6 +221,7 @@ export class ActionSpawn implements IAction
         mem.actionAttempts = 0;
         mem.originRoom = this.unit.structure.room.name;
         mem.Role = this.target;
+        mem.haltUntil = null;
 
         switch (this.target)
         {

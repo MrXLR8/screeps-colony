@@ -34,6 +34,7 @@ export class ActionGatherEnergy implements IAction
             if (this.waitForIt)
             {
                 this.unit.creep.say("⌛");
+                this.unit.memory.haltUntil=Game.time+10;
                 return ActionResponseCode.Repeat;
             }
             return ActionResponseCode.NextTask;
