@@ -24,21 +24,22 @@ export class ExpiditorCreep extends BaseCreep
 
         ];
 
-    static SpawnCondition(room: Room): boolean
+    static SpawnCondition(originRoom:string): boolean
     {
         //return false;
-        return ExpiditorCreep.LookForRoomWithConstructionSites() != null;
+        return ExpiditorCreep.LookForRoomWithConstructionSites(originRoom) != null;
     }
 
 
 
-    static LookForRoomWithConstructionSites(): Room
+    static LookForRoomWithConstructionSites(originRoom:string): Room
     {
-        for (var roomName in Game.rooms)
+        for (var originRoom in Game.rooms)
         {
-            var room = Game.rooms[roomName];
+            var room = Game.rooms[originRoom];
 
             if (room == null) continue;
+            if(room.name==originRoom) continue;
             if (typeof room.controller !== 'undefined')
             {
                 if (room.controller.level > Constants.ExpiditorMaxHelpLevel) continue;
