@@ -1,3 +1,6 @@
 [submodule "Traveler"]
 	path = Traveler
 	url = https://github.com/screepers/Traveler
+[submodule "screeps-typescript-profiler"]
+	path = screeps-typescript-profiler
+	url = https://github.com/SSchnaible/screeps-typescript-profiler
