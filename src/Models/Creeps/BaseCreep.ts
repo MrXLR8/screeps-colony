@@ -50,7 +50,8 @@ export abstract class BaseCreep extends Unit
     {
         if (this.memory.actions.moved) return ERR_TIRED;
         this.memory.actions.moved = true;
-        return Traveler.travelTo(this.creep,targetPos, ops);
+        return this.creep.moveTo(targetPos, { reusePath: 10, ignoreCreeps: false })
+       // return Traveler.travelTo(this.creep,targetPos, ops);
     }
 
     AmmountCanCarry(): number
