@@ -21,6 +21,8 @@ import { ScoutCreep } from "Models/Creeps/Scout";
 import { PopulatioInfo, Population } from "Population";
 import { ExternalRepairer } from "Models/Creeps/ExternalRepairer";
 import { ExternalAttacker } from "Models/Creeps/ExternalAttacker";
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
+@profile
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -94,8 +96,8 @@ export class ActionSpawn implements IAction
     {
         this.target = CreepTypes.UniversalCreep;
         this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
-        if (this.unit.structure.room.controller.level != 1)
-            console.log((this.unit.structure.room.name + "| SPAWNING EMERGENCY CREEP"));
+      //  if (this.unit.structure.room.controller.level != 1)
+            //console.log((this.unit.structure.room.name + "| SPAWNING EMERGENCY CREEP"));
 
     }
 

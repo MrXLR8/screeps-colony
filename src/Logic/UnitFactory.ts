@@ -17,7 +17,8 @@ import { BaseStructure } from "Models/Structures/BaseStructure";
 import { Link } from "Models/Structures/Link";
 import { Spawner } from "Models/Structures/Spawner";
 import { Tower } from "Models/Structures/Tower";
-
+import { profile } from "../../screeps-typescript-profiler/Profiler";
+@profile
 export class UnitFactory
 {
   static CreateCreep(creep: Creep): BaseCreep

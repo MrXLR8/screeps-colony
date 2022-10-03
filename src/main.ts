@@ -5,8 +5,12 @@ import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Spawner } from "Models/Structures/Spawner";
 import { Tower } from "Models/Structures/Tower";
 import { PopulatioInfo, Population } from "Population";
+import * as Profiler from "../screeps-typescript-profiler"
 //npm run push-main
 
+global.Profiler = Profiler.init();
+
+declare const __PROFILER_ENABLED__: boolean;
 export function loop()
 {
   Population.count = {};

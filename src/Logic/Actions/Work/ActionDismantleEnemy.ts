@@ -2,7 +2,8 @@ import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
-
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
+@profile
 export class ActionDismantleEnemy implements IAction
 {
     unit: BaseCreep;

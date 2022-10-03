@@ -7,6 +7,8 @@ import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
 import { Link } from "Models/Structures/Link";
 import { link } from "fs";
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
+@profile
 export class ActionLinkSend implements IAction
 {
     unit: Link;

@@ -7,7 +7,8 @@ import { IAssignable } from "Models/Interfaces/IAssignable";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
-
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
+@profile
 export class ActionAttackFlag implements IAction
 {
     private unit: IAssignable;

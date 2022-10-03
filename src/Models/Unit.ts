@@ -1,5 +1,6 @@
 import { IAction } from "Logic/Actions/IAction";
 import { Population } from "Population";
+import { profile } from "../../screeps-typescript-profiler/Profiler/Profiler";
 import { ActionResponseCode } from "./ActionResponseCode";
 import { BaseCreep } from "./Creeps/BaseCreep";
 import { TickAction } from "./Data/TickAction";

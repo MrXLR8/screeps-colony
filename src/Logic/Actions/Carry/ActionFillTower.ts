@@ -4,8 +4,9 @@ import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
 import { IAction } from "../IAction";
-
+@profile
 export class ActionFillTower implements IAction
 {
     unit: BaseCreep;

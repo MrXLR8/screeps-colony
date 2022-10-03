@@ -7,7 +7,8 @@ import { HeavyMinerCreep } from "Models/Creeps/HeavyMiner";
 import { IAssignable } from "Models/Interfaces/IAssignable";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
-
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
+@profile
 export class ActionAssignedMining implements IAction
 {
     unit: IAssignable;

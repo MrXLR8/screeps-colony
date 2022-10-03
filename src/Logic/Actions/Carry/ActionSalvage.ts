@@ -3,8 +3,9 @@ import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Storage } from "Models/Structures/Storage";
 import { Unit } from "Models/Unit";
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
 import { IAction } from "../IAction";
-
+@profile
 export class ActionSalvage implements IAction
 {
     unit: BaseCreep;

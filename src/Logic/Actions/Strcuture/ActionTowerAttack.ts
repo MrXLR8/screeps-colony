@@ -5,10 +5,13 @@ import { BaseStructure } from "Models/Structures/BaseStructure";
 import { IAction } from "../IAction";
 import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
+@profile
 export class ActionTowerAttack implements IAction
 {
     unit: Tower;
     target: Creep;
+
 
     Act(): ActionResponseCode
     {

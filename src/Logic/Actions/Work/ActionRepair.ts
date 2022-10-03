@@ -10,7 +10,8 @@ import { BaseStructure } from "Models/Structures/BaseStructure";
 import { Tower } from "Models/Structures/Tower";
 import { Unit } from "Models/Unit";
 import { IAction } from "../IAction";
-
+import { profile } from "../../../../screeps-typescript-profiler/Profiler";
+@profile
 export class ActionRepair implements IAction
 {
     private unit: BaseCreep | Tower;
