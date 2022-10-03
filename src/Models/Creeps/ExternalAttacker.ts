@@ -12,9 +12,9 @@ export class ExternalAttacker extends BaseCreep implements IAssignable
 
     static parts: BodyPartConstant[][] =
         [
-            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK], //1170
-            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK], //910
-            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK] //780
+            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK], //1170
+            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK], //910
+            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK] //780
         ];
 
 
@@ -33,7 +33,7 @@ export class ExternalAttacker extends BaseCreep implements IAssignable
         {
             var flag = Game.flags[flagName];
             var assFalg = new AssignableFlag(flag);
-            if(Utils.BelongsToThisRoom(flag.name, roomOrigin)) continue;
+            if (Utils.BelongsToThisRoom(flag.name, roomOrigin)) continue;
             if (!assFalg.CompareColors(ExternalAttacker.primaryColor, ExternalAttacker.secondaryColor)) continue;
             if (assFalg.assignedAmmount < 1) return true;
         }
@@ -43,11 +43,12 @@ export class ExternalAttacker extends BaseCreep implements IAssignable
 
     Assign(): boolean
     {
+        var busyFlag = null;
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
             var assFalg = new AssignableFlag(flag);
-            if(!Utils.BelongsToThisRoom(flag.name, this.memory.originRoom)) continue;
+            if (!Utils.BelongsToThisRoom(flag.name, this.memory.originRoom)) continue;
             if (!assFalg.CompareColors(ExternalAttacker.primaryColor, ExternalAttacker.secondaryColor)) continue;
             if (assFalg.assignedAmmount < 1)
             {
@@ -55,6 +56,12 @@ export class ExternalAttacker extends BaseCreep implements IAssignable
                 this.memory.assignedTo = flagName;
                 return true;
             }
+            else { busyFlag = assFalg; }
+        }
+        if (busyFlag != null)
+        {
+            this.memory.assignedTo = busyFlag.flag.name;
+            return true;
         }
         return false;
     }

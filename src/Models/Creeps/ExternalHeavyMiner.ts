@@ -33,7 +33,7 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
         ];
 
 
-    static SpawnCondition(originRoom:string): boolean
+    static SpawnCondition(originRoom: string): boolean
     {
         var found = ExternalHeavyMiner.GetFreeMinerSpace(originRoom);
         if (found != null) return true;
@@ -54,14 +54,16 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
     }
 
 
-    static GetFreeMinerSpace(originRoom:string): EnergySource
+    static GetFreeMinerSpace(originRoom: string): EnergySource
     {
 
         for (var flagName in Game.flags)
         {
             var flag = Game.flags[flagName];
-            if(!Utils.BelongsToThisRoom(flag.name,originRoom)) continue;
+            if (!Utils.BelongsToThisRoom(flag.name, originRoom)) continue;
             if (typeof flag.room === 'undefined') continue;
+            if (typeof flag.room.controller !== 'undefined')
+                if (typeof flag.room.controller.reservation !== 'undefined') continue;
             // if (typeof flag.room.controller !== 'undefined')
             // {
             //     if (typeof flag.room.controller.owner !== 'undefined')
@@ -88,7 +90,7 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 
-         var obj = new EnergySource(source);
+        var obj = new EnergySource(source);
 
         obj.memory.myMiner = null;
     }

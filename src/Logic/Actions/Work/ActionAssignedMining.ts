@@ -49,12 +49,15 @@ export class ActionAssignedMining implements IAction
     {
         switch (code)
         {
+            case ERR_NOT_OWNER:
+                this.unit.creep.say("!⛏️");
+                return ActionResponseCode.Repeat;
             case ERR_NOT_IN_RANGE:
                 this.unit.MoveToTarget(this.target);
                 this.unit.creep.say("⛏️");
                 return ActionResponseCode.Repeat;
             case ERR_NOT_ENOUGH_RESOURCES:
-                if(!this.target.pos.isNearTo(this.unit.creep)) this.unit.MoveToTarget(this.target);
+                if (!this.target.pos.isNearTo(this.unit.creep)) this.unit.MoveToTarget(this.target);
                 this.unit.creep.say("!⛏️");
                 return ActionResponseCode.Reset;
             case OK:

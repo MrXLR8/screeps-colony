@@ -20,7 +20,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
 
     static parts: BodyPartConstant[][] =
         [
-            [MOVE, MOVE, MOVE, MOVE, MOVE,MOVE, MOVE,MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,CARRY,CARRY,CARRY,CARRY],//1300
+            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],//1300
             [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //1000
             [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //750
             [MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //600
@@ -50,23 +50,20 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
     }
 
 
-    static GetFreeHaulerSpace(originRoom:string): EnergySource
+    static GetFreeHaulerSpace(originRoom: string): EnergySource
     {
 
         for (var flagName in Game.flags)
         {
 
             var flag = Game.flags[flagName];
-            if(!Utils.BelongsToThisRoom(flag.name,originRoom)) continue;
+            if (!Utils.BelongsToThisRoom(flag.name, originRoom)) continue;
             if (typeof flag.room === 'undefined') continue;
-            // if (typeof flag.room.controller !== 'undefined')
-            // {
-            //     if (typeof flag.room.controller.owner !== 'undefined')
-            //     {
-            //         if (flag.room.controller.owner.username == Constants.userName) continue;
-            //     }
-            // }
-
+            if (typeof flag.room.controller !== 'undefined')
+                if (typeof flag.room.controller.reservation !== 'undefined') continue;
+                //         if (flag.room.controller.owner.username == Constants.userName) continue;
+                //     }
+                // }
             var assFalg = new AssignableFlag(flag);
             if (!assFalg.CompareColors(ExternalHaulerCreep.primaryColor, ExternalHaulerCreep.secondaryColor)) continue;
             var found = EnergySource.GetFreeHaulerSourceInRoom(flag.room);
@@ -74,9 +71,10 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
             continue;
         }
         return null;
+
     }
 
-    static SpawnCondition(originRoom:string): boolean
+    static SpawnCondition(originRoom: string): boolean
     {
 
         var found = ExternalHaulerCreep.GetFreeHaulerSpace(originRoom);
@@ -94,7 +92,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 
-      //  var obj = new EnergySource(source);
+        //  var obj = new EnergySource(source);
 
         //obj.memory.myHauler = null;
     }

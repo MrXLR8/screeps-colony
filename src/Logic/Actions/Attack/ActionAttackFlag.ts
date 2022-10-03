@@ -45,6 +45,7 @@ export class ActionAttackFlag implements IAction
         if(typeof this.foundFlag.room==='undefined') return;
         this.target = this.foundFlag.pos.findInRange(FIND_HOSTILE_CREEPS, 1)[0];
         if (this.target == null) this.target = this.foundFlag.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1)[0];
+        if(this.target==null) this.foundFlag.remove();
     }
     private GetSavedTarget(): void
     {
