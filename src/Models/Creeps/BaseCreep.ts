@@ -73,7 +73,7 @@ export abstract class BaseCreep extends Unit
 
     log(message: string)
     {
-        console.log(this.creep.name + " (task:" + this.memory.taskNumber + ", target: " + this.memory.targetID + ")" + ":\n" + message);
+        console.log(this.creep.name + " (task:" + this.memory.taskNumber + ", target: " + this.memory.targetID + ", room: "+this.creep.room.name+")" + ":\n" + message);
     }
 }
 
