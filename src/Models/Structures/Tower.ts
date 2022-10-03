@@ -2,10 +2,9 @@ import { IAction } from "Logic/Actions/IAction";
 import { ActionTowerAttack } from "Logic/Actions/Strcuture/ActionTowerAttack";
 import { ActionRepair } from "Logic/Actions/Work/ActionRepair";
 import { Utils } from "Logic/Utils";
-import { IStorable } from "Models/Interfaces/IStorable";
 import { BaseStructure } from "./BaseStructure";
 
-export class Tower extends BaseStructure implements IStorable
+export class Tower extends BaseStructure
 {
     //tasks = [this.ActAttack, this.ActRepair,this.ActRepairWalls];
 

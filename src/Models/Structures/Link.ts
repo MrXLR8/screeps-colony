@@ -3,10 +3,9 @@ import { ActionLinkSend } from "Logic/Actions/Strcuture/ActionLinkSend";
 import { ActionTowerAttack } from "Logic/Actions/Strcuture/ActionTowerAttack";
 import { ActionRepair } from "Logic/Actions/Work/ActionRepair";
 import { Utils } from "Logic/Utils";
-import { IStorable } from "Models/Interfaces/IStorable";
 import { BaseStructure } from "./BaseStructure";
 
-export class Link extends BaseStructure implements IStorable
+export class Link extends BaseStructure
 {
     //tasks = [this.ActAttack, this.ActRepair,this.ActRepairWalls];
 
