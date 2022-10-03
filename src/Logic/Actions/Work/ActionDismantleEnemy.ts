@@ -42,6 +42,7 @@ export class ActionDismantleEnemy implements IAction
             {
                 filter: (structure) =>
                 {
+                    if(structure.structureType==STRUCTURE_RAMPART) return false;
                     var storeStructure = structure as any;
                     if (typeof storeStructure.store !== 'undefined')
                     {
