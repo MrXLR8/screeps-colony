@@ -3,6 +3,7 @@ import { CreepTypes } from "Models/Creeps/BaseCreep";
 import { ClaimerCreep } from "Models/Creeps/Claimer";
 import { CourierCreep } from "Models/Creeps/Courier";
 import { ExpiditorCreep } from "Models/Creeps/Expiditor";
+import { ExternalAttacker } from "Models/Creeps/ExternalAttacker";
 import { ExternalHaulerCreep } from "Models/Creeps/ExternalHauler";
 import { ExternalHeavyMiner } from "Models/Creeps/ExternalHeavyMiner";
 import { ExternalRepairer } from "Models/Creeps/ExternalRepairer";
@@ -110,8 +111,11 @@ export class PartsPicker
             case CreepTypes.ExternalRepairer:
                 collection = ExternalRepairer.parts;
                 break;
+            case CreepTypes.ExternalAttacker:
+                collection = ExternalAttacker.parts;
+                break;
             default:
-                console.log("No parts found for creep type: "+type);
+                console.log("No parts found for creep type: " + type);
                 return null;
         }
 

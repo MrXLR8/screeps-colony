@@ -27,6 +27,8 @@ export class Constants
 
     static ExternalCreepRequired: CreepTypes[] =
         [
+            CreepTypes.ExternalAttacker,
+            CreepTypes.ExternalAttacker,
             CreepTypes.Scout,
             CreepTypes.ExternalHeavyMiner,
             CreepTypes.ExternalHauler,

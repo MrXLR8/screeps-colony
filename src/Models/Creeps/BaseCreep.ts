@@ -14,7 +14,8 @@ export enum CreepTypes
     ExternalHeavyMiner,
     ExternalHauler,
     Scout,
-    ExternalRepairer
+    ExternalRepairer,
+    ExternalAttacker
 }
 
 export abstract class BaseCreep extends Unit

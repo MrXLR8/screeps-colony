@@ -20,6 +20,7 @@ import { ExternalHaulerCreep } from "Models/Creeps/ExternalHauler";
 import { ScoutCreep } from "Models/Creeps/Scout";
 import { PopulatioInfo, Population } from "Population";
 import { ExternalRepairer } from "Models/Creeps/ExternalRepairer";
+import { ExternalAttacker } from "Models/Creeps/ExternalAttacker";
 export class ActionSpawn implements IAction
 {
     unit: Spawner;
@@ -42,7 +43,7 @@ export class ActionSpawn implements IAction
 
         if (this.target == null)
         {
-            if (this.IsThereAllFullContainers()&&Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep]<10)
+            if (this.IsThereAllFullContainers() && Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep] < 10)
             {
                 this.target = CreepTypes.UniversalCreep;
                 console.log(this.unit.structure.room.name + " is full. spawning extra creep");
@@ -60,7 +61,7 @@ export class ActionSpawn implements IAction
             {
                 this.SpawnEmergencyCreep();
             }
-            else if (this.IsThereAllFullContainers()&&Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep]<10)
+            else if (this.IsThereAllFullContainers() && Population.count[this.unit.structure.room.name].pressence[CreepTypes.UniversalCreep] < 10)
             {
                 this.target = CreepTypes.UniversalCreep;
                 this.pickedParts = PartsPicker.GetAviableParts(this.target, this.unit.structure.room.energyAvailable);
@@ -169,6 +170,8 @@ export class ActionSpawn implements IAction
                 return ScoutCreep.SpawnCondition(this.unit.structure.room.name);
             case CreepTypes.ExternalRepairer:
                 return ExternalRepairer.SpawnCondition();
+            case CreepTypes.ExternalAttacker:
+                return ExternalAttacker.SpawnCondition(this.unit.structure.room.name);
             default:
                 return true;
         }
@@ -222,35 +225,39 @@ export class ActionSpawn implements IAction
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Courier:
-                this.creepName =  this.GetAviableCreepName("Courier");
-                 this.spawnsettings = new SpawnSettings(mem);
+                this.creepName = this.GetAviableCreepName("Courier");
+                this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Claimer:
-                this.creepName =  this.GetAviableCreepName("Claimer");
+                this.creepName = this.GetAviableCreepName("Claimer");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExpeditorCreep:
-                this.creepName =  this.GetAviableCreepName("Expiditor");
+                this.creepName = this.GetAviableCreepName("Expiditor");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Upgrader:
-                this.creepName =  this.GetAviableCreepName("Upgrader");
+                this.creepName = this.GetAviableCreepName("Upgrader");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExternalHeavyMiner:
-                this.creepName =  this.GetAviableCreepName("ExternalMiner");
+                this.creepName = this.GetAviableCreepName("ExternalMiner");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExternalHauler:
-                this.creepName =  this.GetAviableCreepName("ExternalHauler");
+                this.creepName = this.GetAviableCreepName("ExternalHauler");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.Scout:
-                this.creepName =  this.GetAviableCreepName("Scout");
+                this.creepName = this.GetAviableCreepName("Scout");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             case CreepTypes.ExternalRepairer:
-                this.creepName =  this.GetAviableCreepName("ExternalRepairer");
+                this.creepName = this.GetAviableCreepName("ExternalRepairer");
+                this.spawnsettings = new SpawnSettings(mem);
+                break;
+            case CreepTypes.ExternalAttacker:
+                this.creepName = this.GetAviableCreepName("ExternalAttacker");
                 this.spawnsettings = new SpawnSettings(mem);
                 break;
             default:
