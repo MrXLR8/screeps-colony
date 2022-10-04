@@ -7,7 +7,7 @@ import { Unit } from "Models/Unit";
 import { profile } from "../../../../screeps-typescript-profiler/Profiler";
 import { IAction } from "../IAction";
 @profile
-export class ActionGatherFromFlag implements IAction
+export class ActionStoreToFlag implements IAction
 {
     unit: BaseCreep;
     target: StructureContainer | StructureStorage | StructureLink | StructureTerminal | StructureLab;
@@ -18,10 +18,9 @@ export class ActionGatherFromFlag implements IAction
 
     flagResource: ResourceConstant;
 
-    leaveAmmount: number;
+    limit: Number;
     Act(): ActionResponseCode
     {
-
         var entryCode = this.EntryValidation();
         if (entryCode != null) return entryCode;
 
@@ -29,7 +28,8 @@ export class ActionGatherFromFlag implements IAction
 
         if (this.target == null) return ActionResponseCode.NextTask;
 
-        var actionCode = this.unit.creep.withdraw(this.target, this.flagResource);
+     //   this.unit.log("storing to" +this.target.structureType+ ". "+this.flagResource+"\ncreep store:"+JSON.stringify(this.unit.creep.store));
+        var actionCode = this.unit.creep.transfer(this.target, this.flagResource);
 
         return this.WorkCodeProcessing(actionCode);
     }
@@ -38,7 +38,7 @@ export class ActionGatherFromFlag implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.store.getFreeCapacity() == 0) return ActionResponseCode.NextTask;
+        if (this.unit.creep.store.getUsedCapacity() == 0) return ActionResponseCode.NextTask;
         return null;
     }
 
@@ -53,17 +53,16 @@ export class ActionGatherFromFlag implements IAction
         if (this.target != null)
         {
             var flag = this.target.pos.lookFor<"flag">("flag")[0] as Flag;
-
             if (flag != null)
             {
 
                 this.flagResource = Utils.GetFlagResourceConstant(flag.name);
-                if (this.flagResource == null) this.flagResource = Utils.GetResourceInStore(this.target.store);
-                if (typeof this.flagResource !== 'undefined')
+                if (this.flagResource == null) this.flagResource = Utils.GetResourceInStore(this.unit.creep.store);
+                if (this.target.store.getFreeCapacity(this.flagResource) > 0 && this.target.store.getUsedCapacity(this.flagResource) < this.limit)
                 {
-                    if (this.target.store.getUsedCapacity(this.flagResource) >= this.leaveAmmount) return;   //Target is valid
-                }
 
+                    return; //Target is valid
+                }
             }
 
         }
@@ -85,17 +84,19 @@ export class ActionGatherFromFlag implements IAction
             var flag = Game.flags[flagName];
             if (typeof flag.room === 'undefined') continue;
             if (!Utils.BelongsToThisRoom(flagName, this.unit.memory.originRoom)) continue;
-
             if (flag.color == this.primaryColor && flag.secondaryColor == this.secondaryColor)
             {
-
                 var found = flag.pos.lookFor<"structure">("structure")[0] as StructureContainer | StructureStorage | StructureLink | StructureTerminal | StructureLab;
-                this.flagResource = Utils.GetFlagResourceConstant(flagName);
-                if (this.flagResource == null) this.flagResource = Utils.GetResourceInStore(found.store, this.unit.AmmountCanCarry());
-                if (typeof this.flagResource === 'undefined') continue;
-                if (found.store.getUsedCapacity(this.flagResource) <= this.leaveAmmount) continue;
-                // if ((found.store.getUsedCapacity(this.flagResource) > this.unit.AmmountCanCarry()))
-                return found;
+                if (found != null)
+                {
+
+                    this.flagResource = Utils.GetFlagResourceConstant(flagName);
+                    if (this.flagResource == null) this.flagResource = Utils.GetResourceInStore(this.unit.creep.store);
+                    if ((found.store.getFreeCapacity(this.flagResource) > 0) && found.store.getUsedCapacity(this.flagResource) < this.limit)
+                    {
+                        return found;
+                    }
+                }
             }
         }
         return null;
@@ -107,13 +108,13 @@ export class ActionGatherFromFlag implements IAction
         {
             case ERR_NOT_IN_RANGE:
                 this.unit.MoveToTarget(this.target);
-                this.unit.creep.say("📤");
+                this.unit.creep.say("📥");
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;
                 return ActionResponseCode.StopCreepAct;
             default:
-                this.unit.log("Problem occured. GatherFromFlag error code: " + code + "\n res " + this.flagResource + "\n store " + JSON.stringify(this.target.store));
+                this.unit.log("Problem occured. StoreToFlag error code: " + code);
                 return ActionResponseCode.NextTask;
         }
     }
@@ -125,19 +126,20 @@ export class ActionGatherFromFlag implements IAction
         this.unit = unit as BaseCreep;
     }
 
-    WithColors(primaryColor: ColorConstant, secondaryColor: ColorConstant): ActionGatherFromFlag
+    WithColors(primaryColor: ColorConstant, secondaryColor: ColorConstant): ActionStoreToFlag
     {
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
-        this.leaveAmmount = 0;
+        this.limit = Number.MAX_SAFE_INTEGER;
         return this;
-
     }
 
-    LeaveAmmount(leavAmmount: number): ActionGatherFromFlag
+    Limit(ammount: number): ActionStoreToFlag
     {
-        this.leaveAmmount = leavAmmount;
+        this.limit = ammount;
         return this;
     }
+
+
     //#endregion
 }

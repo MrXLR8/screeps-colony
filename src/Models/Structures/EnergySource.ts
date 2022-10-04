@@ -9,14 +9,14 @@ export class SourceMemory extends BaseStructureMemory
     myHauler: string = null;
 }
 
-export class EnergySource
+export class ResourceSource
 {
 
-    structure: Source;
+    source: Source | Mineral | Deposit;
 
-    constructor(_structure: Source)
+    constructor(_structure: Source | Mineral | Deposit)
     {
-        this.structure = _structure;
+        this.source = _structure;
         if (typeof this.memory === 'undefined') this.memory = new SourceMemory();
         // EnergySource.StructureMemoryExistsCheck(_structure.id);
 
@@ -43,11 +43,11 @@ export class EnergySource
 
     get memory(): SourceMemory
     {
-        return (Memory as GlobalMemory).structures[this.structure.id] as SourceMemory;
+        return (Memory as GlobalMemory).structures[this.source.id] as SourceMemory;
     }
     set memory(memory: SourceMemory)
     {
-        (Memory as GlobalMemory).structures[this.structure.id] = memory;
+        (Memory as GlobalMemory).structures[this.source.id] = memory;
     }
 
     tasks: IAction[] =
@@ -55,31 +55,55 @@ export class EnergySource
         ];
 
 
-    static GetFreeMinerSourceInRoom(room: Room): EnergySource
+    static GetFreeMinerSourceInRoom(room: Room): ResourceSource
     {
-        var found = room.find(FIND_SOURCES, {
+        var found: Source | Mineral | Deposit = room.find(FIND_SOURCES, {
             filter: (source) =>
             {
-                var obj = new EnergySource(source);
+                var obj = new ResourceSource(source);
                 obj.CheckForDead();
                 return obj.memory.myMiner == null
             }
         })[0];
-        if (found != null) return new EnergySource(found);
+        if (found != null) return new ResourceSource(found);
+
+        var extractor = room.find(FIND_STRUCTURES, {
+            filter: (structure) => { return structure.structureType == STRUCTURE_EXTRACTOR }
+        })[0];
+
+        if (typeof extractor !== 'undefined')
+        {
+            found = extractor.pos.lookFor<"mineral">("mineral")[0];
+        }
+
+        if (found != null) return new ResourceSource(found);
         return null;
     }
 
-    static GetFreeHaulerSourceInRoom(room: Room): EnergySource
+    static GetFreeHaulerSourceInRoom(room: Room): ResourceSource
     {
-        var found = room.find(FIND_SOURCES, {
+        var found: Source | Mineral | Deposit = room.find(FIND_SOURCES, {
             filter: (source) =>
             {
-                var obj = new EnergySource(source);
+                var obj = new ResourceSource(source);
                 obj.CheckForDead();
                 return obj.memory.myHauler == null
             }
         })[0];
-        if (found != null) return new EnergySource(found);
+        // if (found != null) return new ResourceSource(found);
+        // found = room.find(FIND_MINERALS, {
+        //     filter: (structures) =>
+        //     {
+        //         var obj = new ResourceSource(structures);
+        //         obj.CheckForDead();
+        //         if (obj.memory.myMiner == null)
+        //         {
+        //             return structures.pos.lookFor<"structure">("structure").filter((str) => { str.structureType == STRUCTURE_EXTRACTOR })[0] != null;
+        //         }
+        //         return false;
+        //     }
+        // })[0];
+        // if (found != null) return new ResourceSource(found);
         return null;
     }
 
@@ -88,7 +112,7 @@ export class EnergySource
         if (this.memory.myMiner == null)
         {
             this.memory.myMiner = creep.creep.name;
-            creep.memory.assignedTo = this.structure.id;
+            creep.memory.assignedTo = this.source.id;
             return true;
         }
         if (this.memory.myMiner != creep.creep.name) return false;
@@ -101,7 +125,7 @@ export class EnergySource
         if (this.memory.myHauler == null)
         {
             this.memory.myHauler = creep.creep.name;
-            creep.memory.assignedTo = this.structure.id;
+            creep.memory.assignedTo = this.source.id;
             return true;
         }
         if (this.memory.myHauler != creep.creep.name) return false;

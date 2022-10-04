@@ -64,7 +64,9 @@ export abstract class Unit
         {
             i--;
 
+
             var result = this.tasks[taskNumber].Act();
+
 
             codeSwitch: switch (result)
             {

@@ -10,6 +10,7 @@ import { IAction } from "Logic/Actions/IAction";
 import { ActionStore } from "Logic/Actions/Carry/ActionStore";
 import { ActionGatherFromFlag } from "Logic/Actions/Carry/ActionGatherFromFlag";
 import { ActionSalvage } from "Logic/Actions/Carry/ActionSalvage";
+import { ActionStoreToFlag } from "Logic/Actions/Carry/ActionStoreToFlag";
 
 
 export class CourierCreep extends BaseCreep
@@ -26,13 +27,17 @@ export class CourierCreep extends BaseCreep
 
     tasks: IAction[] =
         [
+            new ActionGatherFromFlag(this).WithColors(COLOR_YELLOW, COLOR_RED).LeaveAmmount(5000),
+            new ActionStoreToFlag(this).WithColors(COLOR_YELLOW, COLOR_BLUE),
             new ActionSalvage(this).MinAmmount(this.AmmountCanCarry()),
             new ActionGatherFromFlag(this).WithColors(COLOR_YELLOW, COLOR_WHITE),
             new ActionGatherEnergy(this,).ContainerTypes([STRUCTURE_CONTAINER]).PriorityBigFirst(),
             new ActionSalvage(this).MinAmmount(0),
+            new ActionGatherEnergy(this,).ContainerTypes([STRUCTURE_STORAGE]),
+            new ActionFillTower(this),
+            new ActionGatherFromFlag(this).WithColors(COLOR_YELLOW, COLOR_GREY),
             new ActionStore(this).ContainerTypes([STRUCTURE_STORAGE])
-            //new ActionGather(this,true,[STRUCTURE_STORAGE]),
-            //new ActionFillTower(this,99),
+
         ];
 
     static SpawnCondition(room: Room): boolean

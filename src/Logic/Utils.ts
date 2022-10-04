@@ -57,6 +57,16 @@ export class Utils
         return false;
     }
 
+    static GetFlagResourceConstant(flagName: string): ResourceConstant
+    {
+        var split = flagName.split('|');
+        if (split.length > 2)
+        {
+            return split[1] as ResourceConstant;
+        }
+        return null;
+    }
+
     static PosCompare(pos1: RoomPosition, pos2: RoomPosition): boolean
     {
         return (pos1.x == pos2.x) && (pos1.y == pos2.y);
@@ -81,5 +91,11 @@ export class Utils
     static Percent(val: number, max: number): number
     {
         return (val / max) * 100;
+    }
+
+    static GetResourceInStore(store: StoreDefinition, moreThen?: number): ResourceConstant
+    {
+        if (typeof moreThen === 'undefined') moreThen = 0;
+        return _.filter(Object.keys(store), resource => store[resource as ResourceConstant] > moreThen)[0] as ResourceConstant;
     }
 }

@@ -59,7 +59,7 @@ export class ActionStoreExtension implements IAction
         {
             case ERR_NOT_IN_RANGE:
                 this.unit.MoveToTarget(this.target);
-                this.unit.creep.say("📥");
+                this.unit.creep.say("📀");
                 return ActionResponseCode.Repeat;
             case OK:
                 this.unit.memory.actions.worked = true;

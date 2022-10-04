@@ -22,6 +22,7 @@ export class Constants
             CreepTypes.HeavyMiner,
             CreepTypes.UniversalCreep,
             CreepTypes.Courier,
+            CreepTypes.HeavyMiner
 
         ];
 

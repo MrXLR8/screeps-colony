@@ -2,7 +2,7 @@ import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { ActionStore } from "Logic/Actions/Carry/ActionStore";
 import { IAction } from "Logic/Actions/IAction";
-import { EnergySource } from "Models/Structures/EnergySource";
+import { ResourceSource } from "Models/Structures/EnergySource";
 import { ActionAssignedMining } from "Logic/Actions/Work/ActionAssignedMining";
 import { IAssignable } from "Models/Interfaces/IAssignable";
 
@@ -31,7 +31,7 @@ export class HeavyMinerCreep extends BaseCreep implements IAssignable
 
     Assign(): boolean
     {
-        var found = EnergySource.GetFreeMinerSourceInRoom(this.creep.room);
+        var found = ResourceSource.GetFreeMinerSourceInRoom(this.creep.room);
         if (found != null) return found.TryToAssignMiner(this);
         return false;
     }
@@ -39,7 +39,7 @@ export class HeavyMinerCreep extends BaseCreep implements IAssignable
     static SpawnCondition(room: Room): boolean
     {
 
-        return EnergySource.GetFreeMinerSourceInRoom(room) != null;
+        return ResourceSource.GetFreeMinerSourceInRoom(room) != null;
     }
     static Dispose(_mem: CreepMemory)
     {
@@ -50,7 +50,7 @@ export class HeavyMinerCreep extends BaseCreep implements IAssignable
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 
-        var obj = new EnergySource(source);
+        var obj = new ResourceSource(source);
 
         obj.memory.myMiner = null;
     }

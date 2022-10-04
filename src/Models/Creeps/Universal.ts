@@ -15,7 +15,8 @@ export class UniversalCreep extends BaseCreep
 
     static parts: BodyPartConstant[][] =
         [
-          //  [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //1300
+            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //1700
+            [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //1300
             [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], //700
             [MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY, CARRY], //550
             [MOVE, MOVE, WORK, WORK, CARRY, CARRY], //400
@@ -25,7 +26,7 @@ export class UniversalCreep extends BaseCreep
     tasks: IAction[] =
         [
             new ActionSalvage(this).MinAmmount(this.AmmountCanCarry()).WithResource(RESOURCE_ENERGY),
-            new ActionGatherEnergy(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE,STRUCTURE_LINK]),
+            new ActionGatherEnergy(this).ContainerTypes([STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_LINK]),
             new ActionMining(this).FindRandomSource(),
             new ActionFillTower(this).FillUntil(20),
             new ActionStoreExtension(this),

@@ -12,7 +12,7 @@ import { profile } from "../../../../screeps-typescript-profiler/Profiler";
 export class ActionAssignedMining implements IAction
 {
     unit: IAssignable;
-    target: Source;
+    target: Source | Mineral | Deposit;
 
     lookForClosest: boolean;
 
@@ -38,11 +38,11 @@ export class ActionAssignedMining implements IAction
 
     private GetSavedTarget(): void
     {
-        this.target = Game.getObjectById<Id<Source>>(this.unit.memory.assignedTo as Id<Source>);
+        this.target = Game.getObjectById<Id<any>>(this.unit.memory.assignedTo as Id<any>);
         if (this.target == null)
         {
             this.unit.Assign();
-            this.target = Game.getObjectById<Id<Source>>(this.unit.memory.assignedTo as Id<Source>);
+            this.target = Game.getObjectById<Id<any>>(this.unit.memory.assignedTo as Id<any>);
         }
     }
 
@@ -54,14 +54,20 @@ export class ActionAssignedMining implements IAction
                 this.unit.memory.haltUntil = Game.time + this.unit.creep.room.controller.reservation.ticksToEnd;
                 return ActionResponseCode.Repeat;
             case ERR_NOT_IN_RANGE:
-                this.unit.MoveToTarget(this.target);
+                this.unit.MoveToTarget(this.target as RoomObject);
                 this.unit.creep.say("⛏️");
                 return ActionResponseCode.Repeat;
+            case ERR_TIRED:
+            case ERR_NOT_FOUND:
             case ERR_NOT_ENOUGH_RESOURCES:
                 if (!this.target.pos.isNearTo(this.unit.creep)) this.unit.MoveToTarget(this.target);
-                this.unit.creep.say("!⛏️");
-                this.unit.memory.haltUntil = Game.time + this.target.ticksToRegeneration;
+                this.unit.creep.say("⌛");
+                if (this.target instanceof Source)
+                    this.unit.memory.haltUntil = Game.time + this.target.ticksToRegeneration;
+                if (this.target instanceof Mineral)
+                    this.unit.memory.haltUntil = Game.time + this.target.ticksToRegeneration;
                 return ActionResponseCode.Reset;
+
             case OK:
                 this.unit.memory.actions.worked = true;
                 this.unit.memory.actionAttempts = 0;

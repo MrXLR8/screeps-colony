@@ -2,7 +2,7 @@ import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { BaseCreepMemory } from "Models/Memory/BaseCreepMemory";
 import { ActionStore } from "Logic/Actions/Carry/ActionStore";
 import { IAction } from "Logic/Actions/IAction";
-import { EnergySource } from "Models/Structures/EnergySource";
+import { ResourceSource } from "Models/Structures/EnergySource";
 import { ActionAssignedMining } from "Logic/Actions/Work/ActionAssignedMining";
 import { IAssignable } from "Models/Interfaces/IAssignable";
 import { AssignableFlag } from "Models/AssignableFlag";
@@ -54,7 +54,7 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
     }
 
 
-    static GetFreeMinerSpace(originRoom: string): EnergySource
+    static GetFreeMinerSpace(originRoom: string): ResourceSource
     {
 
         for (var flagName in Game.flags)
@@ -73,7 +73,7 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
             // }
             var assFalg = new AssignableFlag(flag);
             if (!assFalg.CompareColors(ExternalHeavyMiner.primaryColor, ExternalHeavyMiner.secondaryColor)) continue;
-            var found = EnergySource.GetFreeMinerSourceInRoom(flag.room);
+            var found = ResourceSource.GetFreeMinerSourceInRoom(flag.room);
             if (found != null) return found;
             continue;
         }
@@ -90,7 +90,8 @@ export class ExternalHeavyMiner extends BaseCreep implements IAssignable
 
         var source = Game.getObjectById<Id<Source>>(mem.assignedTo as Id<Source>);
 
-        var obj = new EnergySource(source);
+        if(source==null) return;
+        var obj = new ResourceSource(source);
 
         obj.memory.myMiner = null;
     }

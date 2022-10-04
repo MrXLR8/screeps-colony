@@ -3,7 +3,7 @@ import { BaseCreep } from "./BaseCreep";
 import { IAction } from "Logic/Actions/IAction";
 import { ActionStore } from "Logic/Actions/Carry/ActionStore";
 import { IAssignable } from "Models/Interfaces/IAssignable";
-import { EnergySource } from "Models/Structures/EnergySource";
+import { ResourceSource } from "Models/Structures/EnergySource";
 import { AssignableFlag } from "Models/AssignableFlag";
 import { ActionMoveAssign } from "Logic/Actions/Basic/ActionMoveToAssign";
 import { ActionMoveOrigin } from "Logic/Actions/Basic/ActionMoveOrigin";
@@ -50,7 +50,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
     }
 
 
-    static GetFreeHaulerSpace(originRoom: string): EnergySource
+    static GetFreeHaulerSpace(originRoom: string): ResourceSource
     {
 
         for (var flagName in Game.flags)
@@ -66,7 +66,7 @@ export class ExternalHaulerCreep extends BaseCreep implements IAssignable
                 // }
             var assFalg = new AssignableFlag(flag);
             if (!assFalg.CompareColors(ExternalHaulerCreep.primaryColor, ExternalHaulerCreep.secondaryColor)) continue;
-            var found = EnergySource.GetFreeHaulerSourceInRoom(flag.room);
+            var found = ResourceSource.GetFreeHaulerSourceInRoom(flag.room);
             if (found != null) return found;
             continue;
         }

@@ -5,12 +5,12 @@ import { BaseCreep } from "Models/Creeps/BaseCreep";
 export class Storage
 {
 
-    building: StructureContainer | StructureStorage | StructureLink;
+    building: StructureContainer | StructureStorage | StructureLink|StructureTerminal|StructureLab;
     salvage: Tombstone | Ruin;
     resourceObject: Resource;
 
     resourceConstant: ResourceConstant;
-    constructor(gameObject: StructureContainer | StructureStorage | StructureLink | Tombstone | Resource | Ruin, resourceType?: ResourceConstant)
+    constructor(gameObject: StructureContainer | StructureStorage | StructureLink|StructureTerminal|StructureLab | Tombstone | Resource | Ruin, resourceType?: ResourceConstant)
     {
 
         this.building = null;

@@ -1,4 +1,5 @@
 import { Finder } from "Logic/Finder";
+import { Utils } from "Logic/Utils";
 import { ActionResponseCode } from "Models/ActionResponseCode";
 import { BaseCreep } from "Models/Creeps/BaseCreep";
 import { Unit } from "Models/Unit";
@@ -8,7 +9,7 @@ import { IAction } from "../IAction";
 export class ActionStore implements IAction
 {
     unit: BaseCreep;
-    target: StructureContainer | StructureStorage | StructureLink;
+    target: StructureContainer | StructureStorage | StructureLink|StructureTerminal|StructureLab;
     range: number;
     dropOnFull: boolean;
     containerTypes: StructureConstant[];
@@ -35,9 +36,10 @@ export class ActionStore implements IAction
 
     private EntryValidation(): ActionResponseCode
     {
-        if (this.unit.creep.store.getUsedCapacity() == 0) return ActionResponseCode.NextTask;
-        this.stored_resources = _.filter(Object.keys(this.unit.creep.store), resource => this.unit.creep.store[resource as ResourceConstant] > 0)[0] as ResourceConstant;
+        if (this.stored_resources == null)
+            this.stored_resources = Utils.GetResourceInStore(this.unit.creep.store);
 
+        if (this.unit.creep.store.getUsedCapacity(this.stored_resources) == 0) return ActionResponseCode.NextTask;
         return null;
 
     }
@@ -47,7 +49,7 @@ export class ActionStore implements IAction
         var targetId = this.unit.targetId;
         if (targetId != null)
         {
-            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink>);
+            this.target = Game.getObjectById(this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink|StructureTerminal|StructureLab>);
         }
         if (this.target != null)
         {
@@ -59,7 +61,7 @@ export class ActionStore implements IAction
 
 
 
-        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.containerTypes,this.stored_resources);
+        this.target = Finder.GetContrainer(this.unit.creep.pos, this.range, this.containerTypes, this.stored_resources);
         //this.unit.log(JSON.stringify(this.containerTypes)+"|"+JSON.stringify(this.target));
         if (this.target != null)
         {
@@ -98,7 +100,7 @@ export class ActionStore implements IAction
                 this.range,
                 this.containerTypes,
                 this.stored_resources,
-                this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink>
+                this.unit.targetId as Id<StructureContainer | StructureStorage | StructureLink|StructureTerminal|StructureLab>
             );
         if (newTarget != null)
         {
@@ -115,6 +117,7 @@ export class ActionStore implements IAction
         this.unit = unit as BaseCreep;
         this.dropOnFull = false;
         this.range = 999;
+        this.stored_resources = null;
 
     }
 
@@ -133,6 +136,13 @@ export class ActionStore implements IAction
     {
         this.range = range
         return this;
+    }
+
+    Resource(resource: ResourceConstant): ActionStore
+    {
+        this.stored_resources = resource;
+        return this;
+
     }
 
     //#endregion
